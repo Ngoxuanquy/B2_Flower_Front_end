@@ -1,0 +1,63 @@
+.container {
+    margin-top: 100px;
+    height: auto;
+    .box-layout {
+        .layout {
+            width: 100%;
+                height: 400px;
+                position: relative;
+
+            .img_layout1 {
+                width: 100%;
+                height: 400px;
+                position: relative;
+            }
+            .contac {
+                position: absolute;
+                top: 0;
+                z-index: 10;
+                color: rgb(255, 255, 255);
+                font-size: 35px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-weight: 600;
+            }
+        }
+        .conten {
+            font-size: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            .text-conten {
+                width: 70%;
+                text-align: center;
+            }
+        }
+        .LienHe {
+           width: 100%;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           text-align: center;
+            .Layout-lienhe{
+                width: 80%;
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    font-size: 22px;
+                    font-weight: 500;
+                    span {
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
+}

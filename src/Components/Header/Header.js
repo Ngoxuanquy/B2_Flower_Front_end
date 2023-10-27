@@ -88,7 +88,17 @@ function Header() {
                                     <div>SHOP</div>
                                 </Link>
                                 <div>BLOG</div>
+                                <Link
+                                    to="/lienhe"
+                                    style={{
+                                        color: 'black',
+                                        listStyle: 'none',
+                                        textDecoration: 'none',
+                                    }}
+                                >
+
                                 <div>LIÊN HỆ</div>
+                                </Link>
                                 <div>CÂU HỎI THƯỜNG GẶP</div>
                                 <div>KHÁC</div>
                             </div>

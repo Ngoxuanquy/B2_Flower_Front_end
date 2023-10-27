@@ -1,17 +1,27 @@
+import React, {useEffect} from 'react'
 import classNames from 'classnames/bind';
 import styles from './homepage.module.scss';
 import AnhNen from '../../../access/anhnen.png';
 import Banner1 from '../../../access/banner1.png';
 import { Button, Radio, Space, Divider } from 'antd';
+import AOS from 'aos';
+import 'aos/dist/aos.css'; 
 
 const cx = classNames.bind(styles);
 const HomePage = () => {
+
+    useEffect(() => {
+        AOS.init();
+    },[])
+
     return (
         <div className={cx('container')}>
             <div className="container">
                 <div className={cx('elementor-widget-container')}>
                     <div className={cx('layout1')}>
-                        <div>
+                        <div data-aos="fade-down"
+                            data-aos-easing="linear"
+                            data-aos-duration="1500">
                             <h1>LI GIFT</h1>
                             <h3>
                                 Chào quý khách hàng thân yêu
@@ -31,7 +41,10 @@ const HomePage = () => {
                                 Mua ngay bây giờ
                             </div>
                         </div>
-                        <div>
+                        <div data-aos="fade-left"
+                        data-aos-anchor="#example-anchor"
+                        data-aos-offset="500"
+                        data-aos-duration="1500">
                             <img src={AnhNen} className={cx('img_layout1')} />
                         </div>
                     </div>
@@ -80,7 +93,8 @@ const HomePage = () => {
 
                     {/* layout3 */}
 
-                    <div className={cx('layout3')}>
+                    <div className={cx('layout3')} data-aos="fade-up"
+                        data-aos-duration="3000">
                         <div className={cx('box_layout3')}>
                             <div className={cx('conten')}>
                                 <div className={cx('SPECIAL')}>
@@ -126,7 +140,8 @@ const HomePage = () => {
                     </div>
                     {/* sản phẩm */}
 
-                    <div className={cx('sanpham')}>
+                    <div className={cx('sanpham')} data-aos="fade-up"
+                         data-aos-duration="3000">
                         <div className={cx('box_sanpham')}>
                             <div>
                                 <img
