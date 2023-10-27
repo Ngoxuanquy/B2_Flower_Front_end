@@ -1,0 +1,32 @@
+.container {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    cursor: pointer;
+
+    .box {
+        .img_card {
+            width: 300px;
+            height: 300px;
+        }
+        .button {
+            position: absolute;
+            top: 10px;
+            z-index: 10;
+            left: 10px;
+            button {
+                color: rgb(255, 255, 255);
+                background-color: rgb(255, 152, 152);
+                padding: 7px;
+                border: none;
+                width: 70px;
+                border-radius: 6px;
+            }
+        }
+        .conten {
+            font-size: 20px;
+            align-items: center;
+            text-align: center;
+        }
+    }
+}

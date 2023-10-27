@@ -1,0 +1,34 @@
+.container {
+    width: 426px;
+    height: 48px;
+    display: flex;
+
+    .input {
+        flex: 1;
+        height: 100%;
+        border: 1px solid var(--text-inputsearch-color);
+        border-right: none;
+        outline: none;
+        padding-left: 20px;
+        font-size: 1.3rem;
+        color: var(--text-inputsearch-color);
+    }
+
+    .btn-search {
+        width: 110px;
+        height: 100%;
+        font-size: 1.4rem;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-transform: uppercase;
+        background-color: var(--primary-color);
+        color: var(--white-color);
+
+        &:hover {
+            cursor: pointer;
+            filter: brightness(105%);
+        }
+    }
+}
