@@ -7,6 +7,7 @@ import {
     ShoppingCartOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { Tabs } from 'antd';
 
 const cx = classNames.bind(styles);
 
@@ -14,6 +15,7 @@ function Header() {
     const [scrollDirection, setScrollDirection] = useState(null);
     const [lastScroll, setLastScroll] = useState(0);
     const [isLoad, setIsLoad] = useState(true);
+    const [defau, setDefau] = useState(1);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -53,6 +55,10 @@ function Header() {
             ? 'scroll-up'
             : '';
 
+    const handeTab = (e) => {
+        setDefau(e);
+    };
+
     return (
         <div className={cx('container')}>
             {isLoad && (
@@ -66,7 +72,94 @@ function Header() {
                                 />
                             </div>
                             <div className={cx('header_center')}>
-                                <Link
+                                <Tabs
+                                    defaultActiveKey={defau}
+                                    centered
+                                    onChange={(e) => handeTab(e)}
+                                    tabBarStyle={{
+                                        color: 'pink',
+                                    }}
+                                >
+                                    <Tabs.TabPane
+                                        tab={
+                                            <Link
+                                                style={{
+                                                    color: '#292929',
+                                                }}
+                                                to="/"
+                                            >
+                                                TRANG CHỦ
+                                            </Link>
+                                        }
+                                        key="1"
+                                    />
+                                    <Tabs.TabPane
+                                        tab={
+                                            <Link
+                                                style={{
+                                                    color: '#292929',
+                                                }}
+                                                to="/about"
+                                            >
+                                                GIỚI THIỆU
+                                            </Link>
+                                        }
+                                        key="2"
+                                    />
+                                    <Tabs.TabPane
+                                        tab={
+                                            <Link
+                                                style={{
+                                                    color: '#292929',
+                                                }}
+                                                to="/shop"
+                                            >
+                                                SHOP
+                                            </Link>
+                                        }
+                                        key="3"
+                                    />
+                                    <Tabs.TabPane
+                                        tab={
+                                            <Link
+                                                style={{
+                                                    color: '#292929',
+                                                }}
+                                                to="/blog"
+                                            >
+                                                BLOG
+                                            </Link>
+                                        }
+                                        key="4"
+                                    />
+                                    <Tabs.TabPane
+                                        tab={
+                                            <Link
+                                                style={{
+                                                    color: '#292929',
+                                                }}
+                                                to="/lienhe"
+                                            >
+                                                LIÊN HỆ
+                                            </Link>
+                                        }
+                                        key="5"
+                                    />
+                                    <Tabs.TabPane
+                                        tab={
+                                            <Link
+                                                style={{
+                                                    color: '#292929',
+                                                }}
+                                                to="/lienhe"
+                                            >
+                                                CÂU HỎI KHÁC
+                                            </Link>
+                                        }
+                                        key="6"
+                                    />
+                                </Tabs>
+                                {/* <Link
                                     to="/"
                                     style={{
                                         color: 'black',
@@ -96,11 +189,10 @@ function Header() {
                                         textDecoration: 'none',
                                     }}
                                 >
-
-                                <div>LIÊN HỆ</div>
+                                    <div>LIÊN HỆ</div>
                                 </Link>
                                 <div>CÂU HỎI THƯỜNG GẶP</div>
-                                <div>KHÁC</div>
+                                <div>KHÁC</div> */}
                             </div>
                             <div className={cx('header_right')}>
                                 <UserOutlined

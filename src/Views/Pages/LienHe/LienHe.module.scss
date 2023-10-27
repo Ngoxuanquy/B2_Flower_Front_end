@@ -4,8 +4,8 @@
     .box-layout {
         .layout {
             width: 100%;
-                height: 400px;
-                position: relative;
+            height: 400px;
+            position: relative;
 
             .img_layout1 {
                 width: 100%;
@@ -34,19 +34,21 @@
             .text-conten {
                 width: 70%;
                 text-align: center;
+                opacity: 0.9;
             }
         }
         .LienHe {
-           width: 100%;
-           display: flex;
-           justify-content: center;
-           align-items: center;
-           text-align: center;
-            .Layout-lienhe{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            .Layout-lienhe {
                 width: 80%;
                 display: flex;
                 justify-content: space-around;
                 flex-direction: row;
+
                 div {
                     display: flex;
                     flex-direction: column;
@@ -55,6 +57,33 @@
                     font-weight: 500;
                     span {
                         font-size: 14px;
+                        opacity: 0.7;
+                    }
+                }
+            }
+        }
+        .map {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: center;
+            width: 100%;
+            align-items: center;
+            margin-top: 100px;
+            .box {
+                width: 80%;
+                display: flex;
+                text-align: center;
+                .gmail {
+                    width: 400px;
+                    .conten {
+                        font-size: 30px;
+                        font-weight: 500;
+                        margin-top: 0px;
+                    }
+                    Input {
+                        width: 400px;
                     }
                 }
             }
