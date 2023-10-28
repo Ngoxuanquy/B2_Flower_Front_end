@@ -15,9 +15,9 @@ const HomePage = () => {
     },[])
 
     return (
-        <div className={cx('container')}>
-            <div className="container">
-                <div className={cx('elementor-widget-container')}>
+        <div className={cx('container_')}>
+            <div className="container_">
+                <div className={cx('elementor-widget-container_')}>
                     <div className={cx('layout1')}>
                         <div data-aos="fade-down"
                             data-aos-easing="linear"

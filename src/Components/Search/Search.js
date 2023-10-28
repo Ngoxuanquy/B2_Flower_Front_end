@@ -19,7 +19,7 @@ const Search = () => {
     }
 
     return (
-        <div className={cx('container')}>
+        <div className={cx('container_')}>
             <input className={cx('input')} type="text" placeholder="Enter something..." value={value} onChange={e => handleValue(e)}/>
             <div 
                 className={cx('btn-search')}

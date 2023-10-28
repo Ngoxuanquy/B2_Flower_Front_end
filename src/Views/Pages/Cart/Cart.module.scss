@@ -1,0 +1,15 @@
+.container_ {
+    margin-top: 120px;
+    .box-layout {
+        .layut {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .box {
+                width: 90%;
+                font-size: 20px;
+            }
+        }
+    }
+}

@@ -4,7 +4,7 @@
     // color: white;
 }
 
-.container {
+.container_ {
     width: 100%;
     background-color: #f3f6fa;
     z-index: 100;
@@ -156,7 +156,7 @@
 
 //mobile
 @media screen and (max-width: 420px) {
-    .container {
+    .container_ {
         width: 100%;
         background-color: #f3f6fa;
         height: 100%;
@@ -208,7 +208,7 @@
 
 //tablet
 @media screen and (max-width: 1024px) and (min-width: 768px) {
-    .container {
+    .container_ {
         width: 100%;
         background-color: #f3f6fa;
         height: 100%;

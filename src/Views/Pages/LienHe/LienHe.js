@@ -15,8 +15,8 @@ const LienHe = () => {
     };
 
     return (
-        <div className={cx('container')}>
-            <div className="container">
+        <div className={cx('container_')}>
+            <div className="container_">
                 <div className={cx('box-layout')}>
                     <div className={cx('layout')}>
                         <div>

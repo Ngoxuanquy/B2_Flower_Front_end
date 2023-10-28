@@ -1,10 +1,17 @@
+import React,{useEffect, useState} from 'react';
 import classNames from 'classnames/bind';
 import styles from './shoppage.module.scss';
 import { Card, Shop_Left } from '../../../Components';
-
+import AOS from 'aos';
+import 'aos/dist/aos.css'; 
 const cx = classNames.bind(styles);
 
 const ShopPage = () => {
+
+    useEffect(() => {
+        AOS.init();
+    },[])
+
     //fake list product
     const lists = [
         {
@@ -69,9 +76,11 @@ const ShopPage = () => {
         },
     ];
 
+   
+
     return (
-        <div className={cx('container')}>
-            <div className="container">
+        <div className={cx('container_')}>
+            <div className="container_">
                 <div className={cx('shop-has-sidebar')}>
                     <div className={cx('nova-page-header__overlay')}>
                         <div>
@@ -89,8 +98,16 @@ const ShopPage = () => {
                             </div>
                             {/* right */}
                             <div className={cx('right')}>
-                                {lists.map((list) => (
-                                    <Card list={list} />
+                                {lists.map((list, index) => (
+                                    <div
+                                    key={list.id}
+                                    data-aos="fade-left"
+                                    data-aos-anchor="#example-anchor"
+                                    data-aos-duration={(index + 1) * 1000}
+                                  >
+                                    <Card list={list}
+                                    />
+                                    </div>
                                 ))}
                             </div>
                         </div>

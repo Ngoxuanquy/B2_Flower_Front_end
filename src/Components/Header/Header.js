@@ -60,10 +60,10 @@ function Header() {
     };
 
     return (
-        <div className={cx('container')}>
+        <div className={cx('container_')}>
             {isLoad && (
                 <div className={`scroll-indicator ${scrollDirection}`}>
-                    <div className="container">
+                    <div className="container_">
                         <div className={cx('header')}>
                             <div>
                                 <img
@@ -205,11 +205,20 @@ function Header() {
                                         fontSize: '25px',
                                     }}
                                 />
+                                  <Link
+                                    to="/cart"
+                                    style={{
+                                        color: 'black',
+                                        listStyle: 'none',
+                                        textDecoration: 'none',
+                                    }}
+                                >
                                 <ShoppingCartOutlined
                                     style={{
                                         fontSize: '25px',
                                     }}
-                                />
+                                    />
+                                    </Link>
                             </div>
                         </div>
                     </div>

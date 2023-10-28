@@ -95,8 +95,8 @@ const Footer = () => {
                     </g>
                 </svg>
 
-                <div className={cx('container')}>
-                    <div className="container">
+                <div className={cx('container_')}>
+                    <div className="container_">
                         <div className={cx('box')}>
                             <div className={cx('row')}>
                                 <h1>Li Gift</h1>

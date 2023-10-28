@@ -24,8 +24,8 @@ function Shop_Left() {
     };
 
     return (
-        <div className={cx('container')}>
-            <div className="container">
+        <div className={cx('container_')}>
+            <div className="container_">
                 <div className={cx('box')}>
                     <div className={cx('conten')}>
                         <h1>Danh Mục</h1>

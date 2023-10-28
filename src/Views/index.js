@@ -3,3 +3,5 @@ export { default as HomePage } from './Pages/HomePage/HomePage';
 export { default as ShopPage } from './Pages/ShopPage/ShopPage';
 export { default as LienHe } from './Pages/LienHe/LienHe';
 export { default as BLog } from './Pages/Blog/Blog';
+export { default as Cart } from './Pages/Cart/Cart';
+
