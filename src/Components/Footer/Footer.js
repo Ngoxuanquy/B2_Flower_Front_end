@@ -3,8 +3,6 @@ import { useState } from 'react';
 import React, { useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './footer.module.scss';
-import * as THREE from 'https://cdn.skypack.dev/three@0.136.0';
-import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls';
 import {
     FacebookOutlined,
     WhatsAppOutlined,
