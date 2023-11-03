@@ -1,119 +1,8 @@
-.container_ {
-    // display: none;
-    background-color: '#222';
-    width: 100%;
-    height: 100%;
-
-    .box {
-        background-color: #e2e2e5;
+@media screen and (min-width: 1024px) {
+    .container_ {
+        background-color: #222;
         width: 100%;
         height: 100%;
-        position: absolute;
-        top: 0;
-        z-index: 10;
-
-        .form {
-            position: absolute;
-            background-color: white;
-            margin: 0 auto;
-            justify-content: center;
-            align-items: center;
-            top: 30%;
-            left: 30%;
-            z-index: 100;
-
-            .all {
-                display: flex;
-                flex-direction: row;
-                height: 300px;
-                width: 700px;
-
-                .left {
-                    width: 50%;
-                    height: 350px;
-                    padding: 10px;
-                    display: flex;
-                    flex-direction: column;
-                    padding: 20px;
-
-                    .login {
-                        font-size: 37px;
-                        font-weight: 800;
-                        margin-top: 0px;
-                    }
-
-                    .titer {
-                        font-size: 16px;
-                        margin-top: 30px;
-                    }
-
-                    .taikhoan {
-                        font-size: 14px;
-                        margin-top: 20px;
-                    }
-                }
-
-                .rigth {
-                    display: flex;
-                    flex-direction: column;
-                    width: 50%;
-                    background-color: aqua;
-                    height: 440px;
-                    margin-top: -45px;
-                    background: #474a59;
-                    box-shadow: 0px 0px 40px 16px rgb(0 0 0 / 22%);
-                    color: #f1f1f2;
-                    justify-content: center;
-                    align-items: center;
-
-                    .submit {
-                        padding: 10px;
-                        color: #707075;
-                        transition: color 300ms;
-                        border-radius: 5px;
-                        font-size: 15px;
-                        margin-top: 26px;
-                    }
-
-                    .email {
-                        color: #c2c2c5;
-                        display: block;
-                        font-size: 14px;
-                        height: 16px;
-                        margin-top: 50px;
-                        margin-bottom: -15px;
-                    }
-
-                    .matkhau {
-                        color: #c2c2c5;
-                        display: block;
-                        font-size: 14px;
-                        height: 16px;
-                        margin-top: 20px;
-                        margin-bottom: -15px;
-                    }
-
-                    .input {
-                        background: transparent;
-                        border: 0;
-                        color: #f2f2f2;
-                        font-size: 16px;
-                        height: 30px;
-                        line-height: 30px;
-                        outline: none !important;
-                        width: 250px;
-                        border-bottom: 2px solid rgb(184, 146, 146);
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 1024px) {
-    .container {
-        // display: none;
-        background-color: '#222';
 
         .box {
             background-color: #e2e2e5;
@@ -122,26 +11,26 @@
             position: absolute;
             top: 0;
             z-index: 10;
-            margin-top: -200px;
 
             .form {
                 position: absolute;
                 background-color: white;
-                margin: 0px;
+                margin: 0 auto;
                 justify-content: center;
                 align-items: center;
-                margin-left: -100px;
+                top: 30%;
+                left: 30%;
+                z-index: 100;
 
                 .all {
                     display: flex;
-                    flex-direction: column;
-                    width: 100%;
-                    margin: -10px;
+                    flex-direction: row;
+                    height: 300px;
+                    width: 700px;
 
                     .left {
-                        width: 100%;
-                        height: 300px;
-                        padding: 10px;
+                        width: 50%;
+                        height: 350px;
                         display: flex;
                         flex-direction: column;
                         padding: 20px;
@@ -149,7 +38,7 @@
                         .login {
                             font-size: 37px;
                             font-weight: 800;
-                            margin-top: 0px;
+                            margin-top: 0;
                         }
 
                         .titer {
@@ -166,16 +55,15 @@
                     .rigth {
                         display: flex;
                         flex-direction: column;
-                        width: 100%;
+                        width: 50%;
                         background-color: aqua;
-                        height: 550px;
-                        margin-top: -20px;
+                        height: 440px;
+                        margin-top: -45px;
                         background: #474a59;
-                        box-shadow: 0px 0px 40px 16px rgb(0 0 0 / 22%);
+                        box-shadow: 0 0 40px 16px rgba(0, 0, 0, 0.22);
                         color: #f1f1f2;
                         justify-content: center;
                         align-items: center;
-                        margin: 0;
 
                         .submit {
                             padding: 10px;
@@ -186,15 +74,7 @@
                             margin-top: 26px;
                         }
 
-                        .email {
-                            color: #c2c2c5;
-                            display: block;
-                            font-size: 14px;
-                            height: 16px;
-                            margin-top: 20px;
-                            margin-bottom: 5px;
-                        }
-
+                        .email,
                         .matkhau {
                             color: #c2c2c5;
                             display: block;
@@ -219,5 +99,191 @@
                 }
             }
         }
+    }
+    .rigth {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        background-color: aqua;
+        height: 440px;
+        margin-top: -45px;
+        background: #474a59;
+        box-shadow: 0 0 40px 16px rgba(0, 0, 0, 0.22);
+        color: #f1f1f2;
+        justify-content: center;
+        align-items: center;
+    }
+    .submit {
+        padding: 10px;
+        color: #707075;
+        transition: color 300ms;
+        border-radius: 5px;
+        font-size: 15px;
+        margin-top: 26px;
+    }
+
+    .email,
+    .matkhau {
+        color: #c2c2c5;
+        display: block;
+        font-size: 14px;
+        height: 16px;
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+    .input {
+        background: transparent;
+        border: 0;
+        color: #f2f2f2;
+        font-size: 16px;
+        height: 30px;
+        line-height: 30px;
+        outline: none !important;
+        width: 250px;
+        border-bottom: 2px solid rgb(184, 146, 146);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container_ {
+        background-color: #222;
+
+        .box {
+            background-color: #e2e2e5;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            z-index: 10;
+
+            .form {
+                position: absolute;
+                background-color: white;
+                margin: 0;
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                top: 0;
+                left: 0;
+
+                .all {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+
+                    .left {
+                        width: 100%;
+                        height: 300px;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 20px;
+
+                        .login {
+                            font-size: 37px;
+                            font-weight: 800;
+                            margin-top: 0;
+                        }
+
+                        .titer {
+                            font-size: 16px;
+                            margin-top: 30px;
+                        }
+
+                        .taikhoan {
+                            font-size: 14px;
+                            margin-top: 20px;
+                        }
+                    }
+
+                    .right {
+                        display: flex;
+                        flex-direction: column;
+                        width: 100%;
+                        background-color: aqua;
+                        height: 550px;
+                        margin-top: -20px;
+                        background: #474a59;
+                        box-shadow: 0 0 40px 16px rgba(0, 0, 0, 0.22);
+                        color: #f1f1f2;
+                        justify-content: center;
+                        align-items: center;
+
+                        .submit {
+                            padding: 10px;
+                            color: #707075;
+                            transition: color 300ms;
+                            border-radius: 5px;
+                            font-size: 15px;
+                            margin-top: 26px;
+                        }
+
+                        .email,
+                        .matkhau {
+                            color: #c2c2c5;
+                            display: block;
+                            font-size: 14px;
+                            height: 16px;
+                            margin-top: 20px;
+                            margin-bottom: 5px;
+                        }
+
+                        .input {
+                            background: transparent;
+                            border: 0;
+                            color: #f2f2f2;
+                            font-size: 16px;
+                            height: 30px;
+                            line-height: 30px;
+                            outline: none !important;
+                            width: 250px;
+                            border-bottom: 2px solid rgb(184, 146, 146);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .rigth {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        background-color: aqua;
+        height: 440px;
+        margin-top: -45px;
+        background: #474a59;
+        box-shadow: 0 0 40px 16px rgba(0, 0, 0, 0.22);
+        color: #f1f1f2;
+        justify-content: center;
+        align-items: center;
+    }
+    .submit {
+        padding: 10px;
+        color: #707075;
+        transition: color 300ms;
+        border-radius: 5px;
+        font-size: 15px;
+        margin-top: 26px;
+    }
+
+    .email,
+    .matkhau {
+        color: #c2c2c5;
+        display: block;
+        font-size: 14px;
+        height: 16px;
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+    .input {
+        background: transparent;
+        border: 0;
+        color: #f2f2f2;
+        font-size: 16px;
+        height: 30px;
+        line-height: 30px;
+        outline: none !important;
+        width: 250px;
+        border-bottom: 2px solid rgb(184, 146, 146);
     }
 }

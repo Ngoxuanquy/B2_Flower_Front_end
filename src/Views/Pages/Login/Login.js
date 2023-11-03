@@ -451,26 +451,7 @@ function Logins() {
                                             </Form.Item>
                                         </div>
 
-                                        <div
-                                            style={{
-                                                marginLeft: '-100px',
-                                            }}
-                                        >
-                                            <Form.Item
-                                                name="remember"
-                                                valuePropName="checked"
-                                                wrapperCol={{
-                                                    offset: 8,
-                                                    span: 16,
-                                                }}
-                                            >
-                                                <Checkbox>Remember me</Checkbox>
-                                            </Form.Item>
-                                        </div>
-
-                                        <Form.Item
-                                            wrapperCol={{ offset: 8, span: 16 }}
-                                        >
+                                        <Form.Item>
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
