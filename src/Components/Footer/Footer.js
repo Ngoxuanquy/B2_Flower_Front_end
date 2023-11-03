@@ -103,7 +103,7 @@ const Footer = () => {
                                 <p>Address: Ngõ 252, Trịnh đình cửu</p>
                                 <p>Hoàng Mai, HN</p>
                                 <p>Phone: 0332062668</p>
-                                <p>Email: ngoxuanquy1812@gmail.com</p>
+                                <p>Email: girllinh4@gmail.com</p>
                             </div>
                             <div className={cx('footer__widget')}>
                                 <h2>Useful Links</h2>

@@ -1,5 +1,7 @@
 .container_ {
-    margin-top: 120px;
+    margin-top: 140px;
+    position: relative;
+
     .box-layout {
         .layut {
             width: 100%;
@@ -9,6 +11,286 @@
             .box {
                 width: 90%;
                 font-size: 20px;
+                Image {
+                    width: 200px;
+                    height: 200px;
+                }
+            }
+        }
+        .layout-thanhtoan {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            margin-left: -30px;
+            .box {
+                width: 90%;
+                display: flex;
+                justify-content: space-around;
+
+                .ThongTin {
+                    font-size: 22px;
+                    h2 {
+                        font-size: 25px;
+                        padding: 10px 0px;
+                    }
+                    Input {
+                        width: 250px;
+                    }
+                }
+                .Vanchuyen {
+                    margin-left: -30px;
+                    .conten-vanchuyen {
+                        p {
+                            background-color: #d1ecf1;
+                            padding: 10px 30px;
+                            font-size: 18px;
+                            margin-top: 20px;
+                            margin-bottom: 20px;
+                        }
+                    }
+                    .conten-thanhtoan {
+                        h3 {
+                            font-size: 22px;
+                        }
+                        .phươngthucTT {
+                            height: 200px;
+                            font-size: 18px;
+                            line-height: 40px;
+                            border: 0.4px solid gray;
+                            padding: 20px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            flex-direction: column;
+                            input {
+                                margin-right: 10px;
+                            }
+                        }
+                    }
+                }
+                .TongTien {
+                    width: 300px;
+                    line-height: 40px;
+                    h2 {
+                        // padding: 10px;
+                        font-size: 22px;
+                    }
+                    Input {
+                        // margin-top: 10px;
+                        // margin-bottom: 10px;
+                        height: 40px;
+                    }
+                    .button {
+                        padding: 5px 5px;
+                        background-color: rgb(38, 110, 86);
+                        color: white;
+                        width: 120px;
+                        font-size: 14px;
+                        text-align: center;
+                        align-items: center;
+                        display: flex;
+                        justify-content: center;
+                        height: 40px;
+                        margin-top: 0px;
+                    }
+                    button {
+                        padding: 5px 20px;
+                        background-color: rgb(47, 153, 118);
+                        border: none;
+                        font-size: 20px;
+                        color: white;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                        justify-content: flex-end;
+                        display: flex;
+                        text-align: left;
+                    }
+                    .tamtinh {
+                        display: flex;
+                        font-size: 18px;
+                        justify-content: space-between;
+                    }
+                    .vanchuyen {
+                        display: flex;
+                        font-size: 18px;
+                        justify-content: space-between;
+                    }
+                    .tongcong {
+                        display: flex;
+                        font-size: 18px;
+                        justify-content: space-between;
+                    }
+                }
+            }
+        }
+    }
+    .buttom_dathang {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container_ {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        margin-left: 0px;
+        margin-top: 140px;
+        .box-layout {
+            width: 100%;
+            margin-left: 0px;
+
+            .layut {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-left: 0px;
+
+                .box {
+                    width: 100%;
+                    font-size: 20px;
+                    margin-left: 0px;
+                }
+            }
+            .layout-thanhtoan {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                margin-top: 40px;
+                margin-left: 0px;
+                .box {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    margin: 0;
+                    padding: 0;
+                    margin-left: 0px;
+                    align-items: center;
+                    justify-content: center;
+                    .ThongTin {
+                        width: 90%;
+                        font-size: 22px;
+                        margin-left: 0px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        h2 {
+                            font-size: 25px;
+                            padding: 10px 0px;
+                        }
+                        Input {
+                            width: 100%;
+                        }
+                    }
+                    .Vanchuyen {
+                        margin-left: 0px;
+                        .conten-vanchuyen {
+                            p {
+                                background-color: #d1ecf1;
+                                padding: 10px 30px;
+                                font-size: 18px;
+                                margin-top: 20px;
+                                margin-bottom: 20px;
+                            }
+                        }
+                        .conten-thanhtoan {
+                            h3 {
+                                font-size: 22px;
+                            }
+                            .phươngthucTT {
+                                height: 200px;
+                                font-size: 18px;
+                                line-height: 40px;
+                                border: 0.4px solid gray;
+                                padding: 20px;
+                                input {
+                                    margin-right: 10px;
+                                }
+                            }
+                        }
+                    }
+                    .TongTien {
+                        width: 300px;
+                        line-height: 40px;
+                        h2 {
+                            // padding: 10px;
+                            font-size: 22px;
+                        }
+                        Input {
+                            // margin-top: 10px;
+                            // margin-bottom: 10px;
+                            height: 40px;
+                        }
+                        .button {
+                            padding: 5px 5px;
+                            background-color: rgb(38, 110, 86);
+                            color: white;
+                            width: 120px;
+                            font-size: 14px;
+                            text-align: center;
+                            align-items: center;
+                            display: flex;
+                            justify-content: center;
+                            height: 40px;
+                            margin-top: 0px;
+                        }
+                        button {
+                            padding: 5px 20px;
+                            background-color: rgb(47, 153, 118);
+                            border: none;
+                            font-size: 20px;
+                            color: white;
+                            border-radius: 5px;
+                            margin-top: 20px;
+                            justify-content: flex-end;
+                            display: flex;
+                            text-align: left;
+                        }
+                        .tamtinh {
+                            display: flex;
+                            font-size: 18px;
+                            justify-content: space-between;
+                        }
+                        .vanchuyen {
+                            display: flex;
+                            font-size: 18px;
+                            justify-content: space-between;
+                        }
+                        .tongcong {
+                            display: flex;
+                            font-size: 18px;
+                            justify-content: space-between;
+                        }
+                    }
+                }
+            }
+        }
+        .buttom_dathang {
+            display: flex;
+            width: 100%;
+            height: 50px;
+            font-size: 17px;
+            position: fixed;
+            bottom: 55px;
+            z-index: 1000000;
+
+            background-color: rgb(255, 255, 255);
+            div {
+                position: relative;
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                height: 50px;
+                z-index: 1000000;
+                div {
+                    position: relative;
+                }
             }
         }
     }

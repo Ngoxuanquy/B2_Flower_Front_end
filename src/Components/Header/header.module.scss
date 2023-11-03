@@ -48,7 +48,9 @@
         }
     }
 }
-
+.ant-tabs-content-holder {
+    display: none;
+}
 .ant-tabs-ink-bar .ant-tabs-ink-bar-animated {
     background-color: pink;
     color: #292929;
@@ -56,4 +58,28 @@
 
 .css-dev-only-do-not-override-xu9wm8 .ant-tabs .ant-tabs-ink-bar {
     background-color: #292929;
+}
+.menu {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .container_ {
+        margin: 0;
+        padding: 0;
+        .header {
+            // display: none;
+            padding: 0;
+
+            .header_center {
+                display: none;
+            }
+            .header_right {
+                display: none;
+            }
+        }
+    }
+    .menu {
+        display: block;
+    }
 }

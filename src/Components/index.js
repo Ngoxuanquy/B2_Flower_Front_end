@@ -4,3 +4,7 @@ export { default as Footer } from './Footer/Footer';
 export { default as Search } from './Search/Search';
 export { default as Shop_Left } from './Shop_Left/Shop_Left';
 export { default as Card } from './Card/Card';
+export { default as ScrollToTop } from './ScrollToTop/ScrollToTop';
+export { default as Backgroug } from './Backgroug/Backgroug';
+export { default as Sliders } from './Slider/Slider';
+export { default as Left_Admin } from './Left_Admin/index';

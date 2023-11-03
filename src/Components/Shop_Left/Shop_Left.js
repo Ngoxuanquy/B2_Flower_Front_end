@@ -23,17 +23,44 @@ function Shop_Left() {
         setValueMax(e[1]);
     };
 
+    const colors = [
+        { id: 1, title: 'Cam', color: 'coral' },
+        { id: 2, title: 'Đỏ', color: 'red' },
+        { id: 3, title: 'Đen', color: 'black' },
+        { id: 4, title: 'Vàng', color: 'yellow' },
+        { id: 5, title: 'Xanh dương', color: 'blue' },
+        { id: 6, title: 'Xanh lá', color: 'green' },
+    ];
+
+    const types = [
+        { id: 1, name: 'Hoa' },
+        { id: 2, name: 'hộp quà' },
+        { id: 6, name: 'Gấu bông' },
+        { id: 3, name: 'Đồ đan tay' },
+        { id: 4, name: 'Các đồ thiết kế' },
+        { id: 5, name: 'Các đồ có sẵn' },
+    ];
+
+    const handelColor = (color) => {
+        console.log(color);
+    };
+
     return (
         <div className={cx('container_')}>
             <div className="container_">
                 <div className={cx('box')}>
                     <div className={cx('conten')}>
                         <h1>Danh Mục</h1>
-                        <div>Hộp quà</div>
-                        <div>Gấu bông</div>
-                        <div>Đồ đan tay</div>
-                        <div>Các đồ thiết kế</div>
-                        <div>Các đồ có sẵn</div>
+                        {types.map((type) => (
+                            <div
+                                style={{
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                {type.name}
+                            </div>
+                        ))}
+
                         <hr />
                     </div>
                     <div className={cx('price')}>
@@ -63,66 +90,21 @@ function Shop_Left() {
                         <hr />
                         <div className={cx('conten')}>Màu săc</div>
                         <div>
-                            <div className={cx('value-corlor')}>
-                                <p
-                                    style={{
-                                        width: '20px',
-                                        height: '20px',
-                                        backgroundColor: 'coral',
-                                    }}
-                                ></p>
-                                <span>Cam</span>
-                            </div>
-                            <div className={cx('value-corlor')}>
-                                <p
-                                    style={{
-                                        width: '20px',
-                                        height: '20px',
-                                        backgroundColor: 'red',
-                                    }}
-                                ></p>
-                                Đỏ
-                            </div>
-                            <div className={cx('value-corlor')}>
-                                <p
-                                    style={{
-                                        width: '20px',
-                                        height: '20px',
-                                        backgroundColor: 'black',
-                                    }}
-                                ></p>
-                                Đen
-                            </div>
-                            <div className={cx('value-corlor')}>
-                                <p
-                                    style={{
-                                        width: '20px',
-                                        height: '20px',
-                                        backgroundColor: 'yellow',
-                                    }}
-                                ></p>
-                                Vàng
-                            </div>
-                            <div className={cx('value-corlor')}>
-                                <p
-                                    style={{
-                                        width: '20px',
-                                        height: '20px',
-                                        backgroundColor: 'blue',
-                                    }}
-                                ></p>
-                                Xanh dương
-                            </div>
-                            <div className={cx('value-corlor')}>
-                                <p
-                                    style={{
-                                        width: '20px',
-                                        height: '20px',
-                                        backgroundColor: 'green',
-                                    }}
-                                ></p>
-                                Xanh lá
-                            </div>
+                            {colors?.map((color) => (
+                                <div
+                                    className={cx('value-corlor')}
+                                    onClick={() => handelColor(color.title)}
+                                >
+                                    <p
+                                        style={{
+                                            width: '20px',
+                                            height: '20px',
+                                            backgroundColor: color.color,
+                                        }}
+                                    ></p>
+                                    <span>{color.title}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
                     <hr />

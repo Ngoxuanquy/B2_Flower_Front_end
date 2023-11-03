@@ -7,7 +7,7 @@
             justify-content: center;
             align-items: center;
             height: 250px;
-            background-color: #E5E9DD;
+            background-color: #e5e9dd;
             flex-direction: column;
             h1 {
                 text-align: center;
@@ -27,72 +27,169 @@
             width: 100%;
             padding: 20px;
 
-        .danhgia {
-            margin-top: 20px;
-            .button-layout {
-                div {
-                    display: flex;
-                    width: 400px;
-                    justify-content: space-around;
-                    font-size: 18px;
-                    .button {
-                        padding: 2px;
-                        background-color: rgb(250, 73, 102);
-                        margin-left: 10px;
-                        color: white;
-                        border-radius: 6px;
-                        transition: transform 0.75s ease-in-out,
-                        -webkit-transform 0.75s ease-in-out;
-                        &:hover {
-                            background-color: #E5E9DD;
-                            color: black;
-                        }
-                    }
-
-                }
-            }
-            .conten {
-                .box {
-                    .text {
-                        font-size: 25px;
-                        padding: 10px;
-                        font-weight: 500;
-                    }
-                    .avata {
+            .danhgia {
+                margin-top: 20px;
+                .button-layout {
+                    div {
                         display: flex;
-                        // justify-content: center;
-                        align-items: center;
-
-                        img {
-                            width: 50px;
-                            height: 50px;
-                            border-radius: 100px;
+                        width: 400px;
+                        justify-content: space-around;
+                        font-size: 18px;
+                        .button {
+                            padding: 2px;
+                            background-color: rgb(250, 73, 102);
                             margin-left: 10px;
+                            color: white;
+                            border-radius: 6px;
+                            transition: transform 0.75s ease-in-out,
+                                -webkit-transform 0.75s ease-in-out;
+                            &:hover {
+                                background-color: #e5e9dd;
+                                color: black;
+                            }
                         }
-                        div {
-                            margin-left: 15px;
-                            font-size: 16px;
-                        }
-                        li {
-                            margin-left: 10px;
-                            font-size: 14px;
-                            opacity: 0.7;
-                        }
-                    }
-                    .text-conten {
-                        padding: 30px;
-                        font-size: 14px;
                     }
                 }
+                .conten {
+                    .box {
+                        .text {
+                            font-size: 25px;
+                            padding: 10px;
+                            font-weight: 500;
+                        }
+                        .avata {
+                            display: flex;
+                            // justify-content: center;
+                            align-items: center;
 
-            }
-            .right {
-                div {
-                    // width: 300px;
-                    height: 300px;
+                            img {
+                                width: 50px;
+                                height: 50px;
+                                border-radius: 100px;
+                                margin-left: 10px;
+                            }
+                            div {
+                                margin-left: 15px;
+                                font-size: 16px;
+                            }
+                            li {
+                                margin-left: 10px;
+                                font-size: 14px;
+                                opacity: 0.7;
+                            }
+                        }
+                        .text-conten {
+                            padding: 30px;
+                            font-size: 14px;
+                        }
+                    }
+                }
+                .right {
+                    div {
+                        // width: 300px;
+                        height: 300px;
+                    }
                 }
             }
         }
     }
 }
+
+@media screen and (max-width: 768px) {
+    .container_ {
+        margin-top: 100px;
+        .box-layout {
+            .layout1 {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 250px;
+                background-color: #e5e9dd;
+                flex-direction: column;
+                h1 {
+                    text-align: center;
+                    font-size: 25px;
+                    p {
+                        font-size: 18px;
+                        opacity: 0.7;
+                    }
+                }
+            }
+            .video {
+                margin-top: 30px;
+            }
+            .layout2 {
+                display: flex;
+                flex-direction: column-reverse;
+                width: 100%;
+                padding: 20px;
+
+                .danhgia {
+                    margin-top: 20px;
+                    .button-layout {
+                        div {
+                            display: flex;
+                            width: 100%;
+                            justify-content: space-around;
+                            font-size: 18px;
+                            .button {
+                                padding: 2px;
+                                background-color: rgb(250, 73, 102);
+                                margin-left: 10px;
+                                color: white;
+                                border-radius: 6px;
+                                transition: transform 0.75s ease-in-out,
+                                    -webkit-transform 0.75s ease-in-out;
+                                &:hover {
+                                    background-color: #e5e9dd;
+                                    color: black;
+                                }
+                            }
+                        }
+                    }
+                    .conten {
+                        .box {
+                            .text {
+                                font-size: 25px;
+                                padding: 10px;
+                                font-weight: 500;
+                            }
+                            .avata {
+                                display: flex;
+                                // justify-content: center;
+                                align-items: center;
+
+                                img {
+                                    width: 50px;
+                                    height: 50px;
+                                    border-radius: 100px;
+                                    margin-left: 10px;
+                                }
+                                div {
+                                    margin-left: 15px;
+                                    font-size: 16px;
+                                }
+                                li {
+                                    margin-left: 10px;
+                                    font-size: 14px;
+                                    opacity: 0.7;
+                                }
+                            }
+                            .text-conten {
+                                padding: 30px;
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                    .right {
+                        div {
+                            // width: 300px;
+                            height: 300px;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,22 +1,70 @@
-import React,{useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './shoppage.module.scss';
 import { Card, Shop_Left } from '../../../Components';
+import ScrollReveal from 'scrollreveal';
 import AOS from 'aos';
-import 'aos/dist/aos.css'; 
+import 'aos/dist/aos.css';
+import { Link } from 'react-router-dom';
+import { Call_Post_Api } from '../../../Components/CallApi/CallApis';
+import ButtomNavigation from '../../../Components/ButtomNavigation/ButtomNavigation';
+import { Slider, Switch } from 'antd';
+import { Spin, message } from 'antd';
+
 const cx = classNames.bind(styles);
 
 const ShopPage = () => {
-
     useEffect(() => {
         AOS.init();
-    },[])
+
+        // const sr = ScrollReveal();
+
+        // // Thiết lập cấu hình cho hiệu ứng
+        // sr.reveal(this.container, {
+        //     duration: 1000,
+        //     origin: 'left',
+        //     distance: '100px',
+        // });
+    }, []);
+
+    const [isLoad, setIsLoad] = useState(false);
+
+    const [disabled, setDisabled] = useState(false);
+    const [valueSlider, setValueSlider] = useState([]);
+
+    //lấy giá trị nhỏ và lớn
+    const [value_min, setValueMin] = useState(20);
+    const [value_max, setValueMax] = useState(50);
+
+    const onChange = (checked) => {
+        setDisabled(checked);
+    };
+
+    const colors = [
+        { id: 1, title: 'Cam', color: 'coral' },
+        { id: 2, title: 'Đỏ', color: 'red' },
+        { id: 3, title: 'Đen', color: 'black' },
+        { id: 4, title: 'Vàng', color: 'yellow' },
+        { id: 5, title: 'Xanh dương', color: 'blue' },
+        { id: 6, title: 'Xanh lá', color: 'green' },
+        { id: 7, title: 'All', color: 'All' },
+    ];
+
+    const types = [
+        { id: 1, name: 'Hoa' },
+        { id: 2, name: 'hộp quà' },
+        { id: 6, name: 'Gấu bông' },
+        { id: 3, name: 'Đồ đan tay' },
+        { id: 4, name: 'Các đồ thiết kế' },
+        { id: 5, name: 'Các đồ có sẵn' },
+        { id: 6, name: 'All' },
+    ];
 
     //fake list product
     const lists = [
         {
             id: 1,
-            img: 'https://scontent.xx.fbcdn.net/v/t1.15752-9/370225831_3676239955941314_7161542285842422241_n.jpg?stp=dst-jpg_p206x206&_nc_cat=110&ccb=1-7&_nc_sid=510075&_nc_eui2=AeEqdsuMrBq1rWGE0kB3YWU4eiwgK2-9lxx6LCArb72XHJm1lKNneUaRZyosqzsohaZ-mb3GM-0uIicGoSp7Zz94&_nc_ohc=hHDgHvia3JQAX8e7mTB&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdT4dSjcABFLtd0TEyXx3BDopIjlw0HjCt37wfPmWWgv4g&oe=65636642',
+            img: 'https://scontent.fhan20-1.fna.fbcdn.net/v/t1.15752-9/370225831_3676239955941314_7161542285842422241_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=8cd0a2&_nc_eui2=AeEqdsuMrBq1rWGE0kB3YWU4eiwgK2-9lxx6LCArb72XHJm1lKNneUaRZyosqzsohaZ-mb3GM-0uIicGoSp7Zz94&_nc_ohc=hHDgHvia3JQAX-am4zE&_nc_ht=scontent.fhan20-1.fna&oh=03_AdR8Icfau1yd3OMNl4n1wjH9GNKp7aKVYv_CUGrUb6fK6w&oe=65644742',
             name: 'sản phâm 1',
             price: 100,
         },
@@ -76,10 +124,116 @@ const ShopPage = () => {
         },
     ];
 
-   
+    const sizes = [
+        { id: 1, size: '40cm' },
+        { id: 2, size: '60cm' },
+        { id: 3, size: '80cm' },
+        { id: 4, size: '100cm' },
+    ];
+
+    const [apis, setApi] = useState([]);
+
+    useEffect(() => {
+        Call_Post_Api(null, null, null, '/product/getAll').then((data) => {
+            setApi(data.metadata);
+        });
+    }, []);
+
+    const [apiLocs, setApiTT] = useState([]);
+    const [colorLocs, setColor] = useState('');
+    const [typeLocs, setType] = useState('');
+
+    //xử lý chọn màu
+    const handelColor = (color) => {
+        setColor(color);
+        setIsLoad(true);
+        if (color != 'All') {
+            const filteredApis = apis.filter((api) => {
+                return (
+                    api.product_attributes.color.toLowerCase() ===
+                    color.toLowerCase()
+                );
+            });
+            setApiTT(filteredApis);
+            setIsLoad(false);
+        } else {
+            setApiTT(apis);
+            setIsLoad(false);
+        }
+    };
+
+    //xử lý chọn cm
+    const [sizess, setSize] = useState('');
+    const hanlerSize = (size) => {
+        setSize(size);
+        setIsLoad(true);
+        if (size != 'All') {
+            const filteredApis = apis.filter((api) => {
+                return (
+                    api.product_attributes.size.toLowerCase() ===
+                    size.toLowerCase()
+                );
+            });
+            setApiTT(filteredApis);
+            setIsLoad(false);
+        } else {
+            setApiTT(apis);
+            setIsLoad(false);
+        }
+    };
+
+    //xử lý chọn kiểu
+    const handlerType = (type) => {
+        setType(type);
+        setIsLoad(true);
+        if (type != 'All') {
+            const filteredApis = apis.filter((api) => {
+                return api.product_type.toLowerCase() === type.toLowerCase();
+            });
+            setApiTT(filteredApis);
+            setIsLoad(false);
+        } else {
+            setApiTT(apis);
+            setIsLoad(false);
+        }
+    };
+
+    //xử lý lấy sử kiện giá trị
+    const [locPrice, setLocPrice] = useState('');
+    const handerChangeValue = (e) => {
+        setValueMin(e[0]);
+        setValueMax(e[1]);
+        setLocPrice(e[1]);
+        const filteredProducts = apis.filter((product) => {
+            return (
+                product.product_price >= Number(e[0]) &&
+                product.product_price <= Number(e[1])
+            );
+        });
+        setApiTT(filteredProducts);
+    };
 
     return (
         <div className={cx('container_')}>
+            {isLoad && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        width: '100%',
+                        height: '100vh',
+                        zIndex: 100,
+                        top: 0,
+                        top: 0,
+                        left: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Spin />
+                </div>
+            )}
             <div className="container_">
                 <div className={cx('shop-has-sidebar')}>
                     <div className={cx('nova-page-header__overlay')}>
@@ -94,21 +248,132 @@ const ShopPage = () => {
                         <div className={cx('box')}>
                             {/* left */}
                             <div className={cx('left')}>
-                                <Shop_Left />
+                                <div className={cx('box')}>
+                                    <div className={cx('conten')}>
+                                        <h1>Danh Mục</h1>
+                                        {types.map((type) => (
+                                            <div
+                                                style={{
+                                                    cursor: 'pointer',
+                                                }}
+                                                onClick={() =>
+                                                    handlerType(type.name)
+                                                }
+                                            >
+                                                {type.name}
+                                            </div>
+                                        ))}
+
+                                        <hr />
+                                    </div>
+                                    <div className={cx('price')}>
+                                        <div>Giá</div>
+                                        <Slider
+                                            range
+                                            defaultValue={[20, 50]}
+                                            min={50}
+                                            max={1000}
+                                            disabled={disabled}
+                                            dotActiveBorderColor="black"
+                                            onChange={(e) => {
+                                                handerChangeValue(e);
+                                            }}
+                                            rail="black"
+                                            style={{
+                                                color: 'red', // Change the color here
+                                            }}
+                                        />
+                                        <br />
+                                        <div className={cx('valueSlider')}>
+                                            Giá tối thiểu: {value_min} - Giá tối
+                                            đa: {value_max}
+                                        </div>
+                                    </div>
+                                    {/* Màu sắc */}
+                                    <div className={cx('color')}>
+                                        <hr />
+                                        <div className={cx('conten')}>
+                                            Màu săc
+                                        </div>
+                                        <div>
+                                            {colors?.map((color) => (
+                                                <div
+                                                    className={cx(
+                                                        'value-corlor',
+                                                    )}
+                                                    onClick={() =>
+                                                        handelColor(color.title)
+                                                    }
+                                                >
+                                                    <p
+                                                        style={{
+                                                            width: '20px',
+                                                            height: '20px',
+                                                            backgroundColor:
+                                                                color.color,
+                                                        }}
+                                                    ></p>
+                                                    <span>{color.title}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    {/* kichs thuowcs */}
+                                    <div className={cx('kichthuoc')}>
+                                        <div>Kích thước</div>
+                                        {sizes.map((size) => (
+                                            <div
+                                                onClick={() =>
+                                                    hanlerSize(size.size)
+                                                }
+                                            >
+                                                <p>{size.size}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                             {/* right */}
                             <div className={cx('right')}>
-                                {lists.map((list, index) => (
-                                    <div
-                                    key={list.id}
-                                    data-aos="fade-left"
-                                    data-aos-anchor="#example-anchor"
-                                    data-aos-duration={(index + 1) * 1000}
-                                  >
-                                    <Card list={list}
-                                    />
+                                {colorLocs != '' ||
+                                typeLocs != '' ||
+                                sizess != '' ||
+                                locPrice != '' ? (
+                                    <div>
+                                        {apiLocs?.length != 0 ? (
+                                            apiLocs.map((list, index) => (
+                                                <div
+                                                    key={list.id}
+                                                    data-aos="fade-left"
+                                                    // data-aos-easing="ease-out-cubic"
+                                                    data-aos-duration={
+                                                        (index + 1) * 1000
+                                                    }
+                                                >
+                                                    <Card list={list} />
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <h2>Hiện chưa có sản phẩm</h2>
+                                        )}
                                     </div>
-                                ))}
+                                ) : (
+                                    <div>
+                                        {apis.map((list, index) => (
+                                            <div
+                                                key={list.id}
+                                                data-aos="fade-left"
+                                                // data-aos-easing="ease-out-cubic"
+                                                data-aos-duration={
+                                                    (index + 1) * 1000
+                                                }
+                                            >
+                                                <Card list={list} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
