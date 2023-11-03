@@ -4,7 +4,7 @@ import styles from './shoppage.module.scss';
 import { Card, Shop_Left } from '../../../Components';
 import ScrollReveal from 'scrollreveal';
 import AOS from 'aos';
-import 'aos/dist/aos.css';
+// import 'aos/dist/aos.css';
 import { Link } from 'react-router-dom';
 import { Call_Post_Api } from '../../../Components/CallApi/CallApis';
 import ButtomNavigation from '../../../Components/ButtomNavigation/ButtomNavigation';

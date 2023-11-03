@@ -5,7 +5,7 @@ import AnhNen from '../../../access/anhnen.png';
 import Banner1 from '../../../access/banner1.png';
 import { Button, Radio, Space, Divider } from 'antd';
 import AOS from 'aos';
-import 'aos/dist/aos.css';
+// import 'aos/dist/aos.css';
 import ButtomNavigation from '../../../Components/ButtomNavigation/ButtomNavigation';
 
 const cx = classNames.bind(styles);

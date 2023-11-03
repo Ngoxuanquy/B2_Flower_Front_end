@@ -15,8 +15,7 @@ import {
 } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { Sliders } from '../../../Components';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+
 import { useParams } from 'react-router-dom';
 import { Call_Post_Api } from '../../../Components/CallApi/CallApis';
 import { message, Space } from 'antd';
