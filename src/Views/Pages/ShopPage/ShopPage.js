@@ -8,12 +8,23 @@ import AOS from 'aos';
 import { Link } from 'react-router-dom';
 import { Call_Post_Api } from '../../../Components/CallApi/CallApis';
 import ButtomNavigation from '../../../Components/ButtomNavigation/ButtomNavigation';
-import { Slider, Switch } from 'antd';
+import { Slider } from 'antd';
 import { Spin, message } from 'antd';
+import { Avatar, Badge, Switch, Space, Drawer } from 'antd';
+import {
+    AppstoreOutlined,
+    MailOutlined,
+    SettingOutlined,
+    MenuOutlined,
+    AlignRightOutlined,
+} from '@ant-design/icons';
+import { Menu } from 'antd';
 
 const cx = classNames.bind(styles);
 
 const ShopPage = () => {
+    const [count, setCount] = useState(5); // Initialize count with 5
+
     useEffect(() => {
         AOS.init();
 
@@ -27,7 +38,7 @@ const ShopPage = () => {
         // });
     }, []);
 
-    const [isLoad, setIsLoad] = useState(false);
+    const [isLoad, setIsLoad] = useState(true);
 
     const [disabled, setDisabled] = useState(false);
     const [valueSlider, setValueSlider] = useState([]);
@@ -136,6 +147,7 @@ const ShopPage = () => {
     useEffect(() => {
         Call_Post_Api(null, null, null, '/product/getAll').then((data) => {
             setApi(data.metadata);
+            setIsLoad(false);
         });
     }, []);
 
@@ -213,6 +225,159 @@ const ShopPage = () => {
         setApiTT(filteredProducts);
     };
 
+    //draw
+    const getItem = (label, key, icon, children, type) => ({
+        key,
+        icon,
+        children,
+        label,
+        type,
+    });
+
+    const items_menu = [
+        getItem('Danh mục', 'sub1', <MailOutlined />, [
+            getItem(
+                'Hoa',
+                'g1',
+                null,
+                [getItem('Hoa có sẵn', 'hoa'), getItem('Hoa tự làm', 'hoa')],
+                'group',
+            ),
+            getItem(
+                'Hộp quà',
+                'Hộp quà',
+                null,
+                [
+                    getItem('Hộp quà có sẵn', 'Hộp quà'),
+                    getItem('Hộp quà tự đóng gói', 'Hộp quà'),
+                ],
+                'group',
+            ),
+            getItem(
+                'Khác',
+                'Khác',
+                null,
+                [getItem('Gấu bông', 'Gấu bông'), getItem('Đồ ăn', 'Đồ ăn')],
+                'group',
+            ),
+        ]),
+
+        getItem('Màu sắc', 'Màu sắc', <AppstoreOutlined />, [
+            getItem(
+                'Màu cam',
+                'cam',
+                <div
+                    style={{
+                        backgroundColor: 'coral',
+                        width: '20px',
+                        height: '20px',
+                    }}
+                ></div>,
+            ),
+            getItem(
+                'Màu đỏ',
+                'đỏ',
+                <div
+                    style={{
+                        backgroundColor: 'red',
+                        width: '20px',
+                        height: '20px',
+                    }}
+                ></div>,
+            ),
+            getItem(
+                'Màu đen',
+                'đen',
+                <div
+                    style={{
+                        backgroundColor: 'black',
+                        width: '20px',
+                        height: '20px',
+                    }}
+                ></div>,
+            ),
+            getItem(
+                'Màu vàng',
+                'vàng',
+                <div
+                    style={{
+                        backgroundColor: 'yellow',
+                        width: '20px',
+                        height: '20px',
+                    }}
+                ></div>,
+            ),
+            getItem(
+                'Màu xanh dương',
+                'xanh dương',
+                <div
+                    style={{
+                        backgroundColor: 'blue',
+                        width: '20px',
+                        height: '20px',
+                    }}
+                ></div>,
+            ),
+            getItem(
+                'Màu xanh lá',
+                'xanh lá',
+                <div
+                    style={{
+                        backgroundColor: 'green',
+                        width: '20px',
+                        height: '20px',
+                    }}
+                ></div>,
+            ),
+        ]),
+
+        { type: 'divider' },
+
+        getItem('Kích thước', 'Kích thước', <SettingOutlined />, [
+            getItem('40cm', '40cm'),
+            getItem('60cm', '60cm'),
+            getItem('80cm', '80cm'),
+            getItem('khác', 'khác'),
+        ]),
+
+        getItem(
+            'Group',
+            'grp',
+            null,
+            [getItem('Option 13', '13'), getItem('Option 14', '14')],
+            'group',
+        ),
+    ];
+
+    const increase = () => {
+        setCount(count + 1);
+    };
+
+    // Function to decrease the count
+    const decline = () => {
+        let newCount = count - 1;
+        if (newCount < 0) {
+            newCount = 0;
+        }
+        setCount(newCount);
+    };
+
+    //khai báo menu ẩn
+    const onClick = (e) => {
+        console.log('click ', e);
+        handlerType(e.key);
+        onClose();
+    };
+    //khai báo model
+    const [open, setOpen] = useState(false);
+
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
     return (
         <div className={cx('container_')}>
             {isLoad && (
@@ -234,10 +399,32 @@ const ShopPage = () => {
                     <Spin />
                 </div>
             )}
+            <Drawer
+                title="Menu"
+                placement="right"
+                onClose={onClose}
+                open={open}
+                width="70%"
+            >
+                <Menu
+                    onClick={onClick}
+                    style={{ width: 256 }}
+                    defaultSelectedKeys={['1']}
+                    defaultOpenKeys={['sub1']}
+                    mode="inline"
+                    items={items_menu}
+                />
+            </Drawer>
             <div className="container_">
                 <div className={cx('shop-has-sidebar')}>
                     <div className={cx('nova-page-header__overlay')}>
                         <div>
+                            <AlignRightOutlined
+                                style={{
+                                    fontSize: '25px',
+                                }}
+                                onClick={showDrawer}
+                            />
                             <h1>Shop</h1> <br />
                             <p>Trang Chủ | Shop</p>
                         </div>
@@ -340,7 +527,7 @@ const ShopPage = () => {
                                 typeLocs != '' ||
                                 sizess != '' ||
                                 locPrice != '' ? (
-                                    <div>
+                                    <div className={cx('layout_right')}>
                                         {apiLocs?.length != 0 ? (
                                             apiLocs.map((list, index) => (
                                                 <div
@@ -359,7 +546,7 @@ const ShopPage = () => {
                                         )}
                                     </div>
                                 ) : (
-                                    <div>
+                                    <div className={cx('layout_right')}>
                                         {apis.map((list, index) => (
                                             <div
                                                 key={list.id}

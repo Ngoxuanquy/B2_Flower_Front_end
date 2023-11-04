@@ -11,9 +11,9 @@
             .box {
                 width: 90%;
                 font-size: 20px;
-                Image {
-                    width: 200px;
-                    height: 200px;
+                .Image {
+                    width: 120px;
+                    height: 120px;
                 }
             }
         }
@@ -153,6 +153,10 @@
                     width: 100%;
                     font-size: 20px;
                     margin-left: 0px;
+                    .Image {
+                        width: 80px;
+                        height: 80px;
+                    }
                 }
             }
             .layout-thanhtoan {
@@ -276,7 +280,7 @@
             height: 50px;
             font-size: 17px;
             position: fixed;
-            bottom: 55px;
+            bottom: 0px;
             z-index: 1000000;
 
             background-color: rgb(255, 255, 255);
@@ -293,5 +297,11 @@
                 }
             }
         }
+    }
+    .STT {
+        display: none;
+    }
+    .table {
+        width: 100%;
     }
 }

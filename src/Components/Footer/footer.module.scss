@@ -167,7 +167,7 @@
             height: 100%;
             display: grid;
             grid-template-columns: 100%;
-            margin-left: 25px;
+            // margin-left: 25px;
         }
 
         .box div {
@@ -219,7 +219,7 @@
             height: 100%;
             display: grid;
             grid-template-columns: 50% 48%;
-            margin-left: 25px;
+            // margin-left: 25px;
         }
 
         .box .footer_right {
@@ -252,9 +252,10 @@
         width: 100%;
         background-color: #f3f6fa;
         height: 100%;
+        margin: 0;
+        padding: 0;
 
         .box {
-            
             padding-top: 40px;
             width: 100%;
             height: auto;

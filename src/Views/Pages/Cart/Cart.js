@@ -12,12 +12,14 @@ import { Radio } from 'antd';
 import { message, Space } from 'antd';
 import ThemeConText from '../../../config/themeConText';
 import { EventRegister } from 'react-event-listeners';
+import { Spin } from 'antd';
 
 const cx = classNames.bind(styles);
 
 const Cart = () => {
     const CheckboxGroup = Checkbox.Group;
     const [theme, ordersLength] = useContext(ThemeConText);
+    const [isLoad, setIsLoad] = useState(true);
 
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -48,7 +50,7 @@ const Cart = () => {
             '/cart/getlistCart',
         )
             .then((data) => {
-                setIsLoading(false);
+                setIsLoad(false);
                 if (data && data.metadata && data.metadata.cart_products) {
                     setOrder(data.metadata.cart_products);
                     // EventRegister.emit(
@@ -217,14 +219,33 @@ const Cart = () => {
     return (
         <div className={cx('container_')}>
             {contextHolder}
-
+            {isLoad && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        width: '100%',
+                        height: '100vh',
+                        zIndex: 100,
+                        top: 0,
+                        top: 0,
+                        left: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Spin />
+                </div>
+            )}
             <div className="cpntainer">
                 <div className={cx('box-layout')}>
                     <div className={cx('layut')}>
                         <div className={cx('box')}>
                             <table
                                 class="table table-striped"
-                                style={{ margin: '0 auto' }}
+                                style={{ margin: '0 auto', width: '100%' }}
+                                className={cx('table')}
                             >
                                 <thead>
                                     <tr>
@@ -233,11 +254,16 @@ const Cart = () => {
                                                 indeterminate={indeterminate}
                                                 onChange={onCheckAllChange}
                                                 checked={checkAll}
+                                                style={{
+                                                    color: 'white',
+                                                }}
                                             >
-                                                Check all
+                                                All
                                             </Checkbox>
                                         </th>
-                                        <th scope="col">#</th>
+                                        <th scope="col" className={cx('STT')}>
+                                            #
+                                        </th>
                                         <th scope="col">Sản phẩm</th>
                                         <th scope="col">Số lượng</th>
                                         <th scope="col">Tổng tiền</th>
@@ -259,15 +285,14 @@ const Cart = () => {
                                                 }
                                             ></Checkbox>
                                         </td>
-                                        <td scope="row">{index + 1}</td>
+                                        <td scope="row" className={cx('STT')}>
+                                            {index + 1}
+                                        </td>
                                         <td>
                                             {order.product_name}
                                             <Image
                                                 src={order.product_thumb}
-                                                style={{
-                                                    width: '120px',
-                                                    height: '120px',
-                                                }}
+                                                className={cx('Image')}
                                             />
                                         </td>
 

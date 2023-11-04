@@ -10,7 +10,7 @@ const DefaultLayout = ({ children }) => {
         <div className={cx('container_')}>
             <Header />
             {children}
-            <div
+            {/* <div
                 className={cx('buttom')}
                 style={{
                     position: 'fixed',
@@ -21,7 +21,7 @@ const DefaultLayout = ({ children }) => {
                 }}
             >
                 <ButtomNavigation />
-            </div>
+            </div> */}
             <Footer />
         </div>
     );

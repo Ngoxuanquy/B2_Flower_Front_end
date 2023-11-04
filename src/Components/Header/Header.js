@@ -129,144 +129,6 @@ function Header() {
         console.log('click ', e);
     };
 
-    const getItem = (label, key, icon, children, type) => ({
-        key,
-        icon,
-        children,
-        label,
-        type,
-    });
-
-    const items_menu = [
-        getItem('Danh mục', 'sub1', <MailOutlined />, [
-            getItem(
-                'Hoa',
-                'g1',
-                null,
-                [
-                    getItem('Hoa có sẵn', 'Hoa có sẵn'),
-                    getItem('Hoa tự làm', 'Hoa tự làm'),
-                ],
-                'group',
-            ),
-            getItem(
-                'Hộp quà',
-                'Hộp quà',
-                null,
-                [
-                    getItem('Hộp quà có sẵn', 'Hộp quà có sẵn'),
-                    getItem('Hộp quà tự đóng gói', 'Hộp quà tự đóng gói'),
-                ],
-                'group',
-            ),
-            getItem(
-                'Khác',
-                'Khác',
-                null,
-                [getItem('Gấu bông', 'Gấu bông'), getItem('Đồ ăn', 'Đồ ăn')],
-                'group',
-            ),
-        ]),
-
-        getItem('Màu sắc', 'Màu sắc', <AppstoreOutlined />, [
-            getItem(
-                'Màu cam',
-                'cam',
-                <div
-                    style={{
-                        backgroundColor: 'coral',
-                        width: '20px',
-                        height: '20px',
-                    }}
-                ></div>,
-            ),
-            getItem(
-                'Màu đỏ',
-                'đỏ',
-                <div
-                    style={{
-                        backgroundColor: 'red',
-                        width: '20px',
-                        height: '20px',
-                    }}
-                ></div>,
-            ),
-            getItem(
-                'Màu đen',
-                'đen',
-                <div
-                    style={{
-                        backgroundColor: 'black',
-                        width: '20px',
-                        height: '20px',
-                    }}
-                ></div>,
-            ),
-            getItem(
-                'Màu vàng',
-                'vàng',
-                <div
-                    style={{
-                        backgroundColor: 'yellow',
-                        width: '20px',
-                        height: '20px',
-                    }}
-                ></div>,
-            ),
-            getItem(
-                'Màu xanh dương',
-                'xanh dương',
-                <div
-                    style={{
-                        backgroundColor: 'blue',
-                        width: '20px',
-                        height: '20px',
-                    }}
-                ></div>,
-            ),
-            getItem(
-                'Màu xanh lá',
-                'xanh lá',
-                <div
-                    style={{
-                        backgroundColor: 'green',
-                        width: '20px',
-                        height: '20px',
-                    }}
-                ></div>,
-            ),
-        ]),
-
-        { type: 'divider' },
-
-        getItem('Kích thước', 'Kích thước', <SettingOutlined />, [
-            getItem('40cm', '40cm'),
-            getItem('60cm', '60cm'),
-            getItem('80cm', '80cm'),
-            getItem('khác', 'khác'),
-        ]),
-
-        getItem(
-            'Group',
-            'grp',
-            null,
-            [getItem('Option 13', '13'), getItem('Option 14', '14')],
-            'group',
-        ),
-    ];
-
-    const increase = () => {
-        setCount(count + 1);
-    };
-
-    // Function to decrease the count
-    const decline = () => {
-        let newCount = count - 1;
-        if (newCount < 0) {
-            newCount = 0;
-        }
-        setCount(newCount);
-    };
     return (
         <div className={cx('container_')}>
             <Drawer
@@ -274,15 +136,97 @@ function Header() {
                 placement="right"
                 onClose={onClose}
                 open={open}
+                width="70%"
             >
-                <Menu
-                    onClick={onClick}
-                    style={{ width: 256 }}
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    mode="inline"
-                    items={items_menu}
-                />
+                <Tabs
+                    defaultActiveKey={defau}
+                    centered
+                    onChange={(e) => handeTab(e)}
+                    tabBarStyle={{
+                        color: 'pink',
+                        marginRight: ' 70px',
+                    }}
+                    tabPosition="right"
+                >
+                    <Tabs.TabPane
+                        tab={
+                            <Link
+                                style={{
+                                    color: '#292929',
+                                }}
+                                to="/"
+                            >
+                                TRANG CHỦ
+                            </Link>
+                        }
+                        key="1"
+                    />
+                    <Tabs.TabPane
+                        tab={
+                            <Link
+                                style={{
+                                    color: '#292929',
+                                }}
+                                to="/about"
+                            >
+                                GIỚI THIỆU
+                            </Link>
+                        }
+                        key="2"
+                    />
+                    <Tabs.TabPane
+                        tab={
+                            <Link
+                                style={{
+                                    color: '#292929',
+                                }}
+                                to="/shop"
+                            >
+                                SHOP
+                            </Link>
+                        }
+                        key="3"
+                    />
+                    <Tabs.TabPane
+                        tab={
+                            <Link
+                                style={{
+                                    color: '#292929',
+                                }}
+                                to="/blog"
+                            >
+                                BLOG
+                            </Link>
+                        }
+                        key="4"
+                    />
+                    <Tabs.TabPane
+                        tab={
+                            <Link
+                                style={{
+                                    color: '#292929',
+                                }}
+                                to="/lienhe"
+                            >
+                                LIÊN HỆ
+                            </Link>
+                        }
+                        key="5"
+                    />
+                    <Tabs.TabPane
+                        tab={
+                            <Link
+                                style={{
+                                    color: '#292929',
+                                }}
+                                to="/lienhe"
+                            >
+                                CÂU HỎI KHÁC
+                            </Link>
+                        }
+                        key="6"
+                    />
+                </Tabs>
             </Drawer>
             {isLoad && (
                 <div className={`scroll-indicator ${scrollDirection}`}>
@@ -486,6 +430,31 @@ function Header() {
 
                             {/* Menu */}
                             <div className={cx('menu')}>
+                                <Link
+                                    to="/cart"
+                                    style={{
+                                        color: 'black',
+                                        listStyle: 'none',
+                                        textDecoration: 'none',
+                                        marginRight: '20px',
+                                    }}
+                                >
+                                    <Space
+                                        size="large"
+                                        style={{
+                                            fontSize: '25px',
+                                            marginLeft: '-40px',
+                                        }}
+                                    >
+                                        <Badge count={ordersLength}>
+                                            <ShoppingCartOutlined
+                                                style={{
+                                                    fontSize: '25px',
+                                                }}
+                                            />
+                                        </Badge>
+                                    </Space>
+                                </Link>
                                 <MenuOutlined
                                     style={{
                                         fontSize: '25px',

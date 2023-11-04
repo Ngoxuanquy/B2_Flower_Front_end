@@ -77,9 +77,15 @@
             .header_right {
                 display: none;
             }
+            .img_logo {
+                width: 60px;
+                height: 60px;
+                margin-left: -30px;
+            }
         }
     }
     .menu {
         display: block;
+        margin-right: -50px;
     }
 }

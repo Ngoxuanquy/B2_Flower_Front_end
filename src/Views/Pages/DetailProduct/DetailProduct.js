@@ -23,9 +23,12 @@ import Cookies from 'js-cookie';
 import { toaster } from 'evergreen-ui';
 import { EventRegister } from 'react-event-listeners';
 import ThemeConText from '../../../config/themeConText';
+import { Spin } from 'antd';
+
 const cx = classNames.bind(styles);
 
 function DetailProduct() {
+    const [isLoad, setIsLoad] = useState(true);
     const { productId } = useParams();
     const [messageApi, contextHolder] = message.useMessage();
     const [products, setProduct] = useState([]);
@@ -35,6 +38,7 @@ function DetailProduct() {
         Call_Post_Api(null, null, null, `/product/byId/${productId}`).then(
             (data) => {
                 setProduct(data.metadata);
+                setIsLoad(false);
             },
         );
     }, []);
@@ -139,7 +143,7 @@ function DetailProduct() {
     const handlerAddCart = (products) => {
         const token = Cookies.get('accessToken');
         const id = Cookies.get('id');
-
+        setIsLoad(true);
         // if (cleanId == userId) {
         //     alert('Sản Phẩm này của bạn, không mua được')
         // }
@@ -161,6 +165,7 @@ function DetailProduct() {
                 '/cart',
             ).then((data) => {
                 EventRegister.emit('chaneLength', ordersLength + 1);
+                setIsLoad(false);
 
                 messageApi.open({
                     type: 'success',
@@ -173,6 +178,26 @@ function DetailProduct() {
     return (
         <div className={cx('container_')}>
             {contextHolder}
+            {isLoad && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        width: '100%',
+                        height: '100vh',
+                        zIndex: 100,
+                        top: 0,
+                        top: 0,
+                        left: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Spin />
+                </div>
+            )}
+
             <div className="container_">
                 <div className={cx('box-layout')}>
                     <div className={cx('conten')}>
