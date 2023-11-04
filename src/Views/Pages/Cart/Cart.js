@@ -50,16 +50,12 @@ const Cart = () => {
             '/cart/getlistCart',
         )
             .then((data) => {
+                setOrder(data?.metadata.cart_products);
+                EventRegister.emit(
+                    'chaneLength',
+                    data.metadata.cart_products.length,
+                );
                 setIsLoad(false);
-                if (data && data.metadata && data.metadata.cart_products) {
-                    setOrder(data.metadata.cart_products);
-                    // EventRegister.emit(
-                    //     'chaneLength',
-                    //     data.metadata.cart_products.length,
-                    // );
-                } else {
-                    setOrder([]);
-                }
             })
             .catch((err) => console.log({ err }));
     };
@@ -139,11 +135,6 @@ const Cart = () => {
         const cleanId = id?.replace(/"/g, '');
         if (checkedList.length != 0) {
             if (names != '' && phone != '' && adrees != '') {
-                const token = Cookies.get('accessToken');
-                const id = Cookies.get('id');
-                const cleanedJwtString = token?.replace(/^"|"$/g, '');
-                const cleanId = id?.replace(/^"|"$/g, '');
-
                 const user = {
                     userId: cleanId,
                     name: names,
