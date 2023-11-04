@@ -41,23 +41,32 @@ const Cart = () => {
         const id = Cookies.get('id');
         const cleanedJwtString = token?.replace(/"/g, '');
         const cleanId = id?.replace(/"/g, '');
-        Call_Post_Api(
-            {
-                userId: id,
-            },
-            cleanedJwtString,
-            cleanId,
-            '/cart/getlistCart',
-        )
-            .then((data) => {
-                setOrder(data?.metadata.cart_products);
-                EventRegister.emit(
-                    'chaneLength',
-                    data.metadata.cart_products.length,
-                );
-                setIsLoad(false);
-            })
-            .catch((err) => console.log({ err }));
+        if (token != '') {
+            Call_Post_Api(
+                {
+                    userId: id,
+                },
+                cleanedJwtString,
+                cleanId,
+                '/cart/getlistCart',
+            )
+                .then((data) => {
+                    setOrder(data?.metadata.cart_products);
+                    EventRegister.emit(
+                        'chaneLength',
+                        data.metadata.cart_products.length,
+                    );
+                    setIsLoad(false);
+                })
+                .catch((err) => console.log({ err }));
+        } else {
+            setIsLoad(false);
+
+            messageApi.open({
+                type: 'warning',
+                content: 'Vui lòng đăng nhập để xem giỏ hàng!!',
+            });
+        }
     };
 
     useEffect(() => {
