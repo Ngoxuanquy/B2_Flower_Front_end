@@ -23,7 +23,7 @@ const Cart = () => {
 
     const [messageApi, contextHolder] = message.useMessage();
 
-    const [isload, setIsLoading] = useState(false);
+    // const [isload, setIsLoading] = useState(false);
     //khai báo api cart
     const [orders, setOrder] = useState([]);
     const [tong, setTong] = useState(0);
@@ -41,27 +41,28 @@ const Cart = () => {
         const id = Cookies.get('id');
         const cleanedJwtString = token?.replace(/"/g, '');
         const cleanId = id?.replace(/"/g, '');
-        if (token != '') {
+        if (cleanedJwtString != undefined || cleanedJwtString != '') {
             Call_Post_Api(
                 {
-                    userId: id,
+                    userId: cleanId,
                 },
                 cleanedJwtString,
                 cleanId,
                 '/cart/getlistCart',
             )
                 .then((data) => {
-                    setOrder(data?.metadata.cart_products);
+                    console.log(data);
+                    setOrder(data?.metadata?.cart_products);
                     EventRegister.emit(
                         'chaneLength',
                         data.metadata.cart_products.length,
                     );
                     setIsLoad(false);
+                    return;
                 })
                 .catch((err) => console.log({ err }));
         } else {
             setIsLoad(false);
-
             messageApi.open({
                 type: 'warning',
                 content: 'Vui lòng đăng nhập để xem giỏ hàng!!',
@@ -113,9 +114,9 @@ const Cart = () => {
 
     const [checkedList, setCheckedList] = useState(orders);
 
-    const checkAll = orders.length === checkedList.length;
+    const checkAll = orders?.length === checkedList.length;
     const indeterminate =
-        checkedList.length > 0 && checkedList.length < orders.length;
+        checkedList.length > 0 && checkedList.length < orders?.length;
 
     const toggleCheckbox = (value) => {
         const currentIndex = checkedList.indexOf(value);
@@ -172,7 +173,7 @@ const Cart = () => {
                             cleanId,
                             '/cart/updateTransaciton',
                         ).then(() => {
-                            setIsLoading(false);
+                            setIsLoad(false);
                             getApi();
                             messageApi.open({
                                 type: 'success',
@@ -214,8 +215,6 @@ const Cart = () => {
         setTong(total);
     }, [checkedList]);
 
-    console.log({ tong });
-
     return (
         <div className={cx('container_')}>
             {contextHolder}
@@ -242,75 +241,93 @@ const Cart = () => {
                 <div className={cx('box-layout')}>
                     <div className={cx('layut')}>
                         <div className={cx('box')}>
-                            <table
-                                class="table table-striped"
-                                style={{ margin: '0 auto', width: '100%' }}
-                                className={cx('table')}
-                            >
-                                <thead>
-                                    <tr>
-                                        <th scope="col">
-                                            <Checkbox
-                                                indeterminate={indeterminate}
-                                                onChange={onCheckAllChange}
-                                                checked={checkAll}
-                                                style={{
-                                                    color: 'white',
-                                                }}
+                            {orders?.length != 0 ? (
+                                <table
+                                    class="table table-striped"
+                                    style={{ margin: '0 auto', width: '100%' }}
+                                    className={cx('table')}
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                <Checkbox
+                                                    indeterminate={
+                                                        indeterminate
+                                                    }
+                                                    onChange={onCheckAllChange}
+                                                    checked={checkAll}
+                                                    style={{
+                                                        color: 'white',
+                                                    }}
+                                                >
+                                                    All
+                                                </Checkbox>
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className={cx('STT')}
                                             >
-                                                All
-                                            </Checkbox>
-                                        </th>
-                                        <th scope="col" className={cx('STT')}>
-                                            #
-                                        </th>
-                                        <th scope="col">Sản phẩm</th>
-                                        <th scope="col">Số lượng</th>
-                                        <th scope="col">Tổng tiền</th>
-                                        <th scope="col">#</th>
-                                    </tr>
-                                </thead>
+                                                #
+                                            </th>
+                                            <th scope="col">Sản phẩm</th>
+                                            <th scope="col">Số lượng</th>
+                                            <th scope="col">Tổng tiền</th>
+                                            <th scope="col">#</th>
+                                        </tr>
+                                    </thead>
 
-                                {orders.map((order, index) => (
-                                    <tr key={order._id}>
-                                        <td>
-                                            {/* <Divider /> */}
-                                            <Checkbox
-                                                key={order}
-                                                checked={checkedList.includes(
-                                                    order,
-                                                )}
-                                                onChange={() =>
-                                                    toggleCheckbox(order)
-                                                }
-                                            ></Checkbox>
-                                        </td>
-                                        <td scope="row" className={cx('STT')}>
-                                            {index + 1}
-                                        </td>
-                                        <td>
-                                            {order.product_name}
-                                            <Image
-                                                src={order.product_thumb}
-                                                className={cx('Image')}
-                                            />
-                                        </td>
+                                    {orders?.map((order, index) => (
+                                        <tr key={order._id}>
+                                            <td>
+                                                {/* <Divider /> */}
+                                                <Checkbox
+                                                    key={order}
+                                                    checked={checkedList.includes(
+                                                        order,
+                                                    )}
+                                                    onChange={() =>
+                                                        toggleCheckbox(order)
+                                                    }
+                                                ></Checkbox>
+                                            </td>
+                                            <td
+                                                scope="row"
+                                                className={cx('STT')}
+                                            >
+                                                {index + 1}
+                                            </td>
+                                            <td>
+                                                {order.product_name}
+                                                <Image
+                                                    src={order.product_thumb}
+                                                    className={cx('Image')}
+                                                />
+                                            </td>
 
-                                        <td>{order.quantity}</td>
-                                        <td>
-                                            {order.quantity *
-                                                order.product_price}
-                                        </td>
-                                        <td>
-                                            <DeleteOutlined
-                                                onClick={() =>
-                                                    handlerDelete(order._id)
-                                                }
-                                            />
-                                        </td>
-                                    </tr>
-                                ))}
-                            </table>
+                                            <td>{order.quantity}</td>
+                                            <td>
+                                                {order.quantity *
+                                                    order.product_price}
+                                            </td>
+                                            <td>
+                                                <DeleteOutlined
+                                                    onClick={() =>
+                                                        handlerDelete(order._id)
+                                                    }
+                                                />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </table>
+                            ) : (
+                                <h2
+                                    style={{
+                                        color: 'pink',
+                                    }}
+                                >
+                                    Chưa có sản phẩm nào
+                                </h2>
+                            )}
                         </div>
                     </div>
 

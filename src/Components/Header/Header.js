@@ -25,7 +25,7 @@ import {
 } from '@ant-design/icons';
 import { Avatar, Badge, Switch, Space } from 'antd';
 import ThemeConText from '../../config/themeConText';
-
+import { notification } from 'antd';
 const cx = classNames.bind(styles);
 
 function Header() {
@@ -38,6 +38,45 @@ function Header() {
 
     const [count, setCount] = useState(5); // Initialize count with 5
     const [show, setShow] = useState(true);
+
+    const close = () => {
+        console.log(
+            'Notification was closed. Either the close button was clicked or duration time elapsed.',
+        );
+    };
+
+    const [api, contextHolder] = notification.useNotification();
+
+    // Function to open a notification
+    const openNotification = () => {
+        const key = `open${Date.now()}`;
+
+        // Create a set of buttons for the notification
+        const btn = (
+            <Space>
+                <Button type="link" size="small" onClick={() => api.destroy()}>
+                    Destroy All
+                </Button>
+                <Button
+                    type="primary"
+                    size="small"
+                    onClick={() => api.destroy(key)}
+                >
+                    Confirm
+                </Button>
+            </Space>
+        );
+
+        // Open the notification with a message, title, buttons, key, and onClose event handler
+        api.open({
+            message: 'Notification Title',
+            description:
+                'A function will be called after the notification is closed (automatically after the "duration" time or manually).',
+            btn,
+            key,
+            onClose: close,
+        });
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -105,11 +144,7 @@ function Header() {
         },
         {
             key: '3',
-            label: (
-                <a rel="noopener noreferrer" href="/login">
-                    Đăng xuất
-                </a>
-            ),
+            label: <a onClick={() => Click()}>Đăng xuất</a>,
         },
     ];
 
@@ -129,8 +164,22 @@ function Header() {
         console.log('click ', e);
     };
 
+    const Click = () => {
+        const cookies = document.cookie.split(';');
+
+        // Lặp qua danh sách cookie và xóa từng cookie một
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i];
+            const eqPos = cookie.indexOf('=');
+            const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+        window.location.href = '/login';
+    };
+
     return (
         <div className={cx('container_')}>
+            {contextHolder}
             <Drawer
                 title="Menu"
                 placement="right"
@@ -225,6 +274,19 @@ function Header() {
                             </Link>
                         }
                         key="6"
+                    />
+                    <Tabs.TabPane
+                        tab={
+                            <Link
+                                style={{
+                                    color: '#292929',
+                                }}
+                                to="/login"
+                            >
+                                Đăng nhập
+                            </Link>
+                        }
+                        key="7"
                     />
                 </Tabs>
             </Drawer>
@@ -383,7 +445,7 @@ function Header() {
                                         size="large"
                                         style={{
                                             fontSize: '25px',
-                                            marginLeft: '-40px',
+                                            marginLeft: '-70px',
                                         }}
                                     >
                                         <Badge count={ordersLength}>
@@ -398,34 +460,50 @@ function Header() {
                                 <SearchOutlined
                                     style={{
                                         fontSize: '25px',
-                                        marginTop: '-10px',
-                                        marginLeft: '-20px',
+                                        marginTop: '0px',
+                                        marginLeft: '-40px',
                                     }}
                                 />
-                                <Dropdown
-                                    menu={{ items }}
-                                    placement="bottom"
-                                    arrow
-                                >
-                                    {img == '' ? (
-                                        <UserOutlined
-                                            style={{
-                                                fontSize: '25px',
-                                            }}
-                                        />
-                                    ) : (
-                                        <div>
+                                {name == undefined ? (
+                                    <button
+                                        style={{
+                                            padding: '5px',
+                                        }}
+                                        onClick={() =>
+                                            (window.location.href = '/login')
+                                        }
+                                    >
+                                        Đăng nhập
+                                    </button>
+                                ) : (
+                                    <Dropdown
+                                        menu={{ items }}
+                                        placement="bottom"
+                                        arrow
+                                    >
+                                        {img == '' || img == undefined ? (
                                             <img
-                                                src={img}
+                                                src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-avatar-trang-chat-ngau-cute-400x400.jpg"
                                                 style={{
                                                     width: '40px',
                                                     height: '40px',
                                                     borderRadius: '100px',
                                                 }}
                                             />
-                                        </div>
-                                    )}
-                                </Dropdown>
+                                        ) : (
+                                            <div>
+                                                <img
+                                                    src={img}
+                                                    style={{
+                                                        width: '40px',
+                                                        height: '40px',
+                                                        borderRadius: '100px',
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                    </Dropdown>
+                                )}
                             </div>
 
                             {/* Menu */}
