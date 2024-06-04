@@ -34,7 +34,9 @@
         "firebase": "^9.0.0",
         "gapi-script": "^1.2.0",
         "js-cookie": "^3.0.5",
+
         "ra-data-simple-rest": "^4.16.17",
+
         "react": "^18.2.0",
         "react-admin": "^4.16.18",
         "react-dom": "^18.2.0",
@@ -53,7 +55,11 @@
         "sass": "^1.54.9",
         "scrollreveal": "^4.0.9",
         "slick-carousel": "^1.8.1",
+
         "styled-components": "^6.1.11",
+
+        "socket.io-client": "^4.7.5",
+
         "swiper": "^11.0.3",
         "web-vitals": "^2.1.4"
     },

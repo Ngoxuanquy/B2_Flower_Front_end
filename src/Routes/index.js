@@ -11,6 +11,7 @@ import {
   Index,
   ListKhachHang,
   SelectProduct,
+  Information,
 } from "../Views";
 import Admin from "../Views/Pages/Admin/Admin";
 import DashBoard from "../Views/Pages/Admin/DashBoard";
@@ -21,6 +22,7 @@ export const publicRoute = [
   { path: "/lienhe", component: <LienHe /> },
   { path: "/blog", component: <BLog /> },
   { path: "/cart", component: <Cart /> },
+  { path: "/information", component: <Information /> },
   { path: "/detailproduct/:productId", component: <DetailProduct /> },
 ];
 
