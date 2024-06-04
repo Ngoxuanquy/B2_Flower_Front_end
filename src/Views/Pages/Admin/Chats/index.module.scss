@@ -1,0 +1,80 @@
+.container_ {
+  margin-top: 70px;
+  width: 100%;
+  background-color: white;
+  height: 100vh;
+
+  .box {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    .box-messege {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      background-color: rgb(243, 243, 243);
+      .header {
+        font-size: 20px;
+        height: 40px;
+        width: 100%;
+        background-color: rgb(192, 192, 192);
+        display: flex;
+        .title {
+          font-size: 12px;
+        }
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+      }
+      .input {
+        position: fixed;
+        bottom: 4px;
+        height: 40px;
+        width: 100%;
+        display: flex;
+      }
+    }
+    .box-title {
+      overflow: scroll;
+      height: 100vh;
+      .box-chat {
+        display: flex;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        border-bottom: 0.4px solid gray;
+        cursor: pointer;
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-top: 3px;
+        }
+        .title {
+          font-size: 13px;
+          margin-left: 5px;
+          margin-top: 2px;
+          .title-status {
+            display: flex;
+            .online {
+              width: 8px;
+              height: 8px;
+              background-color: green;
+              border-radius: 50%;
+              margin-top: 5px;
+              margin-right: 4px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.right {
+  display: flex !important;
+  justify-content: flex-end !important;
+  width: 100%;
+  margin-left: -20px;
+}

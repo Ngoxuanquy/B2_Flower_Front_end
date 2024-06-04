@@ -1,17 +1,24 @@
 .container_ {
-    width: 100%;
-    height: auto;
-    .buttom {
-        display: none;
-    }
+  width: 100%;
+  height: auto;
+  .buttom {
+    display: none;
+  }
+}
+
+.right {
+  display: flex !important;
+  justify-content: flex-end !important;
+  width: 100%;
+  margin-left: -20px;
 }
 
 @media screen and (max-width: 768px) {
-    .container_ {
-        width: 100%;
-        height: auto;
-        .buttom {
-            display: block;
-        }
+  .container_ {
+    width: 100%;
+    height: auto;
+    .buttom {
+      display: block;
     }
+  }
 }

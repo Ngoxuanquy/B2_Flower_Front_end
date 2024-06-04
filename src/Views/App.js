@@ -85,7 +85,14 @@ const App = () => {
                           <div className="sidebarWapper">
                             <SideBar />
                           </div>
-                          <div className="contents">{Page}</div>
+                          <div
+                            className="contents"
+                            style={{
+                              width: "100%",
+                            }}
+                          >
+                            {Page}
+                          </div>
                         </div>
                       </>
                     }

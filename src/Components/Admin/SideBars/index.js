@@ -6,13 +6,16 @@ import { BsCartCheckFill } from "react-icons/bs";
 import SideBarItem from "../SideBarItem/SideBarItem";
 import { IoSettings } from "react-icons/io5";
 import { IoMdLock } from "react-icons/io";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [openItem, setOpenItem] = useState(null);
+  const navigate = useNavigate();
 
   const handleItemClick = (primary) => {
     setOpenItem(primary === openItem ? null : primary);
     console.log("open ", primary);
+    navigate(`/admin/${primary}`);
   };
 
   const handleSubItemClick = (subItem) => {
@@ -25,12 +28,7 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar">
-      <SideBarItem
-        icon={<MdDashboard />}
-        primary="Dashboard"
-        onItemClick={handleOpenDashBroad}
-        isOpen={openItem === "Dashboard"}
-      />
+      <SideBarItem icon={<MdDashboard />} primary="Dashboard" onItemClick={handleOpenDashBroad} isOpen={openItem === "Dashboard"} />
       <SideBarItem
         icon={<IoMdLock />}
         primary="Authentication"
@@ -63,24 +61,9 @@ const Sidebar = () => {
         onSubItemClick={handleSubItemClick}
         isOpen={openItem === "User"}
       />
-      <SideBarItem
-        icon={<MdContactMail />}
-        primary="Message"
-        onItemClick={handleItemClick}
-        isOpen={openItem === "Message"}
-      />
-      <SideBarItem
-        icon={<FaBell />}
-        primary="Notification"
-        onItemClick={handleItemClick}
-        isOpen={openItem === "Notification"}
-      />
-      <SideBarItem
-        icon={<IoSettings />}
-        primary="Setting"
-        onItemClick={handleItemClick}
-        isOpen={openItem === "Setting"}
-      />
+      <SideBarItem icon={<MdContactMail />} primary="Message" onItemClick={handleItemClick} isOpen={openItem === "Message"} />
+      <SideBarItem icon={<FaBell />} primary="Notification" onItemClick={handleItemClick} isOpen={openItem === "Notification"} />
+      <SideBarItem icon={<IoSettings />} primary="Setting" onItemClick={handleItemClick} isOpen={openItem === "Setting"} />
     </div>
   );
 };

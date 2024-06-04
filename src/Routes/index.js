@@ -14,6 +14,7 @@ import {
   Information,
 } from "../Views";
 import Admin from "../Views/Pages/Admin/Admin";
+import Chats from "../Views/Pages/Admin/Chats";
 import DashBoard from "../Views/Pages/Admin/DashBoard";
 
 export const publicRoute = [
@@ -34,5 +35,6 @@ export const privateRoute = [
   { path: "/api/admin", component: <Index /> },
   { path: "/api/select/product", component: <SelectProduct /> },
   { path: "/admin", component: <Admin /> },
+  { path: "/admin/Message", component: <Chats /> },
   { path: "/admin/dash-board", component: <DashBoard /> },
 ];

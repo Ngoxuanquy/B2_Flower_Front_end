@@ -1,19 +1,16 @@
-import { Header, Footer } from "../../../Components";
-
+import React, { useEffect, useState } from "react";
 import classNames from "classnames/bind";
-import styles from "./defaultlayout.module.scss";
-import { useEffect, useState } from "react";
-import { FloatButton, Drawer, Input, Button, List, message } from "antd";
-import { CommentOutlined, CustomerServiceOutlined } from "@ant-design/icons";
-import socketIOClient from "socket.io-client";
+import styles from "./index.module.scss";
+import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
-
+import socketIOClient from "socket.io-client";
+import { Button, Input, List, message } from "antd";
 const ENDPOINT = "http://localhost:4000";
-const cx = classNames.bind(styles);
 
-const DefaultLayout = ({ children }) => {
+const Chats = () => {
+  const cx = classNames.bind(styles);
+  const URL = process.env.REACT_APP_URL;
   const [apis, setApi] = useState([]);
-  const [open, setOpen] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
   const [socket, setSocket] = useState(null);
@@ -80,6 +77,13 @@ const DefaultLayout = ({ children }) => {
     }
   }, [roomId, socket]);
 
+  const showDrawer = () => {
+    const room = prompt("Enter room ID:");
+    if (room) {
+      setRoomId(room);
+    }
+  };
+
   const handleOpentChat = (id) => {
     if (id) {
       setRoomId(id);
@@ -89,6 +93,11 @@ const DefaultLayout = ({ children }) => {
   };
 
   const sendMessage = () => {
+    if (!roomId) {
+      alert("Please join a room first.");
+      return;
+    }
+
     if (messageInput.trim() !== "") {
       const id = Cookies.get("id");
       const cleanId = id?.replace(/^"|"$/g, "");
@@ -133,59 +142,69 @@ const DefaultLayout = ({ children }) => {
     }
   };
 
-  const showDrawer = () => {
-    const id = Cookies.get("id");
-    const cleanId = id?.replace(/^"|"$/g, "");
-    if (cleanId) {
-      setRoomId(cleanId);
-      setOpen(true);
-      fetchMessages(cleanId);
-    }
+  const hanldeTest = () => {
+    console.log(messages);
   };
 
-  const onClose = () => {
-    setOpen(false);
-  };
   return (
     <div className={cx("container_")}>
-      {contextHolder}
-      <Header />
-      {children}
-      <Footer />
-      <>
-        <FloatButton.Group
-          trigger="click"
-          type="primary"
-          style={{
-            right: 24,
-          }}
-          icon={<CustomerServiceOutlined />}
-        >
-          <FloatButton />
-          <FloatButton icon={<CommentOutlined />} onClick={showDrawer} />
-        </FloatButton.Group>
-      </>
-      <Drawer title="Chat" onClose={onClose} open={open}>
-        <List
-          dataSource={messages}
-          renderItem={(item) => (
-            <List.Item className={cx({ right: item.id === testCleanId, left: item.id !== testCleanId })}>{item?.message}</List.Item>
-          )}
-          style={{ maxHeight: "60vh", overflow: "auto" }}
-        />
-        <Input.TextArea
-          rows={4}
-          value={messageInput}
-          onChange={(e) => setMessageInput(e.target.value)}
-          onPressEnter={sendMessage}
-          placeholder="Type your message..."
-        />
-        <Button type="primary" onClick={sendMessage} style={{ marginTop: 10 }}>
-          Send
-        </Button>
-      </Drawer>
+      <div className={cx("box")}>
+        <div className={cx("box-title")}>
+          {apis.map((api) => (
+            <div className={cx("box-chat")} onClick={() => handleOpentChat(api._id)}>
+              <div>
+                <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/441570670_802929555136374_1350330455299972228_n.jpg?stp=dst-jpg_p206x206&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=91HeDsJJZNkQ7kNvgHu9Jur&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGfs4Qv1AuLHqZ9HHGwwc_mVoRelzACXi0oV7mkiqnIFw&oe=6686363C" />
+              </div>
+              <div className={cx("title")}>
+                <div>{api.email}</div>
+                <div className={cx("title-status")}>
+                  <div className={cx("online")}></div>
+                  <div>18/12/2002</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className={cx("box-messege")}>
+          <div>
+            <div className={cx("header")}>
+              <div>
+                <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/441570670_802929555136374_1350330455299972228_n.jpg?stp=dst-jpg_p206x206&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=91HeDsJJZNkQ7kNvgHu9Jur&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGfs4Qv1AuLHqZ9HHGwwc_mVoRelzACXi0oV7mkiqnIFw&oe=6686363C" />
+              </div>
+              <div className={cx("title")}>
+                <div>123</div>
+                <div className={cx("title-status")}>
+                  <div className={cx("online")}></div>
+                  <div>18/12/2002</div>
+                </div>
+              </div>
+            </div>
+            <Button type="primary" onClick={() => hanldeTest()}>
+              Gửi
+            </Button>
+
+            <div className={cx("input")}>
+              <Input
+                style={{
+                  height: "40px",
+                }}
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                onPressEnter={sendMessage}
+              />
+            </div>
+            <List
+              dataSource={messages}
+              renderItem={(item) => (
+                <List.Item className={cx({ right: item.id === testCleanId, left: item.id !== testCleanId })}>{item.message}</List.Item>
+              )}
+              style={{ maxHeight: "60vh", overflow: "auto" }}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default DefaultLayout;
+export default Chats;
