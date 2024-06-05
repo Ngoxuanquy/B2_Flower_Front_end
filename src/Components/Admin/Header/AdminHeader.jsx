@@ -218,14 +218,17 @@ const AdminHeader = () => {
                     </ListItemIcon>
                     My account
                   </MenuItem>
-                  <MenuItem onClick={handleCloseMyAcc}>
-                    <ListItemIcon>
+                  <MenuItem
+                    onClick={handleCloseMyAcc}
+                    style={{ color: "#ffa000" }}
+                  >
+                    <ListItemIcon style={{ color: "#ffa000" }}>
                       <IoShieldHalfSharp fontSize="small" />
                     </ListItemIcon>
                     Reset password
                   </MenuItem>
-                  <MenuItem onClick={handleCloseMyAcc}>
-                    <ListItemIcon>
+                  <MenuItem onClick={handleCloseMyAcc} style={{ color: "red" }}>
+                    <ListItemIcon style={{ color: "red" }}>
                       <Logout fontSize="small" />
                     </ListItemIcon>
                     Logout
