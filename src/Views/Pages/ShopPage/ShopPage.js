@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import classNames from 'classnames/bind';
 import styles from './shoppage.module.scss';
 import { Card, Shop_Left } from '../../../Components';
@@ -19,11 +19,13 @@ import {
     AlignRightOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
+import ThemeConText from '../../../config/themeConText';
 
 const cx = classNames.bind(styles);
 
 const ShopPage = () => {
     const [count, setCount] = useState(5); // Initialize count with 5
+    const [theme, ordersLength] = useContext(ThemeConText);
 
     useEffect(() => {
         AOS.init();
@@ -379,7 +381,13 @@ const ShopPage = () => {
         setOpen(false);
     };
     return (
-        <div className={cx('container_')}>
+        <div
+            className={cx('container_')}
+            style={{
+                backgroundColor: theme.background,
+                color: theme.color,
+            }}
+        >
             {isLoad && (
                 <div
                     style={{

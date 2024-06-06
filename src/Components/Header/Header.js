@@ -26,6 +26,9 @@ import {
 import { Avatar, Badge, Switch, Space } from 'antd';
 import ThemeConText from '../../config/themeConText';
 import { notification } from 'antd';
+import { Call_Post_Api } from '../CallApi/CallApis';
+import { EventRegister } from 'react-event-listeners';
+
 const cx = classNames.bind(styles);
 
 function Header() {
@@ -44,6 +47,41 @@ function Header() {
             'Notification was closed. Either the close button was clicked or duration time elapsed.',
         );
     };
+
+    const getApi = () => {
+        const token = Cookies.get('accessToken');
+        const id = Cookies.get('id');
+        const cleanedJwtString = token?.replace(/"/g, '');
+        const cleanId = id?.replace(/"/g, '');
+        if (cleanedJwtString != undefined || cleanedJwtString != '') {
+            Call_Post_Api(
+                {
+                    userId: cleanId,
+                },
+                cleanedJwtString,
+                cleanId,
+                '/cart/getlistCart',
+            )
+                .then((data) => {
+                    EventRegister.emit(
+                        'chaneLength',
+                        data.metadata.cart_products.length,
+                    );
+                    ordersLength = data.metadata?.cart_products.length;
+                    setIsLoad(false);
+                    return;
+                })
+                .catch((err) => console.log({ err }));
+        } else {
+            setIsLoad(false);
+            ordersLength = 0;
+        }
+    };
+
+    useEffect(() => {
+        getApi();
+        console.log(ordersLength);
+    }, []);
 
     const [api, contextHolder] = notification.useNotification();
 
@@ -136,11 +174,7 @@ function Header() {
         },
         {
             key: '2',
-            label: (
-                <a target="_blank" rel="noopener noreferrer">
-                    Dổi mật khẩu
-                </a>
-            ),
+            label: <a onClick={() => hanldeOrdered()}>Đơn hàng của bạn</a>,
         },
         {
             key: '3',
@@ -162,6 +196,10 @@ function Header() {
     //khai báo menu ẩn
     const onClick = (e) => {
         console.log('click ', e);
+    };
+
+    const hanldeOrdered = () => {
+        window.location.href = '/ordered';
     };
 
     const Click = () => {

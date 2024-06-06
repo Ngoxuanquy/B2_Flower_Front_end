@@ -11,6 +11,7 @@ import {
     Index,
     ListKhachHang,
     SelectProduct,
+    OrderPlaced,
 } from '../Views';
 
 export const publicRoute = [
@@ -19,6 +20,7 @@ export const publicRoute = [
     { path: '/lienhe', component: <LienHe /> },
     { path: '/blog', component: <BLog /> },
     { path: '/cart', component: <Cart /> },
+    { path: '/ordered', component: <OrderPlaced /> },
     { path: '/detailproduct/:productId', component: <DetailProduct /> },
 ];
 

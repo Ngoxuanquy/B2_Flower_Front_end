@@ -11,3 +11,4 @@ export { default as CreateProduct } from './Pages/Seller/CreateProduct/index';
 export { default as Index } from './Pages/Seller/Admin/index';
 export { default as ListKhachHang } from './Pages/Seller/ListKhachHang/index';
 export { default as SelectProduct } from './Pages/Seller/SelectProduct/index';
+export { default as OrderPlaced } from './Pages/OrderPlaced/OrderPlaced';

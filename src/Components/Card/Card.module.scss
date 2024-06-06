@@ -38,10 +38,9 @@
     }
     .conten {
         font-size: 20px;
-        align-items: center;
-        text-align: center;
-        color: black;
         top: 350px;
+        display: flex;
+        justify-content: space-around;
     }
 }
 

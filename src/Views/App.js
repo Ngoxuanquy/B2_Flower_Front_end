@@ -13,6 +13,7 @@ import Cookies from 'js-cookie';
 
 const App = () => {
     const [mode, setMode] = useState(false);
+    const [ordersLength, setOrderLength] = useState(0);
 
     useEffect(() => {
         let b = EventRegister.addEventListener('chaneLength', (data) => {
@@ -20,15 +21,17 @@ const App = () => {
         });
 
         let a = EventRegister.addEventListener('changeTheme', (data) => {
+            console.log(data);
             setMode(data);
         });
         return () => {
             EventRegister.removeEventListener(a);
             EventRegister.removeEventListener(b);
         };
-    }, []);
+    }, [mode]);
 
-    const [ordersLength, setOrderLength] = useState(0);
+    console.log(mode);
+
     useEffect(() => {
         const token = Cookies.get('accessToken');
         const id = Cookies.get('id');
@@ -77,7 +80,6 @@ const App = () => {
                                 />
                             );
                         })}
-
                         {privateRoute.map((route, index) => {
                             let Page = route.component;
                             return (
