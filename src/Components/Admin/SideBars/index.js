@@ -6,7 +6,9 @@ import { BsCartCheckFill } from "react-icons/bs";
 import SideBarItem from "../SideBarItem/SideBarItem";
 import { IoSettings } from "react-icons/io5";
 import { IoMdLock } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
+import { TbLogout } from "react-icons/tb";
 
 const Sidebar = () => {
   const [openItem, setOpenItem] = useState(null);
@@ -15,7 +17,7 @@ const Sidebar = () => {
   const handleItemClick = (primary) => {
     setOpenItem(primary === openItem ? null : primary);
     console.log("open ", primary);
-    navigate(`/admin/${primary}`);
+    // navigate(`/admin/${primary}`);
   };
 
   const handleSubItemClick = (subItem) => {
@@ -23,12 +25,20 @@ const Sidebar = () => {
   };
   const handleOpenDashBroad = (primary) => {
     setOpenItem(primary);
+    navigate("/admin/dash-board");
     console.log("Open Dashboard", primary);
   };
-
+  const handleOpenMessage = () => {
+    navigate("/admin/message");
+  };
   return (
     <div className="sidebar">
-      <SideBarItem icon={<MdDashboard />} primary="Dashboard" onItemClick={handleOpenDashBroad} isOpen={openItem === "Dashboard"} />
+      <SideBarItem
+        icon={<MdDashboard />}
+        primary="Dashboard"
+        onItemClick={handleOpenDashBroad}
+        isOpen={openItem === "Dashboard"}
+      />
       <SideBarItem
         icon={<IoMdLock />}
         primary="Authentication"
@@ -40,7 +50,7 @@ const Sidebar = () => {
       <SideBarItem
         icon={<AiFillProduct />}
         primary="Products"
-        subItems={["Product 1", "Product 2", "Product 3"]}
+        subItems={["Product List", "Product View", "Product Upload"]}
         onItemClick={handleItemClick}
         onSubItemClick={handleSubItemClick}
         isOpen={openItem === "Products"}
@@ -61,9 +71,37 @@ const Sidebar = () => {
         onSubItemClick={handleSubItemClick}
         isOpen={openItem === "User"}
       />
-      <SideBarItem icon={<MdContactMail />} primary="Message" onItemClick={handleItemClick} isOpen={openItem === "Message"} />
-      <SideBarItem icon={<FaBell />} primary="Notification" onItemClick={handleItemClick} isOpen={openItem === "Notification"} />
-      <SideBarItem icon={<IoSettings />} primary="Setting" onItemClick={handleItemClick} isOpen={openItem === "Setting"} />
+      <SideBarItem
+        icon={<MdContactMail />}
+        primary="Message"
+        onItemClick={handleOpenMessage}
+        isOpen={openItem === "Message"}
+      />
+      <SideBarItem
+        icon={<FaBell />}
+        primary="Notification"
+        onItemClick={handleItemClick}
+        isOpen={openItem === "Notification"}
+      />
+      <SideBarItem
+        icon={<IoSettings />}
+        primary="Setting"
+        onItemClick={handleItemClick}
+        isOpen={openItem === "Setting"}
+      />
+      <div className="logoutWrapper">
+        <div className="logoutBox">
+          <Button
+            variant="contained"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            <TbLogout />
+            Logout
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

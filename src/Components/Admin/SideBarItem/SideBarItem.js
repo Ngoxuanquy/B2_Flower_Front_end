@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import { FaAngleDown, FaAngleRight } from "react-icons/fa";
 
-const SideBarItem = ({ icon, primary, subItems, onItemClick, onSubItemClick, isOpen }) => {
+const SideBarItem = ({
+  icon,
+  primary,
+  subItems,
+  onItemClick,
+  onSubItemClick,
+  isOpen,
+}) => {
   const [open, setOpen] = useState(isOpen);
 
   useEffect(() => {
@@ -22,7 +35,7 @@ const SideBarItem = ({ icon, primary, subItems, onItemClick, onSubItemClick, isO
     <div>
       <List
         sx={{
-          padding: 0,
+          padding: "5px",
           width: "100%",
 
           bgcolor: "background.paper",
@@ -33,13 +46,23 @@ const SideBarItem = ({ icon, primary, subItems, onItemClick, onSubItemClick, isO
         <ListItemButton onClick={handleClick}>
           <ListItemIcon className="icon">{icon}</ListItemIcon>
           <ListItemText primary={primary} className="text-sidebar" />
-          {subItems && subItems.length > 0 ? open ? <FaAngleDown /> : <FaAngleRight /> : null}
+          {subItems && subItems.length > 0 ? (
+            open ? (
+              <FaAngleDown />
+            ) : (
+              <FaAngleRight />
+            )
+          ) : null}
         </ListItemButton>
         {subItems && subItems.length > 0 && (
           <Collapse in={open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               {subItems.map((subItem, index) => (
-                <ListItemButton key={index} sx={{ pl: 4 }} onClick={() => handleSubItemClick(subItem)}>
+                <ListItemButton
+                  key={index}
+                  sx={{ pl: 4 }}
+                  onClick={() => handleSubItemClick(subItem)}
+                >
                   <ListItemText primary={subItem} className="list-item" />
                 </ListItemButton>
               ))}
