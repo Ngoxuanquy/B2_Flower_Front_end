@@ -1,21 +1,30 @@
 import { Header, Footer } from '../../../Components';
+
 import classNames from 'classnames/bind';
 import styles from './defaultlayout.module.scss';
-import ButtomNavigation from '../../../Components/ButtomNavigation/ButtomNavigation';
-import { FloatButton, Drawer, Button, Input, Space } from 'antd';
-import { CustomerServiceOutlined, CommentOutlined } from '@ant-design/icons';
-import { DashboardOutlined } from '@ant-design/icons';
-import ThemeConText from '../../../config/themeConText';
-import { useContext, useState, useEffect, useRef } from 'react';
-import { EventRegister } from 'react-event-listeners';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { FloatButton, Drawer, Input, Button, List, message, Space } from 'antd';
+import {
+    CommentOutlined,
+    CustomerServiceOutlined,
+    DashboardOutlined,
+} from '@ant-design/icons';
 import socketIOClient from 'socket.io-client';
+import Cookies from 'js-cookie';
+import ThemeConText from '../../../config/themeConText';
+import { EventRegister } from 'react-event-listeners';
+
+const ENDPOINT = 'http://localhost:4000';
 const cx = classNames.bind(styles);
+
 const DefaultLayout = ({ children }) => {
     const [theme, ordersLength] = useContext(ThemeConText);
     const [open, setOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
-
+    const [messageInput, setMessageInput] = useState('');
+    const testId = Cookies.get('id');
+    const testCleanId = testId?.replace(/^"|"$/g, '');
     const socketRef = useRef();
     const showDrawer = () => {
         setOpen(true);
@@ -120,6 +129,36 @@ const DefaultLayout = ({ children }) => {
                         Submit
                     </Button>
                 </Space.Compact>
+            </Drawer>
+            <Drawer title="Chat" onClose={onClose} open={open}>
+                <List
+                    dataSource={messages}
+                    renderItem={(item) => (
+                        <List.Item
+                            className={cx({
+                                right: item.id === testCleanId,
+                                left: item.id !== testCleanId,
+                            })}
+                        >
+                            {item?.message}
+                        </List.Item>
+                    )}
+                    style={{ maxHeight: '60vh', overflow: 'auto' }}
+                />
+                <Input.TextArea
+                    rows={4}
+                    value={messageInput}
+                    onChange={(e) => setMessageInput(e.target.value)}
+                    onPressEnter={sendMessage}
+                    placeholder="Type your message..."
+                />
+                <Button
+                    type="primary"
+                    onClick={sendMessage}
+                    style={{ marginTop: 10 }}
+                >
+                    Send
+                </Button>
             </Drawer>
             {/* <ButtomNavigation /> */}
         </div>

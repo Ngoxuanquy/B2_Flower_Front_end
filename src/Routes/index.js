@@ -11,8 +11,11 @@ import {
     Index,
     ListKhachHang,
     SelectProduct,
-    OrderPlaced,
+    Information,
 } from '../Views';
+import Admin from '../Views/Pages/Admin/Admin';
+import Chats from '../Views/Pages/Admin/Chats';
+import DashBoard from '../Views/Pages/Admin/DashBoard';
 
 export const publicRoute = [
     { path: '/', component: <HomePage /> },
@@ -20,7 +23,7 @@ export const publicRoute = [
     { path: '/lienhe', component: <LienHe /> },
     { path: '/blog', component: <BLog /> },
     { path: '/cart', component: <Cart /> },
-    { path: '/ordered', component: <OrderPlaced /> },
+    { path: '/information', component: <Information /> },
     { path: '/detailproduct/:productId', component: <DetailProduct /> },
 ];
 
@@ -31,4 +34,7 @@ export const privateRoute = [
     { path: '/api/admin/listkhachhang', component: <ListKhachHang /> },
     { path: '/api/admin', component: <Index /> },
     { path: '/api/select/product', component: <SelectProduct /> },
+    { path: '/admin', component: <Admin /> },
+    { path: '/admin/Message', component: <Chats /> },
+    { path: '/admin/dash-board', component: <DashBoard /> },
 ];
