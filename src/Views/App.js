@@ -50,10 +50,7 @@ const App = () => {
           if (data && data.metadata && data.metadata.cart_products) {
             setOrderLength(data.metadata.cart_products.length);
 
-            EventRegister.emit(
-              "chaneLength",
-              data.metadata.cart_products.length
-            );
+            EventRegister.emit("chaneLength", data.metadata.cart_products.length);
           } else {
           }
         })
@@ -63,22 +60,14 @@ const App = () => {
 
   return (
     <>
-      <ThemeConText.Provider
-        value={[mode === true ? theme.dark : theme.ligth, ordersLength]}
-      >
+      <ThemeConText.Provider value={[mode === true ? theme.dark : theme.ligth, ordersLength]}>
         <Router>
           <ScrollToTop />
           <Routes>
             {publicRoute.map((route, index) => {
               let Page = route.component;
 
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={<DefaultLayout>{Page}</DefaultLayout>}
-                />
-              );
+              return <Route key={index} path={route.path} element={<DefaultLayout>{Page}</DefaultLayout>} />;
             })}
 
             {privateRoute.map((route, index) => {
@@ -93,7 +82,7 @@ const App = () => {
                       <>
                         <AdminHeader />
                         <div className="main d-flex">
-                          <div className="sidebarWrapper">
+                          <div className="sidebarWapper">
                             <SideBar />
                           </div>
                           <div

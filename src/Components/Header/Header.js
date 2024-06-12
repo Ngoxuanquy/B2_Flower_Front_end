@@ -3,7 +3,7 @@ import classNames from "classnames/bind";
 import styles from "./header.module.scss";
 import { UserOutlined, SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { Tabs } from "antd";
+import { Popconfirm, Tabs } from "antd";
 import { Dropdown } from "antd";
 import Cookies from "js-cookie";
 import { MenuOutlined } from "@ant-design/icons";
@@ -14,6 +14,8 @@ import { MinusOutlined, PlusOutlined, QuestionOutlined } from "@ant-design/icons
 import { Avatar, Badge, Switch, Space } from "antd";
 import ThemeConText from "../../config/themeConText";
 import { notification } from "antd";
+import Search from "antd/es/input/Search";
+import { Call_Post_Api } from "../CallApi/CallApis";
 const cx = classNames.bind(styles);
 
 function Header() {
@@ -23,7 +25,7 @@ function Header() {
   const [lastScroll, setLastScroll] = useState(0);
   const [isLoad, setIsLoad] = useState(true);
   const [defau, setDefau] = useState(1);
-
+  const [searchs, setSearch] = useState([]);
   const [count, setCount] = useState(5); // Initialize count with 5
   const [show, setShow] = useState(true);
 
@@ -147,6 +149,69 @@ function Header() {
     window.location.href = "/information";
   };
 
+  const onSearch = (value, _e, info) => {
+    Call_Post_Api(null, null, null, "/product/search/" + value).then((data) => {
+      console.log(data.metadata);
+      setSearch(data.metadata);
+    });
+  };
+
+  const text = searchs.length === 0 ? "Chưa có sản phẩm 🎉🎉🎉" : "Sản phẩm 👀✔👀";
+  const description = () => {
+    return (
+      <div
+        style={{
+          fontFamily: "Arial, sans-serif",
+
+          borderRadius: "8px",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
+        {searchs.length === 0 ? (
+          <div
+            style={{
+              color: "#333",
+              fontSize: "0.9em",
+              textAlign: "center",
+              padding: "10px",
+            }}
+          >
+            Vui lòng nhập tên sản phẩm
+          </div>
+        ) : (
+          <table
+            style={{
+              width: "500px",
+              borderCollapse: "collapse",
+              borderRadius: "8px",
+              backgroundColor: "#ffcccc",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: "#ff6666", color: "white" }}>
+                <th style={{ padding: "8px", textAlign: "left", fontSize: "12px", textAlign: "center" }}>Tên Sản Phẩm</th>
+                <th style={{ padding: "8px", textAlign: "left", fontSize: "12px", textAlign: "center" }}>Số Lượng</th>
+              </tr>
+            </thead>
+            <tbody>
+              {searchs.map((search, index) => (
+                <tr key={index} style={{ backgroundColor: index % 2 === 0 ? "#f2f2f2" : "white" }}>
+                  <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>{search.product_name}</td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>{search.product_quantity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className={cx("container_")}>
       {contextHolder}
@@ -265,7 +330,7 @@ function Header() {
                 }}
               >
                 <img
-                  src="https://scontent.xx.fbcdn.net/v/t1.15752-9/396713578_344872568026890_3407832581849265293_n.png?stp=dst-png_s206x206&_nc_cat=104&ccb=1-7&_nc_sid=510075&_nc_eui2=AeE8lIFF3EhNkx7C74eSmhoZShqdl7rXNCpKGp2Xutc0Km2u_Vy1YBVf4lLbAKRzcgYU4PImcYYoPEwaQz8m1r8n&_nc_ohc=zJ9e8wrfmAEAX_bihfK&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRbSSfcZtOchDK2rrFtD-XKWLNV8OUwkjRHxabFE9MPBw&oe=6569C6F3"
+                  src="http://localhost:3000/static/media/logo-1.0b4e3a18f02ba2d48e78.png"
                   className={cx("img_logo")}
                   style={{
                     borderRadius: "300px",
@@ -409,7 +474,7 @@ function Header() {
                     size="large"
                     style={{
                       fontSize: "25px",
-                      marginLeft: "-70px",
+                      marginLeft: "-50px",
                     }}
                   >
                     <Badge count={ordersLength}>
@@ -421,13 +486,32 @@ function Header() {
                     </Badge>
                   </Space>
                 </Link>
-                <SearchOutlined
+                {/* <SearchOutlined
                   style={{
                     fontSize: "25px",
                     marginTop: "0px",
                     marginLeft: "-40px",
                   }}
-                />
+                  onClick={() => handleSearch()}
+                /> */}
+
+                <Popconfirm
+                  placement="bottom"
+                  title={text}
+                  description={description}
+                  okText="Yes"
+                  cancelText="No"
+                  style={{ width: "500px" }}
+                >
+                  <Search
+                    placeholder="Nhập sản phẩm .... "
+                    onSearch={onSearch}
+                    style={{
+                      width: 400,
+                      marginTop: "5px",
+                    }}
+                  />
+                </Popconfirm>
                 {name == undefined ? (
                   <button
                     style={{
@@ -446,6 +530,7 @@ function Header() {
                           width: "40px",
                           height: "40px",
                           borderRadius: "100px",
+                          marginLeft: "10px",
                         }}
                       />
                     ) : (

@@ -84,7 +84,7 @@ const Information = () => {
                       Địa chỉ của tôi
                     </div>
                     <Radio.Group onChange={onChange} value={selectedValue}>
-                      {address.map((item, index) => (
+                      {address?.map((item, index) => (
                         <div key={index}>
                           <Radio value={item}>
                             <div>
