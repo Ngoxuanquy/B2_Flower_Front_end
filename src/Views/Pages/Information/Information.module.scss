@@ -1,10 +1,15 @@
 .container_ {
   margin-top: 130px;
   font-size: 20px;
+  width: 100% !important;
+  display: flex;
+  flex-direction: column;
+
   .box-title {
     display: flex;
     width: 100%;
     font-size: 20px;
+
     .imformation {
       width: 200px;
       display: flex;
@@ -13,17 +18,33 @@
     .conten {
     }
   }
+  .tabs .ant-tabs-content-holder {
+    min-height: 300px; /* Thiết lập chiều cao tối thiểu cho TabPane */
+  }
   .tabs {
     margin-left: 20px;
     font-size: 20px;
     margin-top: 20px;
+    width: 100% !important;
+    height: auto;
+    padding-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    .tabs-item1 {
+      // margin-top: 20px;
+      font-size: 16px;
+      width: 100% !important;
+      height: 100% !important;
+      display: flex;
+      justify-content: space-between;
+    }
     .tabs-item {
       // margin-top: 20px;
       font-size: 16px;
-      line-height: 40px;
-      width: 92%;
-      display: flex;
-      justify-content: space-between;
+      width: 100% !important;
+      height: 100% !important;
+
       .number {
         span {
           margin-left: 10px;
@@ -31,4 +52,35 @@
       }
     }
   }
+}
+.orders-container {
+  max-width: 100%;
+  width: 90% !important;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 20px;
+  background-color: #fff;
+  height: 100% !important;
+}
+
+.order-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 4px;
+  border-bottom: 1px solid #ccc;
+}
+
+.order-header {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+.order-cell {
+  flex: 1;
+  padding: 1px;
+}
+
+.footer_svg__6xIHg {
+  display: none;
 }

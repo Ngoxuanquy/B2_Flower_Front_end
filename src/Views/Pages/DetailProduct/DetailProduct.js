@@ -166,7 +166,13 @@ function DetailProduct() {
   };
 
   return (
-    <div className={cx("container_")}>
+    <div
+      className={cx("container_")}
+      style={{
+        backgroundColor: theme.background,
+        color: theme.color,
+      }}
+    >
       {contextHolder}
       {isLoad && (
         <div
@@ -310,8 +316,22 @@ function DetailProduct() {
             </div>
           </div>
           {/* Conten */}
-          <div className={cx("detail")}>
-            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+          <div
+            className={cx("detail")}
+            style={{
+              backgroundColor: theme.background,
+              color: theme.color,
+            }}
+          >
+            <Tabs
+              defaultActiveKey="1"
+              items={items}
+              onChange={onChange}
+              style={{
+                backgroundColor: theme.background,
+                color: theme.color,
+              }}
+            />
           </div>
 
           <div className={cx("sanphamtuongtu")}>
@@ -321,6 +341,8 @@ function DetailProduct() {
             style={{
               width: "80%",
               alignItems: "center",
+              backgroundColor: theme.background,
+              color: theme.color,
             }}
           >
             <Sliders />
