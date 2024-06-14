@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./DangKy.module.scss";
 import { Backgroug } from "../../../Components";
-import { Spin, message } from "antd";
+import { Button, Modal, Spin, message } from "antd";
+import OtpInput from "react-otp-input";
 
 const cx = classNames.bind(styles);
 
@@ -14,11 +14,73 @@ function DangKy() {
   const [pass, setPass] = useState("");
   const [re_Pass, setRe_Passs] = useState("");
   const [number, setNumber] = useState("");
-
+  const [otp, setOtp] = useState("");
   const [isLoad, setIsLoad] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
 
   function handerSubmit() {
-    if (pass === re_Pass) {
+    if (!email || !pass || !re_Pass) {
+      messageApi.open({
+        type: "warning",
+        content: "Vui lòng không để trống các trường!!!",
+      });
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      messageApi.open({
+        type: "warning",
+        content: "Email không đúng định dạng!!!",
+      });
+      return;
+    }
+
+    if (pass !== re_Pass) {
+      messageApi.open({
+        type: "warning",
+        content: "Mật khẩu không khớp!!!",
+      });
+      return;
+    }
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+      },
+      body: JSON.stringify({
+        email: email,
+        password: pass,
+      }),
+    };
+
+    // Lấy dữ liệu của khách hàng
+    fetch(URL + "/shop/signup", requestOptions)
+      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        if (data.metadata.msg === "Error: Shop already registered") {
+          // window.location = '/login';
+          messageApi.open({
+            type: "warning",
+            content: "Tài khoản đã đăng ký!!!",
+          });
+        } else {
+          setShowModal(true);
+          return;
+        }
+      });
+  }
+
+  const handleOkButtonClick = () => {
+    if (otp.length === 6) {
       const requestOptions = {
         method: "POST",
         headers: {
@@ -28,29 +90,72 @@ function DangKy() {
         body: JSON.stringify({
           email: email,
           password: pass,
+          code: otp,
         }),
       };
 
       // Lấy dữ liệu của khách hàng
-      fetch(URL + "/shop/signup", requestOptions)
+      fetch(URL + "/shop/verifile", requestOptions)
+        .then((data) => data.json())
         .then((data) => {
-          return data.json();
-        })
-        .then((data) => {
-          alert(data.metadata.msg || "Đăng ký thành công!!");
-          if (data.metadata.msg != "Error: Shop already registered") {
-            // window.location = '/login';
-          } else {
-            return;
+          if (data.metadata.status === "success") {
+            messageApi.open({
+              type: "success",
+              content: "Đăng ký thành công!!!",
+            });
+            window.location = "/login";
           }
         });
     } else {
-      alert("sai mk");
+      console.log("Mã OTP không hợp lệ");
     }
-  }
+  };
 
   return (
     <div className={cx("container_")}>
+      {contextHolder}
+
+      <Modal
+        visible={showModal}
+        onCancel={() => setShowModal(false)}
+        className={cx("otp-modal")}
+        footer={[
+          <Button key="cancel">Hủy</Button>,
+          <Button key="ok" type="primary" onClick={handleOkButtonClick}>
+            OK
+          </Button>,
+        ]}
+      >
+        <div
+          style={{
+            fontSize: "20px",
+            marginBottom: "40px",
+          }}
+        >
+          Vui lòng check mail để nhập mã code
+        </div>
+
+        <OtpInput
+          value={otp}
+          onChange={setOtp}
+          numInputs={6}
+          renderSeparator={<span>---</span>}
+          renderInput={(props) => <input {...props} />}
+          inputStyle={{
+            width: "40px",
+            height: "40px",
+            margin: "2px",
+          }}
+          containerStyle={{
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}
+        />
+      </Modal>
       {isLoad && (
         <div
           style={{
@@ -59,7 +164,6 @@ function DangKy() {
             width: "100%",
             height: "100vh",
             zIndex: 100,
-            top: 0,
             top: 0,
             left: 0,
             display: "flex",
@@ -105,14 +209,14 @@ function DangKy() {
               <div>
                 <div className={cx("matkhau")}>Mật Khẩu</div>
                 <div>
-                  <input className={cx("input")} onChange={(e) => setPass(e.target.value)} />
+                  <input type="password" className={cx("input")} onChange={(e) => setPass(e.target.value)} />
                 </div>
               </div>
 
               <div>
-                <div className={cx("matkhau")}>Mật Lại Mật Khẩu</div>
+                <div className={cx("matkhau")}>Nhập Lại Mật Khẩu</div>
                 <div>
-                  <input className={cx("input")} onChange={(e) => setRe_Passs(e.target.value)} />
+                  <input type="password" className={cx("input")} onChange={(e) => setRe_Passs(e.target.value)} />
                 </div>
               </div>
 
@@ -124,7 +228,7 @@ function DangKy() {
               </div>
 
               <div>
-                <button className={cx("submit")} onClick={() => handerSubmit()}>
+                <button className={cx("submit")} onClick={handerSubmit}>
                   Submit
                 </button>
               </div>

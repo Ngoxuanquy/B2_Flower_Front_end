@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./Information.module.scss";
-import { Image, Tabs } from "antd";
+import { Image, Spin, Tabs, message } from "antd";
 import ModalMap from "../../../Components/ModalMap/ModalMap";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
@@ -13,6 +13,9 @@ const Information = () => {
   const [address, setAddress] = useState([]);
   const [orders, setOrder] = useState([]);
   const [tabPaneHeight, setTabPaneHeight] = useState("auto"); // State to track height of TabPane dynamically
+  const [messageApi, contextHolder] = message.useMessage();
+  const [isLoad, setIsLoad] = useState(false);
+  const name = Cookies.get("name")?.replace(/"/g, "");
 
   const cx = classNames.bind(styles);
   const titles = ["Tài khoản", "Ví của B2-FLOWER", "Đơn hàng", "Địa chỉ"];
@@ -27,7 +30,7 @@ const Information = () => {
     Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
       .then((data) => {
         setAddress(data.metadata.address);
-        console.log(data.metadata.address);
+        setIsLoad(false);
         return;
       })
       .catch((err) => console.log({ err }));
@@ -42,7 +45,7 @@ const Information = () => {
     Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullUseId/${cleanId}`, "Get")
       .then((data) => {
         setOrder(data.metadata);
-        console.log(data.metadata);
+        setIsLoad(false);
         return;
       })
       .catch((err) => console.log({ err }));
@@ -80,9 +83,38 @@ const Information = () => {
 
   return (
     <div className={cx("container_")}>
+      {contextHolder}
+      {isLoad && (
+        <div
+          style={{
+            position: "fixed",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            width: "100%",
+            height: "100vh",
+            zIndex: 100,
+            top: 0,
+            top: 0,
+            left: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin />
+        </div>
+      )}
       <div className={cx("box-title")}>
         <div className={cx("imformation")}>
-          <div>Quy</div>
+          <div
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "150px",
+            }}
+          >
+            {name}
+          </div>
         </div>
         <div className={cx("conten")}>{titles[activeTab]}</div>
       </div>

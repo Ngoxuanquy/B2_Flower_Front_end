@@ -7,7 +7,8 @@ import Cookies from "js-cookie";
 import { DeleteOutlined } from "@ant-design/icons";
 import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
-
+import { Link, useNavigate } from "react-router-dom";
+import { usePayOS, PayOSConfig } from "payos-checkout";
 const cx = classNames.bind(styles);
 
 const Cart = () => {
@@ -19,6 +20,7 @@ const Cart = () => {
   const [orders, setOrder] = useState([]);
   const [tong, setTong] = useState(0);
   const [phiShip, setPhiShip] = useState(0);
+  const navigate = useNavigate();
 
   const [names, setName] = useState("");
   const [emails, setEmails] = useState("");
@@ -74,7 +76,7 @@ const Cart = () => {
       Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart")
         .then((data) => {
           setOrder(data?.metadata?.cart_products || []);
-          EventRegister.emit("chaneLength", data.metadata.cart_products.length);
+          EventRegister.emit("chaneLength", data.metadata?.cart_products?.length ?? 0);
           setIsLoad(false);
         })
         .catch((err) => {
@@ -99,7 +101,6 @@ const Cart = () => {
     Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
       .then((data) => {
         setAddress(data.metadata.address);
-        console.log(data.metadata.address);
         return;
       })
       .catch((err) => console.log({ err }));
@@ -135,108 +136,112 @@ const Cart = () => {
   };
 
   const handlerDatHang = () => {
+    setIsLoad(true);
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    console.log(checkedList);
-    console.log(selectedValueAdress);
-    console.log(selectedOption);
-    console.log(value);
+    if (!address || address.length === 0) {
+      messageApi.open({
+        type: "error",
+        content: "Vui lòng nhập địa chỉ ở trong thông tin cá nhân",
+      });
+      setIsLoad(false);
 
-    // Call_Post_Api(
-    //   {
-    //     user: selectedValueAdress,
-    //     product: checkedList,
-    //     shopId: "test",
-    //     amount: tong + phiShip,
-    //   },
-    //   null,
-    //   null,
-    //   "/vnpay/create-payment-link"
-    // ).then((data) => {
-    //   console.log(data);
-    //   setCurrent(2);
-    //   window.location.replace(data);
-    // });
+      return;
+    }
 
-    Call_Post_Api(
-      { user: { ...selectedValueAdress, _id: cleanId }, product: checkedList, shopId: "test", paymentExpression: selectedOption },
-      cleanedJwtString,
-      cleanId,
-      "/transaction"
-    ).then(() => {
-      Call_Post_Api({ userId: cleanId, newCartData: checkedList }, cleanedJwtString, cleanId, "/cart/updateTransaciton").then(() => {
-        setIsLoad(false);
-        getApi();
-        setCurrent(2);
-        messageApi.open({
-          type: "success",
-          content: "Đặt hàng thành công!!!",
+    if (!selectedValueAdress || Object.keys(selectedValueAdress).length === 0) {
+      messageApi.open({
+        type: "error",
+        content: "Địa chỉ không được trống.",
+      });
+      setIsLoad(false);
+
+      return;
+    }
+
+    if (!selectedOption) {
+      messageApi.open({
+        type: "error",
+        content: "Phương thức thanh toán không được trống.",
+      });
+      setIsLoad(false);
+
+      return;
+    }
+
+    if (!value) {
+      messageApi.open({
+        type: "error",
+        content: "Giá trị không được trống.",
+      });
+      setIsLoad(false);
+
+      return;
+    }
+
+    if (value === 3) {
+      setIsLoad(true);
+      Call_Post_Api(
+        {
+          user: { ...selectedValueAdress, _id: cleanId },
+          product: checkedList,
+          shopId: "test",
+          paymentExpression: selectedOption,
+          phiShip,
+          email: Cookies.get("name")?.replace(/"/g, ""),
+        },
+        cleanedJwtString,
+        cleanId,
+        "/transaction"
+      ).then(() => {
+        Call_Post_Api({ userId: cleanId, newCartData: checkedList }, cleanedJwtString, cleanId, "/cart/updateTransaciton").then(() => {
+          setIsLoad(false);
+          getApi();
+          // setTimeout(() => {
+          //   navigate("/information");
+          // }, 3000);
+          setCurrent(2);
+          setIsLoad(false);
+
+          messageApi.open({
+            type: "success",
+            content: "Đặt hàng thành công!!!",
+          });
         });
       });
-    });
+    } else if (value === 2) {
+      setIsLoad(true);
 
-    // if (checkedList.length === 0) {
-    //     messageApi.open({
-    //         type: 'warning',
-    //         content: 'Vui lòng chọn sản phẩm !!!',
-    //     });
-    //     return;
-    // }
+      Call_Post_Api(
+        {
+          user: selectedValueAdress,
+          product: checkedList,
+          shopId: "test",
+          amount: tong + phiShip,
+        },
+        null,
+        null,
+        "/vnpay/create-payment-link"
+      ).then((data) => {
+        console.log(data);
+        setIsLoad(false);
 
-    // if (!names || !phone || !adrees) {
-    //     alert('Vui lòng nhập đầy đủ thông tin!!!');
-    //     return;
-    // }
-
-    // const user = {
-    //     userId: cleanId,
-    //     name: names,
-    //     email: emails,
-    //     number: phone,
-    //     adrees: adrees,
-    //     note: note,
-    // };
-
-    // if (value === 2) {
-    //     Call_Post_Api(
-    //         { user, product: checkedList, shopId: 'test' },
-    //         cleanedJwtString,
-    //         cleanId,
-    //         '/transaction',
-    //     ).then(() => {
-    //         Call_Post_Api(
-    //             { userId: cleanId, newCartData: checkedList },
-    //             cleanedJwtString,
-    //             cleanId,
-    //             '/cart/updateTransaciton',
-    //         ).then(() => {
-    //             setIsLoad(false);
-    //             getApi();
-    //             messageApi.open({
-    //                 type: 'success',
-    //                 content: 'Đặt hàng thành công!!!',
-    //             });
-    //         });
-    //     });
-    // } else {
-    //     Call_Post_Api(
-    //         {
-    //             user,
-    //             product: checkedList,
-    //             shopId: 'test',
-    //             amount: tong,
-    //         },
-    //         null,
-    //         null,
-    //         '/vnpay/create-payment-link',
-    //     ).then((data) => {
-    //         window.location.replace(data);
-    //     });
-    // }
+        window.location.replace(data);
+        Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
+          console.log(data);
+        });
+      });
+    }
   };
+
+  useEffect(() => {
+    Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
+      console.log(data);
+    });
+  }, []);
 
   const GetHtmlCart = () => {
     return (
@@ -285,7 +290,15 @@ const Cart = () => {
               </div>
             </div>
           ) : (
-            <h2>Chưa có sản phẩm nào</h2>
+            <h2
+              style={{
+                color: "pink",
+                fontSize: "18px",
+                marginTop: "20px",
+              }}
+            >
+              Chưa có sản phẩm nào
+            </h2>
           )}
         </div>
       </div>
@@ -470,10 +483,23 @@ const Cart = () => {
     );
   };
 
+  const handelOpentData = () => {
+    Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
+      console.log(data);
+    });
+  };
+
   const GetOrdered = () => {
     return (
       <div>
-        <div>Thanh toán thành công</div>
+        <div
+          style={{
+            fontSize: "20px",
+          }}
+        >
+          Thanh toán thành công 🎈
+        </div>
+        <Button onClick={handelOpentData}>Xem data</Button>
       </div>
     );
   };
@@ -527,11 +553,33 @@ const Cart = () => {
         color: theme.color,
       }}
     >
+      {contextHolder}
+
+      {isLoad && (
+        <div
+          style={{
+            position: "fixed",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            width: "100%",
+            height: "100vh",
+            zIndex: 100,
+            top: 0,
+            top: 0,
+            left: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin />
+        </div>
+      )}
+
       <div className={cx("box-class")}>
         <div className={cx("box-steps")}>
           <Steps current={current} items={items} className={cx("box")} />
           <div style={contentStyle}>{steps[current].content}</div>
-          {/* <div style={{ marginTop: 24 }}>
+          <div style={{ marginTop: 24 }}>
             {current < steps.length - 1 && (
               <Button type="primary" onClick={next}>
                 Next
@@ -547,7 +595,7 @@ const Cart = () => {
                 Previous
               </Button>
             )}
-          </div> */}
+          </div>
         </div>
         <div className={cx("TongTien")}>
           <div>

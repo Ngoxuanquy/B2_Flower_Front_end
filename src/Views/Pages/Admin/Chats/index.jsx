@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import socketIOClient from "socket.io-client";
 import { Button, Input, List, message } from "antd";
 
-const ENDPOINT = "http://localhost:4000";
+const ENDPOINT = "https://chat-b2-flower.onrender.com";
 
 const Chats = () => {
   const cx = classNames.bind(styles);
@@ -120,7 +120,7 @@ const Chats = () => {
           email: "admin",
         }),
       };
-      fetch("http://localhost:4000/v1/api/chat/create", requestOptions)
+      fetch("https://chat-b2-flower.onrender.com/v1/api/chat/create", requestOptions)
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
@@ -131,7 +131,7 @@ const Chats = () => {
 
   const fetchMessages = async (id) => {
     try {
-      const response = await fetch("http://localhost:4000/v1/api/chat/getMessageUser/" + id);
+      const response = await fetch("https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

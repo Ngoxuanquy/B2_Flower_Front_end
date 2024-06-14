@@ -71,9 +71,8 @@ function Header() {
     if (cleanedJwtString) {
       Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart")
         .then((data) => {
-          EventRegister.emit("chaneLength", data.metadata.cart_products.length);
-          console.log(data.metadata.cart_products.length);
-          setCount(data.metadata.cart_products.length);
+          EventRegister.emit("chaneLength", data.metadata?.cart_products?.length);
+          setCount(data.metadata?.cart_products?.length);
         })
         .catch((err) => console.log({ err }));
     } else {
@@ -83,11 +82,7 @@ function Header() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY || 0;
-
-      console.log(currentScroll);
-
       if (currentScroll == 0) {
-        console.log("abcbcbc");
         setIsLoad(true);
         setScrollDirection("scroll-up");
       } else if (currentScroll > lastScroll && scrollDirection !== "scroll-down") {
@@ -167,7 +162,7 @@ function Header() {
   };
 
   const hanldeLinkUser = () => {
-    window.location.href = "/information";
+    navigate("/information");
   };
 
   const onSearch = (value) => {
@@ -379,7 +374,7 @@ function Header() {
               <div className={cx("header_right")}>
                 <Link to="/cart" style={{ color: "black", listStyle: "none", textDecoration: "none" }}>
                   <Space size="large" style={{ fontSize: "25px", marginLeft: "-50px" }}>
-                    <Badge count={count || ordersLength}>
+                    <Badge count={ordersLength}>
                       <ShoppingCartOutlined style={{ fontSize: "25px" }} />
                     </Badge>
                   </Space>

@@ -114,19 +114,26 @@ const HomePage = () => {
           </div>
           {/* sản phẩm */}
 
-          <div className={cx("sanpham")} data-aos="fade-up" data-aos-duration="3000">
+          <div
+            className={cx("sanpham")}
+            data-aos="fade-up"
+            data-aos-duration="3000"
+            style={{
+              marginBottom: "50px",
+            }}
+          >
             <div className={cx("box_sanpham")}>
               <div>
                 <img
                   className={cx("img1")}
-                  src="https://scontent.fhan20-1.fna.fbcdn.net/v/t1.15752-9/396521293_1006783440383935_2187288414981548075_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=8cd0a2&_nc_ohc=Xk3p-EptywsAX_tFAs6&_nc_ht=scontent.fhan20-1.fna&oh=03_AdTjMBglNOEw4fMNZ6DF7VxWMrxsBuub3S4HmwgAPLlRbA&oe=6561FAD2"
+                  src="https://inkythuatso.com/uploads/thumbnails/800/2022/03/46dddd2899d84ae726305a643600b091-23-09-18-29.jpg"
                 />
               </div>
               <div>
-                <img src="https://scontent.fhan20-1.fna.fbcdn.net/v/t1.15752-9/395199648_180309315130090_4306085981713535823_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=8cd0a2&_nc_ohc=ENHzEjrFlUcAX-NaQct&_nc_ht=scontent.fhan20-1.fna&oh=03_AdSTattApahW1STRmBjJr_orDqa7TRESO2pPWBf7pwU-Zg&oe=6561FB58" />
-                <img src="https://scontent.fhan20-1.fna.fbcdn.net/v/t1.15752-9/387649231_314034171378802_3776341523214919097_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=8cd0a2&_nc_ohc=fMrmdZ11U-kAX9HVz5J&_nc_ht=scontent.fhan20-1.fna&oh=03_AdQ5Ml9JB0b90z4_G8GeYhOnNI-sEelPfCbEjevA_90Vbg&oe=6561DEE9" />
-                <img src="https://scontent.fhan20-1.fna.fbcdn.net/v/t1.15752-9/396543016_861047458947427_7460067975258432522_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=8cd0a2&_nc_ohc=gm1RkP-9NCkAX8moewH&_nc_ht=scontent.fhan20-1.fna&oh=03_AdTJ2kPjjARc4tPaTUT-n4g0gkT8QpLQHO7REygBlfaPOg&oe=6561CC4F" />
-                <img src="https://scontent.fhan20-1.fna.fbcdn.net/v/t1.15752-9/395318948_346066267837330_7552033802855889505_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=8cd0a2&_nc_ohc=XoDuTc4uhaAAX9TLLiX&_nc_ht=scontent.fhan20-1.fna&oh=03_AdQKVxQZQ9R-qXAxxR3yR5ShOOEVV1GqVdrz5OcMHEfMbQ&oe=6561EABB" />
+                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698825956/banhang/cq5dxtvrcssx6lsphmni.jpg" />
+                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826029/banhang/yyptfqyrcuyuweziyhew.jpg" />
+                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826142/banhang/omqv445si5b4r0ax0wqs.jpg" />
+                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826172/banhang/ms5adyn7olihvzdofsll.jpg" />
               </div>
             </div>
           </div>

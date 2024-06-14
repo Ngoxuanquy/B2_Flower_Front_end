@@ -49,6 +49,8 @@ const App = () => {
         } catch (err) {
           console.error("Error fetching cart data:", err);
         }
+      } else {
+        setOrderLength(0);
       }
     };
 
@@ -89,11 +91,11 @@ const App = () => {
                 path={route.path}
                 element={
                   <>
-                    {/* <AdminHeader /> */}
+                    <AdminHeader />
                     <div className="main d-flex">
-                      {/* <div className="sidebarWapper">
+                      <div className="sidebarWapper">
                         <SideBar />
-                      </div> */}
+                      </div>
                       <div
                         className="contents"
                         style={{
