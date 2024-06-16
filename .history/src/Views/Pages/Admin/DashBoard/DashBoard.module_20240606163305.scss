@@ -1,0 +1,13 @@
+.container {
+  margin-top: 70px;
+  height: 1000px;
+  .contents {
+    .box {
+      display: flex;
+      justify-content: space-between;
+      background: #fff;
+      padding: 24px;
+      margin: 20px 0px;
+    }
+  }
+}

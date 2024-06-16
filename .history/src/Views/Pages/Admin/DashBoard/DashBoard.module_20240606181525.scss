@@ -1,0 +1,14 @@
+.container {
+  height: 1000px;
+  .contents {
+    padding: 80px 30px 10px;
+    .box {
+      display: flex;
+      justify-content: space-between;
+      background: #fff;
+      padding: 24px;
+      margin: 20px 0px;
+      border-radius: 20px;
+    }
+  }
+}
