@@ -114,11 +114,12 @@ const DashBoard = () => {
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
-        <PageTitle
-          className="w-100"
-          title={pageTitleProps.title}
-          items={pageTitleProps.items}
-        />
+        <div className={cx("box")}>
+          <PageTitle
+            title={pageTitleProps.title}
+            items={pageTitleProps.items}
+          />
+        </div>
         <div className={cx("dashboardBoxWrapperRow")}>
           <div className="col-md-8">
             <div className={cx("dashboardBoxWrapper")}>

@@ -6,7 +6,6 @@ import { FaCheckCircle } from "react-icons/fa";
 import { IoIosRemoveCircle } from "react-icons/io";
 import PageTitle from "../../../../Components/Admin/PageTitle/PageTitle";
 import FloatCard from "../../../../Components/Admin/FloatCard/FloatCard";
-import RegisteredUsers from "../RegisteredUsers/RegisteredUsers";
 
 const cx = classNames.bind(styles);
 const UserList = () => {
@@ -14,7 +13,7 @@ const UserList = () => {
     title: "User List",
     items: [
       { text: "Admin", link: "/admin/dash-board" },
-      { text: "User", link: "/admin/user-list" },
+      { text: "User", link: "/admin/user/user-list" },
       { text: "User List" },
     ],
   };
@@ -38,14 +37,13 @@ const UserList = () => {
             iconColor="#89ecb3"
           />
           <FloatCard
-            number="249"
-            text="Blocked Users"
+            number="547"
+            text="Pending User"
             backgroundColor="linear-gradient(#ff6179, #f11133)"
             icon={<IoIosRemoveCircle />}
             iconColor="#ff9baa"
           />
         </div>
-        <RegisteredUsers />
       </div>
     </div>
   );

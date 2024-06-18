@@ -1,0 +1,31 @@
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  color: rgb(64, 62, 87);
+  .contents {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+    }
+    ul {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      li {
+        ::after {
+          content: "~";
+          position: absolute;
+          left: -10px;
+        }
+      }
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+}

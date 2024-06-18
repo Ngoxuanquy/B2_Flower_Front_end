@@ -2,11 +2,8 @@ import React from "react";
 import styles from "./UserList.module.scss";
 import classNames from "classnames/bind";
 import { MdPending } from "react-icons/md";
-import { FaCheckCircle } from "react-icons/fa";
-import { IoIosRemoveCircle } from "react-icons/io";
 import PageTitle from "../../../../Components/Admin/PageTitle/PageTitle";
 import FloatCard from "../../../../Components/Admin/FloatCard/FloatCard";
-import RegisteredUsers from "../RegisteredUsers/RegisteredUsers";
 
 const cx = classNames.bind(styles);
 const UserList = () => {
@@ -14,7 +11,7 @@ const UserList = () => {
     title: "User List",
     items: [
       { text: "Admin", link: "/admin/dash-board" },
-      { text: "User", link: "/admin/user-list" },
+      { text: "User", link: "/admin/user/user-list" },
       { text: "User List" },
     ],
   };
@@ -30,22 +27,9 @@ const UserList = () => {
             icon={<MdPending />}
             iconColor="#f3a0ff"
           />
-          <FloatCard
-            number="605"
-            text="Approved Users"
-            backgroundColor="linear-gradient(#4eda89, #1a9f53)"
-            icon={<FaCheckCircle />}
-            iconColor="#89ecb3"
-          />
-          <FloatCard
-            number="249"
-            text="Blocked Users"
-            backgroundColor="linear-gradient(#ff6179, #f11133)"
-            icon={<IoIosRemoveCircle />}
-            iconColor="#ff9baa"
-          />
+          <FloatCard />
+          <FloatCard />
         </div>
-        <RegisteredUsers />
       </div>
     </div>
   );

@@ -11,7 +11,6 @@ import { Chart, registerables } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import zoomPlugin from "chartjs-plugin-zoom";
 import BestSellingProduct from "../../../../Components/Admin/BestSellingProduct/BestSellingProduct";
-import PageTitle from "../../../../Components/Admin/PageTitle/PageTitle";
 
 // Register the necessary components
 Chart.register(...registerables);
@@ -114,11 +113,12 @@ const DashBoard = () => {
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
-        <PageTitle
-          className="w-100"
-          title={pageTitleProps.title}
-          items={pageTitleProps.items}
-        />
+        <div className={cx("box")}>
+          <PageTitle
+            title={pageTitleProps.title}
+            items={pageTitleProps.items}
+          />
+        </div>
         <div className={cx("dashboardBoxWrapperRow")}>
           <div className="col-md-8">
             <div className={cx("dashboardBoxWrapper")}>

@@ -14,7 +14,7 @@ const UserList = () => {
     title: "User List",
     items: [
       { text: "Admin", link: "/admin/dash-board" },
-      { text: "User", link: "/admin/user-list" },
+      { text: "User", link: "/admin/user/user-list" },
       { text: "User List" },
     ],
   };

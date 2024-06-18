@@ -1,8 +1,16 @@
 .container {
   font-family: "Open Sans", sans-serif !important;
   .contents {
-    padding: 90px 30px 30px;
-
+    padding: 80px 30px 30px;
+    .box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 24px;
+      margin: 20px 0px;
+      border-radius: 10px;
+    }
     .dashboardBoxWrapperRow {
       display: flex;
       .dashboardBoxWrapper {
