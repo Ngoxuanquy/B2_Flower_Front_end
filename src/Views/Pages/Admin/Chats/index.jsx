@@ -5,7 +5,8 @@ import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
 import socketIOClient from "socket.io-client";
 import { Button, Input, List, message } from "antd";
-const ENDPOINT = "http://localhost:4000";
+
+const ENDPOINT = "https://chat-b2-flower.onrender.com";
 
 const Chats = () => {
   const cx = classNames.bind(styles);
@@ -119,7 +120,7 @@ const Chats = () => {
           email: "admin",
         }),
       };
-      fetch("http://localhost:4000/v1/api/chat/create", requestOptions)
+      fetch("https://chat-b2-flower.onrender.com/v1/api/chat/create", requestOptions)
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
@@ -130,7 +131,7 @@ const Chats = () => {
 
   const fetchMessages = async (id) => {
     try {
-      const response = await fetch("http://localhost:4000/v1/api/chat/getMessageUser/" + id);
+      const response = await fetch("https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -146,12 +147,30 @@ const Chats = () => {
     console.log(messages);
   };
 
+  const getColorForMessage = (message) => {
+    // Define colors for different message contents
+    const colors = {
+      error: "#f8d7da",
+      success: "#d1e7dd",
+      warning: "#fff3cd",
+      info: "#d1ecf1",
+      default: "#f8f9fa",
+    };
+
+    if (message.includes("error")) return colors.error;
+    if (message.includes("success")) return colors.success;
+    if (message.includes("warning")) return colors.warning;
+    if (message.includes("info")) return colors.info;
+
+    return colors.default;
+  };
+
   return (
     <div className={cx("container_")}>
       <div className={cx("box")}>
         <div className={cx("box-title")}>
           {apis.map((api) => (
-            <div className={cx("box-chat")} onClick={() => handleOpentChat(api._id)}>
+            <div className={cx("box-chat", { active: roomId === api._id })} onClick={() => handleOpentChat(api._id)}>
               <div>
                 <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/441570670_802929555136374_1350330455299972228_n.jpg?stp=dst-jpg_p206x206&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=91HeDsJJZNkQ7kNvgHu9Jur&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGfs4Qv1AuLHqZ9HHGwwc_mVoRelzACXi0oV7mkiqnIFw&oe=6686363C" />
               </div>
@@ -196,7 +215,12 @@ const Chats = () => {
             <List
               dataSource={messages}
               renderItem={(item) => (
-                <List.Item className={cx({ right: item.id === testCleanId, left: item.id !== testCleanId })}>{item.message}</List.Item>
+                <List.Item
+                  className={cx({ right: item.id === testCleanId, left: item.id !== testCleanId })}
+                  style={{ backgroundColor: getColorForMessage(item.message) }}
+                >
+                  {item.message}
+                </List.Item>
               )}
               style={{ maxHeight: "60vh", overflow: "auto" }}
             />

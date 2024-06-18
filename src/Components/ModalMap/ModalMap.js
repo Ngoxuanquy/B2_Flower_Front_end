@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Input, Select } from "antd";
+import { Modal, Button, Input, Select, Spin } from "antd";
 import classNames from "classnames/bind";
 import styles from "./ModalMap.module.scss";
 import axios from "axios";
@@ -13,6 +13,7 @@ function ModalMap({ props }) {
   const [apiTinhThanhs, setApiTinhThanh] = useState([]);
   const [apiQuanHuyens, setApiQuanHuyen] = useState([]);
   const [apiPhuongXas, setApiPhuongXa] = useState([]);
+  const [isLoad, setIsLoad] = useState(true);
 
   const [valueTinhThanh, setValueTinhThanh] = useState("");
   const [valueQuanHuyen, setValueQuanHuyen] = useState("");
@@ -51,7 +52,7 @@ function ModalMap({ props }) {
     try {
       const response = await axios.request(options);
       setApiTinhThanh(response.data);
-      console.log(response.data);
+      setIsLoad(false);
     } catch (error) {
       console.error(error);
     }
@@ -71,7 +72,7 @@ function ModalMap({ props }) {
     try {
       const response = await axios.request(options);
       setApiQuanHuyen(response.data);
-      console.log(response.data);
+      setIsLoad(false);
     } catch (error) {
       console.error(error);
     }
@@ -87,7 +88,7 @@ function ModalMap({ props }) {
     try {
       const response = await axios.request(options);
       setApiPhuongXa(response.data);
-      console.log(response.data);
+      setIsLoad(false);
     } catch (error) {
       console.error(error);
     }
@@ -117,7 +118,8 @@ function ModalMap({ props }) {
       "/users/updateAddress"
     )
       .then((data) => {
-        console.log(data);
+        setIsLoad(false);
+
         return;
       })
       .catch((err) => console.log({ err }));
@@ -125,6 +127,25 @@ function ModalMap({ props }) {
 
   return (
     <>
+      {isLoad && (
+        <div
+          style={{
+            position: "fixed",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            width: "100%",
+            height: "100vh",
+            zIndex: 100,
+            top: 0,
+            top: 0,
+            left: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin />
+        </div>
+      )}
       <Button type="primary" onClick={showModal}>
         {props}
       </Button>

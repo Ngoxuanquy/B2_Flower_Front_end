@@ -8,63 +8,109 @@
     width: 100%;
     display: grid;
     grid-template-columns: 25% 75%;
+
     .box-messege {
       position: relative;
-      height: 100vh;
-      width: 100%;
+      height: 100vh; /* Đặt chiều cao là 100% của viewport */
+      overflow-y: auto; /* Cho phép cuộn nếu nội dung vượt quá kích thước màn hình */
       background-color: rgb(243, 243, 243);
+
       .header {
         font-size: 20px;
-        height: 40px;
+        height: 60px;
         width: 100%;
         background-color: rgb(192, 192, 192);
         display: flex;
+        align-items: center;
+        padding: 0 20px;
+
         .title {
-          font-size: 12px;
+          font-size: 16px;
+          margin-left: 10px;
         }
+
         img {
           width: 40px;
           height: 40px;
           border-radius: 50%;
         }
       }
+
       .input {
         position: fixed;
-        bottom: 4px;
-        height: 40px;
+        bottom: 0;
         width: 100%;
+        height: 60px;
+        background-color: white;
         display: flex;
+        align-items: center;
+        padding: 0 20px;
+
+        .text-input {
+          flex: 1;
+          height: 40px;
+          border-radius: 20px;
+          border: 1px solid #ccc;
+          padding: 0 15px;
+        }
+
+        .send-button {
+          margin-left: 15px;
+          padding: 10px 20px;
+          border-radius: 20px;
+          background-color: #007bff;
+          color: white;
+          cursor: pointer;
+        }
       }
     }
+
     .box-title {
-      overflow: scroll;
+      overflow-y: auto;
       height: 100vh;
+
       .box-chat {
         display: flex;
-        margin-left: 10px;
-        margin-bottom: 10px;
-        border-bottom: 0.4px solid gray;
+        align-items: center;
+        padding: 20px;
         cursor: pointer;
+        border-bottom: 1px solid #ccc;
+
         img {
-          width: 40px;
-          height: 40px;
+          width: 50px;
+          height: 50px;
           border-radius: 50%;
-          margin-top: 3px;
+          margin-right: 15px;
         }
+
         .title {
-          font-size: 13px;
-          margin-left: 5px;
-          margin-top: 2px;
-          .title-status {
+          flex: 1;
+
+          .name {
+            font-weight: bold;
+          }
+
+          .message {
+            color: #888;
+            font-size: 14px;
+          }
+
+          .time {
+            color: #999;
+            font-size: 12px;
+          }
+
+          .unread-badge {
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
             display: flex;
-            .online {
-              width: 8px;
-              height: 8px;
-              background-color: green;
-              border-radius: 50%;
-              margin-top: 5px;
-              margin-right: 4px;
-            }
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            margin-left: auto;
           }
         }
       }
@@ -76,5 +122,4 @@
   display: flex !important;
   justify-content: flex-end !important;
   width: 100%;
-  margin-left: -20px;
 }

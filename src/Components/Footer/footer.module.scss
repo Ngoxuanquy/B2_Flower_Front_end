@@ -54,6 +54,8 @@
     border: none;
     border: 0px solid #fff;
     margin-left: 40px;
+    margin: 0px;
+    padding: 0px;
   }
 
   .footer__widget table tr td ul li {
@@ -198,7 +200,7 @@
   display: block;
   background-color: #0e4166;
   background-image: linear-gradient(to bottom, rgba(14, 65, 102, 0.86), #0e4166);
-  margin-top: 30px;
+  // margin-top: 30px;
 }
 
 //tablet

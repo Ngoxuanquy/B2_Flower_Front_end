@@ -1,553 +1,675 @@
-import React, { useEffect, useState, useContext } from 'react';
-import classNames from 'classnames/bind';
-import styles from './Cart.module.scss';
-import { Button, Form, Image, Input } from 'antd';
-import { Call_Post_Api } from '../../../Components/CallApi/CallApis';
-import Cookies from 'js-cookie';
-import { DeleteOutlined } from '@ant-design/icons';
-
-import CheckGroup from '../../../Components/CheckGroup/CheckGroup';
-import { Checkbox, Divider } from 'antd';
-import { Radio } from 'antd';
-import { message, Space } from 'antd';
-import ThemeConText from '../../../config/themeConText';
-import { EventRegister } from 'react-event-listeners';
-import { Spin } from 'antd';
-
+import React, { useEffect, useState, useContext } from "react";
+import classNames from "classnames/bind";
+import styles from "./Cart.module.scss";
+import { Button, Form, Image, Input, Steps, message, Space, Checkbox, Divider, Radio, Spin, Tooltip, Table } from "antd";
+import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
+import Cookies from "js-cookie";
+import { DeleteOutlined } from "@ant-design/icons";
+import ThemeConText from "../../../config/themeConText";
+import { EventRegister } from "react-event-listeners";
+import { Link, useNavigate } from "react-router-dom";
+import { usePayOS, PayOSConfig } from "payos-checkout";
 const cx = classNames.bind(styles);
 
 const Cart = () => {
-    const CheckboxGroup = Checkbox.Group;
-    const [theme, ordersLength] = useContext(ThemeConText);
-    const [isLoad, setIsLoad] = useState(true);
+  const { CheckboxGroup } = Checkbox;
+  const [theme, ordersLength] = useContext(ThemeConText);
+  const [isLoad, setIsLoad] = useState(true);
+  const [messageApi, contextHolder] = message.useMessage();
 
-    const [messageApi, contextHolder] = message.useMessage();
+  const [orders, setOrder] = useState([]);
+  const [tong, setTong] = useState(0);
+  const [phiShip, setPhiShip] = useState(0);
+  const navigate = useNavigate();
 
-    // const [isload, setIsLoading] = useState(false);
-    //khai báo api cart
-    const [orders, setOrder] = useState([]);
-    const [tong, setTong] = useState(0);
+  const [names, setName] = useState("");
+  const [emails, setEmails] = useState("");
+  const [adrees, setAdrees] = useState("");
+  const [phone, setPhone] = useState("");
+  const [note, setNote] = useState("");
+  const [value, setValue] = useState(1);
+  const [checkedList, setCheckedList] = useState([]);
+  const [current, setCurrent] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [address, setAddress] = useState([]);
+  const [url, setUrl] = useState([]);
 
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    };
+  const [selectedValueAdress, setSelectedValueAdress] = useState(null);
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
+  const onChangeAdress = (e) => {
+    setSelectedValueAdress(e.target.value);
+  };
 
-    const getApi = () => {
-        const token = Cookies.get('accessToken');
-        const id = Cookies.get('id');
-        const cleanedJwtString = token?.replace(/"/g, '');
-        const cleanId = id?.replace(/"/g, '');
-        if (cleanedJwtString != undefined || cleanedJwtString != '') {
-            Call_Post_Api(
-                {
-                    userId: cleanId,
-                },
-                cleanedJwtString,
-                cleanId,
-                '/cart/getlistCart',
-            )
-                .then((data) => {
-                    console.log(data);
-                    setOrder(data?.metadata?.cart_products);
-                    EventRegister.emit(
-                        'chaneLength',
-                        data.metadata.cart_products.length,
-                    );
-                    setIsLoad(false);
-                    return;
-                })
-                .catch((err) => console.log({ err }));
-        } else {
-            setIsLoad(false);
-            messageApi.open({
-                type: 'warning',
-                content: 'Vui lòng đăng nhập để xem giỏ hàng!!',
-            });
-        }
-    };
+  const handleOptionChange = (option) => {
+    console.log(option);
+    setSelectedOption(option);
+    if (option === "fast") {
+      setPhiShip(50);
+    } else {
+      setPhiShip(20);
+    }
+  };
 
-    useEffect(() => {
-        getApi();
-    }, []);
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
 
-    //xử lý xóa
-    const handlerDelete = (procutId) => {
-        const token = Cookies.get('accessToken');
-        const id = Cookies.get('id');
-        const cleanedJwtString = token?.replace(/"/g, '');
-        const cleanId = id?.replace(/"/g, '');
+  const checkAll = orders.length === checkedList.length;
+  const indeterminate = checkedList.length > 0 && checkedList.length < orders.length;
 
-        Call_Post_Api(
-            {
-                userId: cleanId,
-                productId: procutId,
-            },
-            cleanedJwtString,
-            cleanId,
-            '/cart/delete',
-        ).then(() => {
-            getApi();
-            EventRegister.emit('chaneLength', ordersLength - 1);
+  const toggleCheckbox = (value) => {
+    const newCheckedList = checkedList.includes(value) ? checkedList.filter((item) => item !== value) : [...checkedList, value];
+    setCheckedList(newCheckedList);
+  };
 
-            messageApi.open({
-                type: 'success',
-                content: 'Xóa thành công!!',
-            });
+  const onCheckAllChange = (e) => {
+    setCheckedList(e.target.checked ? orders : []);
+  };
+
+  const getApi = () => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    if (cleanedJwtString) {
+      Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart")
+        .then((data) => {
+          setOrder(data?.metadata?.cart_products || []);
+          EventRegister.emit("chaneLength", data.metadata?.cart_products?.length ?? 0);
+          setIsLoad(false);
+        })
+        .catch((err) => {
+          console.log({ err });
+          setIsLoad(false);
         });
-    };
+    } else {
+      setIsLoad(false);
+      messageApi.open({
+        type: "warning",
+        content: "Vui lòng đăng nhập để xem giỏ hàng!!",
+      });
+    }
+  };
 
-    //khai báo biến
-    const [names, setName] = useState('');
-    const [emails, setEmails] = useState('');
-    const [adrees, setAdrees] = useState('');
-    const [phone, setPhone] = useState('');
-    const [note, setNote] = useState('');
-    const [value, setValue] = useState(1);
+  const getApiAdrressUser = () => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
 
-    const onChange = (e) => {
-        setValue(e.target.value);
-    };
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
+      .then((data) => {
+        setAddress(data.metadata.address);
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
 
-    const [checkedList, setCheckedList] = useState(orders);
+  useEffect(() => {
+    getApi();
+    getApiAdrressUser();
+  }, []);
 
-    const checkAll = orders?.length === checkedList.length;
-    const indeterminate =
-        checkedList.length > 0 && checkedList.length < orders?.length;
+  const handlerDelete = (productId) => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
 
-    const toggleCheckbox = (value) => {
-        const currentIndex = checkedList.indexOf(value);
-        const newCheckedList = [...checkedList];
+    Call_Post_Api(
+      {
+        userId: cleanId,
+        productId,
+      },
+      cleanedJwtString,
+      cleanId,
+      "/cart/delete"
+    ).then(() => {
+      getApi();
+      EventRegister.emit("chaneLength", ordersLength - 1);
+      messageApi.open({
+        type: "success",
+        content: "Xóa thành công!!",
+      });
+    });
+  };
 
-        if (currentIndex === -1) {
-            newCheckedList.push(value);
-        } else {
-            newCheckedList.splice(currentIndex, 1);
-        }
+  const handlerDatHang = () => {
+    setIsLoad(true);
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
 
-        setCheckedList(newCheckedList);
-    };
+    if (!address || address.length === 0) {
+      messageApi.open({
+        type: "error",
+        content: "Vui lòng nhập địa chỉ ở trong thông tin cá nhân",
+      });
+      setIsLoad(false);
 
-    const onCheckAllChange = (e) => {
-        setCheckedList(e.target.checked ? orders : []);
-    };
+      return;
+    }
 
-    console.log(checkedList);
+    if (!selectedValueAdress || Object.keys(selectedValueAdress).length === 0) {
+      messageApi.open({
+        type: "error",
+        content: "Địa chỉ không được trống.",
+      });
+      setIsLoad(false);
 
-    //xử lý đặt hàng
-    const handlerDatHang = () => {
-        const token = Cookies.get('accessToken');
-        const id = Cookies.get('id');
-        const cleanedJwtString = token?.replace(/"/g, '');
-        const cleanId = id?.replace(/"/g, '');
-        if (checkedList.length != 0) {
-            if (names != '' && phone != '' && adrees != '') {
-                const user = {
-                    userId: cleanId,
-                    name: names,
-                    email: emails,
-                    number: phone,
-                    adrees: adrees,
-                    note: note,
-                };
-                if (value == 2) {
-                    Call_Post_Api(
-                        {
-                            user: user,
-                            product: checkedList,
-                            shopId: 'test',
-                        },
-                        cleanedJwtString,
-                        cleanId,
-                        '/transaction',
-                    ).then((res) => {
-                        Call_Post_Api(
-                            {
-                                userId: cleanId,
-                                newCartData: checkedList,
-                            },
-                            cleanedJwtString,
-                            cleanId,
-                            '/cart/updateTransaciton',
-                        ).then(() => {
-                            setIsLoad(false);
-                            getApi();
-                            messageApi.open({
-                                type: 'success',
-                                content: 'Đặt hàng thành công!!!',
-                            });
-                        });
-                    });
-                } else {
-                    Call_Post_Api(
-                        {
-                            amount: tong,
-                            language: 'vn',
-                            bankCode: '',
-                        },
-                        cleanedJwtString,
-                        cleanId,
-                        '/vnpay/create_payment_url',
-                    ).then((data) => {
-                        window.open(data.data);
-                    });
-                }
-            } else {
-                alert('Vui lòng nhập dduur thông tin!!!');
-            }
-        } else {
-            messageApi.open({
-                type: 'warning',
-                content: 'Vui lòng chọn sản phẩm !!!',
-            });
-        }
-    };
+      return;
+    }
 
-    //tinhs tieen
-    useEffect(() => {
-        let total = checkedList?.reduce(
-            (acc, current) => acc + current.product_price * current.quantity,
-            0, // Giá trị khởi tạo
-        );
-        setTong(total);
-    }, [checkedList]);
+    if (!selectedOption) {
+      messageApi.open({
+        type: "error",
+        content: "Phương thức thanh toán không được trống.",
+      });
+      setIsLoad(false);
 
+      return;
+    }
+
+    if (!value) {
+      messageApi.open({
+        type: "error",
+        content: "Giá trị không được trống.",
+      });
+      setIsLoad(false);
+
+      return;
+    }
+
+    if (value === 3) {
+      setIsLoad(true);
+      Call_Post_Api(
+        {
+          user: { ...selectedValueAdress, _id: cleanId },
+          product: checkedList,
+          shopId: "test",
+          paymentExpression: selectedOption,
+          phiShip,
+          email: Cookies.get("name")?.replace(/"/g, ""),
+        },
+        cleanedJwtString,
+        cleanId,
+        "/transaction"
+      ).then(() => {
+        Call_Post_Api({ userId: cleanId, newCartData: checkedList }, cleanedJwtString, cleanId, "/cart/updateTransaciton").then(() => {
+          setIsLoad(false);
+          getApi();
+          // setTimeout(() => {
+          //   navigate("/information");
+          // }, 3000);
+          setCurrent(2);
+          setIsLoad(false);
+
+          messageApi.open({
+            type: "success",
+            content: "Đặt hàng thành công!!!",
+          });
+        });
+      });
+    } else if (value === 2) {
+      setIsLoad(true);
+
+      Call_Post_Api(
+        {
+          user: selectedValueAdress,
+          product: checkedList,
+          shopId: "test",
+          amount: tong + phiShip,
+        },
+        null,
+        null,
+        "/vnpay/create-payment-link"
+      ).then((data) => {
+        console.log(data);
+        setIsLoad(false);
+
+        window.location.replace(data);
+        Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
+          console.log(data);
+        });
+      });
+    }
+  };
+
+  useEffect(() => {
+    Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
+      console.log(data);
+    });
+  }, []);
+
+  const GetHtmlCart = () => {
     return (
-        <div className={cx('container_')}>
-            {contextHolder}
-            {isLoad && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        width: '100%',
-                        height: '100vh',
-                        zIndex: 100,
-                        top: 0,
-                        top: 0,
-                        left: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Spin />
+      <div>
+        <div
+          className={cx("box")}
+          style={{
+            backgroundColor: theme.background,
+            color: theme.color,
+          }}
+        >
+          {orders.length ? (
+            <div className={cx("table")}>
+              <div className={cx("table-head")}>
+                <div className={cx("table-row")}>
+                  <div className={cx("table-cell")}>
+                    <Checkbox className={cx("checkbox")} indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+                      All
+                    </Checkbox>
+                  </div>
+                  <div className={cx("table-cell", "STT")}>#</div>
+                  <div className={cx("table-cell")}>Sản phẩm</div>
+                  <div className={cx("table-cell")}>Số lượng</div>
+                  <div className={cx("table-cell")}>Tổng tiền</div>
+                  <div className={cx("table-cell")}>#</div>
                 </div>
-            )}
-            <div className="cpntainer">
-                <div className={cx('box-layout')}>
-                    <div className={cx('layut')}>
-                        <div className={cx('box')}>
-                            {orders?.length != 0 ? (
-                                <table
-                                    class="table table-striped"
-                                    style={{ margin: '0 auto', width: '100%' }}
-                                    className={cx('table')}
-                                >
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">
-                                                <Checkbox
-                                                    indeterminate={
-                                                        indeterminate
-                                                    }
-                                                    onChange={onCheckAllChange}
-                                                    checked={checkAll}
-                                                    style={{
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    All
-                                                </Checkbox>
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className={cx('STT')}
-                                            >
-                                                #
-                                            </th>
-                                            <th scope="col">Sản phẩm</th>
-                                            <th scope="col">Số lượng</th>
-                                            <th scope="col">Tổng tiền</th>
-                                            <th scope="col">#</th>
-                                        </tr>
-                                    </thead>
-
-                                    {orders?.map((order, index) => (
-                                        <tr key={order._id}>
-                                            <td>
-                                                {/* <Divider /> */}
-                                                <Checkbox
-                                                    key={order}
-                                                    checked={checkedList.includes(
-                                                        order,
-                                                    )}
-                                                    onChange={() =>
-                                                        toggleCheckbox(order)
-                                                    }
-                                                ></Checkbox>
-                                            </td>
-                                            <td
-                                                scope="row"
-                                                className={cx('STT')}
-                                            >
-                                                {index + 1}
-                                            </td>
-                                            <td>
-                                                {order.product_name}
-                                                <Image
-                                                    src={order.product_thumb}
-                                                    className={cx('Image')}
-                                                />
-                                            </td>
-
-                                            <td>{order.quantity}</td>
-                                            <td>
-                                                {order.quantity *
-                                                    order.product_price}
-                                            </td>
-                                            <td>
-                                                <DeleteOutlined
-                                                    onClick={() =>
-                                                        handlerDelete(order._id)
-                                                    }
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </table>
-                            ) : (
-                                <h2
-                                    style={{
-                                        color: 'pink',
-                                    }}
-                                >
-                                    Chưa có sản phẩm nào
-                                </h2>
-                            )}
-                        </div>
+              </div>
+              <div className={cx("table-body")}>
+                {orders.map((order, index) => (
+                  <div key={order._id} className={cx("table-row")}>
+                    <div className={cx("table-cell")}>
+                      <Checkbox className={cx("checkbox")} checked={checkedList.includes(order)} onChange={() => toggleCheckbox(order)} />
                     </div>
-
-                    {/* Thanh toán */}
-                    <div className={cx('layout-thanhtoan')}>
-                        <div className={cx('box')}>
-                            <div className={cx('ThongTin')}>
-                                <h2>Thông tin cá nhân</h2>
-                                <Form
-                                    name="basic"
-                                    labelCol={{ span: 8 }}
-                                    wrapperCol={{ span: 16 }}
-                                    style={{ maxWidth: 700 }}
-                                    initialValues={{ remember: true }}
-                                    onFinish={onFinish}
-                                    onFinishFailed={onFinishFailed}
-                                    autoComplete="off"
-                                >
-                                    <Form.Item
-                                        label="Email"
-                                        name="Email"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    'Please input your Email!',
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Email"
-                                            onChange={(e) =>
-                                                setEmails(e.target.value)
-                                            }
-                                        />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        label="Họ và tên"
-                                        name="Họ và tên"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    'Please input your Họ và tên!',
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Họ và tên"
-                                            onChange={(e) =>
-                                                setName(e.target.value)
-                                            }
-                                        />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Số điện thoại"
-                                        name="Số điện thoại"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    'Please input Số điện thoại!',
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Số điện thoại"
-                                            onChange={(e) =>
-                                                setPhone(e.target.value)
-                                            }
-                                        />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Địa chỉ"
-                                        name="Địa chỉ"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please địa chỉ!',
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Địa chỉ"
-                                            onChange={(e) =>
-                                                setAdrees(e.target.value)
-                                            }
-                                        />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Ghi chú"
-                                        name="Ghi chú"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message:
-                                                    'Please input Ghi chú !',
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Ghi chú"
-                                            onChange={(e) =>
-                                                setNote(e.target.value)
-                                            }
-                                        />
-                                    </Form.Item>
-                                </Form>
-                            </div>
-                            <div className={cx('Vanchuyen')}>
-                                <div className={cx('conten-vanchuyen')}>
-                                    <h1>Vận chuyển</h1>
-                                    <p>Vui lòng nhập thông tin giao hàng</p>
-                                </div>
-                                <div className={cx('conten-thanhtoan')}>
-                                    <h3>Thanh toán</h3>
-                                    <div className={cx('phươngthucTT')}>
-                                        <Radio.Group
-                                            onChange={onChange}
-                                            value={value}
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                            }}
-                                        >
-                                            <Radio
-                                                value={1}
-                                                style={{
-                                                    fontSize: '18px',
-                                                }}
-                                            >
-                                                Thanh toán qua VNPay
-                                            </Radio>
-                                            <Radio
-                                                value={2}
-                                                style={{
-                                                    fontSize: '18px',
-                                                }}
-                                            >
-                                                Thanh toán khi nhận hàng
-                                            </Radio>
-                                        </Radio.Group>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={cx('TongTien')}>
-                                <div className="">
-                                    <div>
-                                        <h2>Nhập Mã Giảm Giá</h2>
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                marginTop: '20px',
-                                                marginBottom: '20px',
-                                            }}
-                                        >
-                                            <Input placeholder="Mã giảm giá" />
-                                            <button className={cx('button')}>
-                                                Áp dụng
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className={cx('tamtinh')}>
-                                        <div>Tạm tính</div>
-                                        <div>{tong}</div>
-                                    </div>
-                                    <div className={cx('vanchuyen')}>
-                                        <div>Phí vận chuyển</div>
-                                        <div></div>
-                                    </div>
-                                    <hr />
-                                    <div className={cx('tongcong')}>
-                                        <div>Tổng cộng</div>
-                                        <div>{tong}</div>
-                                    </div>
-                                    <button onClick={() => handlerDatHang()}>
-                                        Đặt hàng
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <div className={cx("table-cell", "STT")}>{index + 1}</div>
+                    <div className={cx("table-cell", "product")}>
+                      <Image src={order.product_thumb} className={cx("Image")} />
+                      <div>{order.product_name}</div>
                     </div>
-                </div>
+                    <div className={cx("table-cell")}>{order.quantity}</div>
+                    <div className={cx("table-cell")}>{order.quantity * order.product_price}</div>
+                    <div className={cx("table-cell")}>
+                      <DeleteOutlined className={cx("DeleteOutlined")} onClick={() => handlerDelete(order._id)} />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            {/* Đặt hàng */}
-
-            <div className={cx('buttom_dathang')}>
-                <div>
-                    <div>
-                        <Checkbox
-                            indeterminate={indeterminate}
-                            onChange={onCheckAllChange}
-                            checked={checkAll}
-                        >
-                            Check all
-                        </Checkbox>
-                    </div>
-                    <div
-                        style={{
-                            fontSize: '14px',
-                        }}
-                    >
-                        Tổng thanh toán: đ{tong}
-                    </div>
-                    <div
-                        style={{
-                            backgroundColor: 'coral',
-                            textAlign: 'center',
-                            color: 'white',
-                            fontWeight: 600,
-                        }}
-                        onClick={() => handlerDatHang()}
-                    >
-                        Mua hàng
-                    </div>
-                </div>
-            </div>
+          ) : (
+            <h2
+              style={{
+                color: "pink",
+                fontSize: "18px",
+                marginTop: "20px",
+              }}
+            >
+              Chưa có sản phẩm nào
+            </h2>
+          )}
         </div>
+      </div>
     );
+  };
+
+  const GetHtmlAddress = () => {
+    return (
+      <div
+        className={cx("box")}
+        style={{
+          backgroundColor: theme.background,
+          color: theme.color,
+        }}
+      >
+        <div className={cx("Vanchuyen")}>
+          <div className={cx("address")}>
+            <h2 className={cx("title-address")}>Thông tin tài khoản</h2>
+
+            <div>Địa chỉ nhận hàng</div>
+            <Radio.Group onChange={onChangeAdress} value={selectedValueAdress}>
+              {address?.map((item, index) => (
+                <div key={index} style={{ textAlign: "left" }}>
+                  <Radio value={item}>
+                    <div style={{ textAlign: "left" }}>
+                      <div>
+                        <span
+                          style={{
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Họ tên:{" "}
+                        </span>
+                        <span>{item.name}</span>
+                      </div>
+                      <div>
+                        <span
+                          style={{
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Số điện thoại:{" "}
+                        </span>
+                        <span> {item.number}</span>
+                      </div>
+
+                      <div>
+                        <p>
+                          {item.diaChiCuThe}, {item.phuongXa}, {item.quanHuyen}, {item.tinhThanh}
+                        </p>
+                      </div>
+                    </div>
+                  </Radio>
+                </div>
+              ))}
+            </Radio.Group>
+          </div>
+          <div className={cx("conten-vanchuyen")}>
+            <h2>Hình thức giao hàng</h2>
+            <div className={cx("box")}>
+              <div className={cx("box1")} onClick={() => handleOptionChange("fast")}>
+                <div className={cx("radio-label")}>
+                  <input type="radio" name="deliveryOption" checked={selectedOption === "fast"} onChange={() => {}} />
+                  <span>Giao hàng nhanh</span>
+                </div>
+                <div className={cx("description")}>
+                  <div>Giao hàng muộn nhất là 17h ngày hôm sau</div>
+                  <iframe src="https://lottie.host/embed/02d37c44-2fd8-4b50-872a-ef3d9974337d/cVZ6Y7ns0O.json"></iframe>
+                </div>
+              </div>
+              <div className={cx("box1")} onClick={() => handleOptionChange("slow")}>
+                <div className={cx("radio-label")}>
+                  <input type="radio" name="deliveryOption" checked={selectedOption === "slow"} onChange={() => {}} />
+                  <span>Giao hàng chậm</span>
+                </div>
+                <div className={cx("description")}>
+                  <div>Khi nào có hàng thì chúng tôi chịu</div>
+                  <iframe src="https://lottie.host/embed/51f5b5f3-1dd7-49ea-a970-30e9099cfa5c/wYp9X23fPi.json"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              height: "30px",
+            }}
+          ></div>
+          <div className={cx("conten-thanhtoan")}>
+            <h2>Thanh toán</h2>
+            <div className={cx("phuongthucTT")}>
+              <Radio.Group
+                onChange={onChange}
+                value={value}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                }}
+              >
+                <Radio value={1} style={{ fontSize: "18px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <img
+                      src="https://lacfarm.netlify.app/assets/vnpay-logo-82927e0d.webp"
+                      style={{
+                        width: "200px",
+                        height: "80px",
+                      }}
+                    />
+                    <div
+                      style={{
+                        fontFamily: "italic",
+                      }}
+                    >
+                      Thanh toán qua VN pay
+                    </div>
+                  </div>
+                </Radio>
+                <Radio value={2} style={{ fontSize: "18px" }}>
+                  <img
+                    src="https://lacfarm.netlify.app/assets/vnpay-qr-code-cbc23988.png"
+                    style={{
+                      width: "120px",
+                      height: "120px",
+                    }}
+                  />
+                  <div>Thanh toán qua QR code</div>
+                </Radio>
+                <Radio value={3} style={{ fontSize: "18px" }}>
+                  <img
+                    src="https://lacfarm.netlify.app/assets/vnpay-qr-code-cbc23988.png"
+                    style={{
+                      width: "120px",
+                      height: "120px",
+                    }}
+                  />
+                  <div>Thanh toán khi nhận hàng</div>
+                </Radio>
+              </Radio.Group>
+            </div>
+          </div>
+
+          {/* sản phẩm đã chọn */}
+          <div className={cx("Sp-daChon")}>
+            <h2
+              style={{
+                backgroundColor: "rgb(170, 170, 170)",
+                padding: "5px",
+                fontSize: "20px",
+                color: "white",
+                borderRadius: "6px",
+                marginTop: "20px",
+              }}
+            >
+              Sản phẩm đã chọn
+            </h2>
+            <div>
+              {checkedList.map((item, index) => (
+                <div
+                  key={item._id}
+                  style={{ display: "flex", alignItems: "center", borderBottom: "1px solid #ddd", padding: "1px 0", height: "100px" }}
+                >
+                  <div style={{ width: "10%", textAlign: "center" }} className={"STT"}>
+                    {index + 1}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", marginLeft: "10px" }}>
+                    <img src={item.product_thumb} style={{ width: "50px", height: "50px", objectFit: "cover" }} className={"Image"} />
+                    <div style={{ marginLeft: "10px" }}>{item.product_name}</div>
+                  </div>
+                  <div style={{ marginLeft: "auto", padding: "0 8px" }}>{item.quantity}</div>
+                  <div style={{ marginLeft: "auto", padding: "0 8px" }}>{item.quantity * item.product_price}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const handelOpentData = () => {
+    Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
+      console.log(data);
+    });
+  };
+
+  const GetOrdered = () => {
+    return (
+      <div>
+        <div
+          style={{
+            fontSize: "20px",
+          }}
+        >
+          Thanh toán thành công 🎈
+        </div>
+        <Button onClick={handelOpentData}>Xem data</Button>
+      </div>
+    );
+  };
+
+  const steps = [
+    {
+      title: "Giỏ Hàng",
+      content: <GetHtmlCart />,
+    },
+    {
+      title: "Thanh Toán",
+      content: <GetHtmlAddress />,
+    },
+    {
+      title: "Thanh toán hoàn tất",
+      content: <GetOrdered />,
+    },
+  ];
+
+  useEffect(() => {
+    const total = checkedList.reduce((acc, current) => acc + current.product_price * current.quantity, 0);
+    setTong(total);
+  }, [checkedList]);
+
+  const next = () => {
+    console.log("ahshsh");
+    setCurrent(current + 1);
+  };
+  const prev = () => setCurrent(current - 1);
+
+  const items = steps.map((item) => ({
+    key: item.title,
+    title: item.title,
+  }));
+
+  const contentStyle = {
+    lineHeight: "260px",
+    textAlign: "center",
+    color: theme.colorTextTertiary,
+    backgroundColor: theme.colorFillAlter,
+    borderRadius: theme.borderRadiusLG,
+    border: `1px dashed ${theme.colorBorder}`,
+    marginTop: 16,
+  };
+
+  return (
+    <div
+      className={cx("container_")}
+      style={{
+        backgroundColor: theme.background,
+        color: theme.color,
+      }}
+    >
+      {contextHolder}
+
+      {isLoad && (
+        <div
+          style={{
+            position: "fixed",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            width: "100%",
+            height: "100vh",
+            zIndex: 100,
+            top: 0,
+            top: 0,
+            left: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin />
+        </div>
+      )}
+
+      <div className={cx("box-class")}>
+        <div className={cx("box-steps")}>
+          <Steps current={current} items={items} className={cx("box")} />
+          <div style={contentStyle}>{steps[current].content}</div>
+          <div style={{ marginTop: 24 }}>
+            {current < steps.length - 1 && (
+              <Button type="primary" onClick={next}>
+                Next
+              </Button>
+            )}
+            {current === steps.length - 1 && (
+              <Button type="primary" onClick={() => message.success("Processing complete!")}>
+                Done
+              </Button>
+            )}
+            {current > 0 && (
+              <Button style={{ margin: "0 8px" }} onClick={prev}>
+                Previous
+              </Button>
+            )}
+          </div>
+        </div>
+        <div className={cx("TongTien")}>
+          <div>
+            <h2>Nhập Mã Giảm Giá</h2>
+            <div
+              style={{
+                display: "flex",
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <Input placeholder="Mã giảm giá" />
+              <button className={cx("button")}>Áp dụng</button>
+            </div>
+            <div className={cx("tamtinh")}>
+              <div>Tạm tính</div>
+              <div>{tong}</div>
+            </div>
+            <div className={cx("vanchuyen")}>
+              <div>Phí vận chuyển</div>
+              <div>{phiShip}</div>
+            </div>
+            <hr />
+            <div className={cx("tongcong")}>
+              <div>Tổng cộng</div>
+              <div>{tong + phiShip}</div>
+            </div>
+            {current < steps.length - 1 && (
+              // <button
+              //     onClick={() => next()}
+              //     disabled={checkedList.length === 0}
+              //     className={cx(
+              //         checkedList.length === 0
+              //             ? 'disabled-button'
+              //             : '',
+              //     )}
+              // >
+              //     Đặt hàng
+              // </button>
+
+              <Tooltip title={checkedList.length === 0 ? "Vui lòng chọn sản phẩm" : "Đặt hàng"}>
+                <Button
+                  type="primary"
+                  disabled={current === 0 && checkedList.length === 0}
+                  className={cx(current === 0 && checkedList.length === 0 ? "disabled-button" : "")}
+                >
+                  {current === 0 ? <div onClick={() => next()}> Next</div> : <div onClick={() => handlerDatHang()}>Đặt Hàng</div>}
+                </Button>
+              </Tooltip>
+            )}
+          </div>
+        </div>
+      </div>
+      {/* {contextHolder} */}
+      {isLoad && (
+        <div
+          style={{
+            position: "fixed",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            width: "100%",
+            height: "100vh",
+            zIndex: 100,
+            top: 0,
+            left: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin />
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Cart;
