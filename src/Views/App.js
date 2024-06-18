@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DefaultLayout from "./Layouts/DefaultLayout/DefaultLayout";
-import { publicRoute, privateRoute } from "../Routes";
+import { publicRoute, privateRoute, adminRoute } from "../Routes";
 import { ScrollToTop } from "../Components";
 import React, { useState, useEffect } from "react";
 import theme from "../config/theme";
@@ -83,7 +83,7 @@ const App = () => {
               />
             );
           })}
-          {privateRoute.map((route, index) => {
+          {adminRoute.map((route, index) => {
             let Page = route.component;
             return (
               <Route
@@ -96,6 +96,30 @@ const App = () => {
                       <div className="sidebarWapper">
                         <SideBar />
                       </div>
+                      <div
+                        className="contents"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        {Page}
+                      </div>
+                    </div>
+                  </>
+                }
+              />
+            );
+          })}
+          {privateRoute.map((route, index) => {
+            let Page = route.component;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <>
+                    <div className="main d-flex">
                       <div
                         className="contents"
                         style={{

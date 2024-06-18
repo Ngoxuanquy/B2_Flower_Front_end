@@ -1,0 +1,90 @@
+// User.module.scss
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  margin-top: 60px;
+
+  div {
+    margin-bottom: 15px;
+  }
+}
+
+.model-header {
+  line-height: 35px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  padding: 6px;
+  font-size: 16px;
+  border-bottom: 2px solid #ccc;
+  font-weight: bold;
+
+  div {
+    flex: 1;
+    text-align: center;
+    padding: 10px 5px;
+  }
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
+
+  div {
+    flex: 1;
+    text-align: center;
+    padding: 10px 5px;
+    word-wrap: break-word;
+    white-space: nowrap; /* Ensure text does not wrap */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis;
+  }
+}
+
+.deleteButton {
+  color: #228556;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.status-active {
+  color: green;
+}
+
+.status-inactive {
+  color: red;
+}
+
+.status-pending {
+  color: orange;
+}
+
+/* Role styles */
+.role-read {
+  color: blue;
+}
+
+.role-edit {
+  color: purple;
+}
+
+.role-delete {
+  color: red;
+}

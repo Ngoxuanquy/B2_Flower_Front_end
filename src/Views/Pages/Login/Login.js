@@ -88,7 +88,7 @@ function Logins() {
           Cookies.set("timeeexp", JSON.stringify(data.metadata?.tokens?.timeExp), { expires: 7 });
           setIsLoad(false);
           // navigate('/');
-          if (data.metadata.shop.roles[0] == "SHOP") {
+          if (data.metadata.shop.roles[0] === "SHOP") {
             // alert(data.metadata.status)
             navigate("/");
           } else {
