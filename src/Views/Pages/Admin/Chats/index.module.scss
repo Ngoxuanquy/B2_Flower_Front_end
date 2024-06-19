@@ -3,30 +3,45 @@
   width: 100%;
   background-color: white;
   height: 100vh;
+  max-height: calc(100vh - 100px);
 
   .box {
     width: 100%;
     display: grid;
-    grid-template-columns: 25% 75%;
-
+    grid-template-columns: 15% 85%;
+    max-height: 100vh;
     .box-messege {
       position: relative;
-      height: 100vh; /* Đặt chiều cao là 100% của viewport */
+      max-height: 100vh; /* Đặt chiều cao là 100% của viewport */
       overflow-y: auto; /* Cho phép cuộn nếu nội dung vượt quá kích thước màn hình */
-      background-color: rgb(243, 243, 243);
+      background-color: rgb(250, 250, 250);
 
       .header {
         font-size: 20px;
-        height: 60px;
+        height: 50px;
         width: 100%;
-        background-color: rgb(192, 192, 192);
+        background-color: rgb(255, 245, 245);
+        // position: fixed;
         display: flex;
-        align-items: center;
-        padding: 0 20px;
-
+        padding: 5px;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         .title {
-          font-size: 16px;
-          margin-left: 10px;
+          font-size: 12px;
+          margin-left: 10px !important;
+          .title-status {
+            display: flex;
+            font-size: 10px;
+            margin-top: 4px;
+            .online {
+              width: 10px;
+              height: 10px;
+              background-color: green;
+              border-radius: 50%;
+              margin-top: 2px;
+              margin-right: 5px;
+            }
+          }
         }
 
         img {
@@ -66,13 +81,14 @@
     }
 
     .box-title {
+      max-height: 100vh;
       overflow-y: auto;
-      height: 100vh;
+      overflow: scroll;
 
       .box-chat {
         display: flex;
         align-items: center;
-        padding: 20px;
+        padding: 10px;
         cursor: pointer;
         border-bottom: 1px solid #ccc;
 
@@ -85,6 +101,7 @@
 
         .title {
           flex: 1;
+          margin-right: -10px !important;
 
           .name {
             font-weight: bold;
@@ -119,7 +136,25 @@
 }
 
 .right {
+  max-width: 70%;
+  width: fit-content;
   display: flex !important;
   justify-content: flex-end !important;
-  width: 100%;
+  background-color: #55a2f3 !important;
+  align-items: flex-end;
+  padding: 10px !important;
+  border-radius: 10px;
+  margin-top: 3px;
+  margin-left: auto;
+}
+.left {
+  width: fit-content;
+  background-color: #cccccc !important;
+  border-radius: 10px;
+  padding: 10px !important;
+  margin-top: 3px;
+}
+
+.box-chat.active {
+  background-color: #cccccc;
 }

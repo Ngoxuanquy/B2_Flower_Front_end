@@ -3,6 +3,7 @@ import classNames from "classnames/bind";
 import styles from "./User.module.scss";
 import { Input, Modal, Select } from "antd";
 import Cookies from "js-cookie";
+import PageTitle from "../../../../Components/Admin/PageTitle/PageTitle";
 
 const User = () => {
   const URL = process.env.REACT_APP_URL;
@@ -14,6 +15,12 @@ const User = () => {
     { value: "EDIT", label: "EDIT" },
     { value: "DELETE", label: "DELETE" },
   ];
+
+  const pageTitleProps = {
+    title: "User List",
+    items: [{ text: "Admin", link: "/admin/dash-board" }, { text: "User", link: "/admin/user-list" }, { text: "User List" }],
+  };
+
   const cx = classNames.bind(styles);
   const [apis, setApi] = useState([]);
   const [detailApi, setDetailApi] = useState(null);
@@ -141,6 +148,8 @@ const User = () => {
 
   return (
     <div className={cx("container")}>
+      <PageTitle title={pageTitleProps.title} items={pageTitleProps.items} />
+
       <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <div className={cx("model-header")}>
           <h2>Thông tin cá nhân</h2>
