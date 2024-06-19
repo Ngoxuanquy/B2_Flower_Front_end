@@ -11,15 +11,20 @@ import { Button } from "@mui/material";
 import { TbLogout } from "react-icons/tb";
 import { Call_Post_Api } from "../../CallApi/CallApis";
 import Cookies from "js-cookie";
+import styles from "./index.module.scss";
+import classNames from "classnames/bind";
 
 const Sidebar = () => {
+  const cx = classNames.bind(styles);
   const [openItem, setOpenItem] = useState(null);
+  const [activeItem, setActiveItem] = useState(null);
   const [roles, setRoles] = useState([]);
 
   const navigate = useNavigate();
 
   const handleItemClick = (primary) => {
     setOpenItem(primary === openItem ? null : primary);
+    setActiveItem(primary); // Set active item
     console.log("open ", primary);
     // navigate(`/admin/${primary}`);
   };
@@ -31,19 +36,23 @@ const Sidebar = () => {
 
   const handleOpenDashBroad = (primary) => {
     setOpenItem(primary);
+    setActiveItem(primary); // Set active item
     navigate("/admin/dash-board");
     console.log("Open Dashboard", primary);
   };
 
   const handleOpenMessage = () => {
+    setActiveItem("Message"); // Set active item
     navigate("/admin/message");
   };
 
   const handleOpentProduct = () => {
+    setActiveItem("Products"); // Set active item
     navigate("/admin/products");
   };
 
   const handleOpentUser = () => {
+    setActiveItem("User"); // Set active item
     navigate("/admin/user");
   };
 
@@ -65,13 +74,19 @@ const Sidebar = () => {
     <div
       className="sidebar"
       style={{
-        marginTop: "80px",
+        marginTop: "70px",
         minHeight: "100vh",
         backgroundColor: "white",
       }}
     >
       {roles.includes("ADMIN") && (
-        <SideBarItem icon={<MdDashboard />} primary="Dashboard" onItemClick={handleOpenDashBroad} isOpen={openItem === "Dashboard"} />
+        <SideBarItem
+          icon={<MdDashboard />}
+          primary="Dashboard"
+          onItemClick={handleOpenDashBroad}
+          isOpen={openItem === "Dashboard"}
+          isActive={activeItem === "Dashboard"} // Set active state
+        />
       )}
 
       {roles.includes("ADMIN") && (
@@ -82,6 +97,7 @@ const Sidebar = () => {
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Authentication"}
+          isActive={activeItem === "Authentication"} // Set active state
         />
       )}
 
@@ -93,6 +109,7 @@ const Sidebar = () => {
           onItemClick={handleOpentProduct}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Products"}
+          isActive={activeItem === "Products"} // Set active state
         />
       )}
       {roles.includes("ADMIN") && (
@@ -103,6 +120,7 @@ const Sidebar = () => {
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Order"}
+          isActive={activeItem === "Order"} // Set active state
         />
       )}
 
@@ -114,19 +132,38 @@ const Sidebar = () => {
           onItemClick={handleOpentUser}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "User"}
+          isActive={activeItem === "User"} // Set active state
         />
       )}
 
       {roles.includes("ADMIN") && (
-        <SideBarItem icon={<MdContactMail />} primary="Message" onItemClick={handleOpenMessage} isOpen={openItem === "Message"} />
+        <SideBarItem
+          icon={<MdContactMail />}
+          primary="Message"
+          onItemClick={handleOpenMessage}
+          isOpen={openItem === "Message"}
+          isActive={activeItem === "Message"} // Set active state
+        />
       )}
 
       {roles.includes("ADMIN") && (
-        <SideBarItem icon={<FaBell />} primary="Notification" onItemClick={handleItemClick} isOpen={openItem === "Notification"} />
+        <SideBarItem
+          icon={<FaBell />}
+          primary="Notification"
+          onItemClick={handleItemClick}
+          isOpen={openItem === "Notification"}
+          isActive={activeItem === "Notification"} // Set active state
+        />
       )}
 
       {roles.includes("ADMIN") && (
-        <SideBarItem icon={<IoSettings />} primary="Setting" onItemClick={handleItemClick} isOpen={openItem === "Setting"} />
+        <SideBarItem
+          icon={<IoSettings />}
+          primary="Setting"
+          onItemClick={handleItemClick}
+          isOpen={openItem === "Setting"}
+          isActive={activeItem === "Setting"} // Set active state
+        />
       )}
 
       <div className="logoutWrapper">

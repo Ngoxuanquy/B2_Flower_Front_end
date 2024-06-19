@@ -43,6 +43,7 @@ export const adminRoute = [
   { path: "/admin", component: <Admin /> },
   { path: "/admin/Message", component: <Chats /> },
   { path: "/admin/user", component: <User /> },
+  { path: "/admin/user-list", component: <User /> },
   { path: "/admin/products", component: <SelectProducts /> },
   { path: "/admin/dash-board", component: <DashBoard /> },
   // { path: "/admin/user-list", component: <UserList /> },

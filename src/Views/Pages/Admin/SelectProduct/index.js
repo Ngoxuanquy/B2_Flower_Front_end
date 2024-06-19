@@ -1528,19 +1528,8 @@ function Index() {
                             Sửa
                           </button>
                         )}
-                        <button
-                          className={cx("learn-more")}
-                          style={{
-                            backgroundColor: "red",
-                            color: "white",
-                          }}
-                          // onClick={() => handerXoa(detail._id)}
-                          onClick={() => handerUnPublic(id_detail)}
-                        >
-                          {" "}
-                          Un public
-                        </button>
-                        {roles.includes("DELETE") && (
+
+                        {(roles.includes("DELETE") || roles.includes("ADMIN")) && (
                           <button
                             className={cx("learn-more")}
                             style={{
@@ -1550,7 +1539,6 @@ function Index() {
                             // onClick={() => handerXoa(detail._id)}
                             onClick={() => handerDelete(id_detail)}
                           >
-                            {" "}
                             Xóa
                           </button>
                         )}
@@ -1609,9 +1597,8 @@ function Index() {
                   <th scope="col">Hình Ảnh</th>
                   <th scope="col">Size</th>
                   <th scope="col">Màu</th>
-                  <th scope="col"></th>
-                  {roles.includes("EDIT") && <th scope="col"></th>}
-                  {roles.includes("DELETE") && <th scope="col"></th>}
+                  {(roles.includes("EDIT") || roles.includes("ADMIN")) && <th scope="col"> Sửa</th>}
+                  {(roles.includes("DELETE") || roles.includes("ADMIN")) && <th scope="col">Xóa</th>}
                 </tr>
               </thead>
               {apiproducts &&
@@ -1648,27 +1635,22 @@ function Index() {
                       </td>
                       <td>{api.product_attributes.size}</td>
                       <td>{api.product_attributes.color}</td>
-                      <td
-                        style={{
-                          fontSize: "17px",
-                        }}
-                      >
-                        <button onClick={() => handerPublic(api._id)}>Public</button>
-                      </td>
-                      {roles.includes("EDIT") && (
+
+                      {(roles.includes("EDIT") || roles.includes("ADMIN")) && (
                         <td
                           style={{
                             fontSize: "17px",
                           }}
                         >
                           <button
-                          // onClick={() => handerUpdate(api._id)}
+                          // onClick={() => handleUpdate(api._id)} // Uncomment this line if the handleUpdate function is ready
                           >
                             Sửa
                           </button>
                         </td>
                       )}
-                      {roles.includes("DELETE") && (
+
+                      {(roles.includes("DELETE") || roles.includes("ADMIN")) && (
                         <td
                           style={{
                             fontSize: "17px",

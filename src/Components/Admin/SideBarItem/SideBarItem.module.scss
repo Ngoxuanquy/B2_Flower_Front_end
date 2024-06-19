@@ -1,0 +1,26 @@
+.sidebar-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sidebar-item.active {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.sidebar-item-primary {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-item-primary span {
+  margin-left: 10px;
+}
+
+.sidebar-item-subitems {
+  padding-left: 20px;
+}
+
+.active {
+  background-color: aqua;
+}

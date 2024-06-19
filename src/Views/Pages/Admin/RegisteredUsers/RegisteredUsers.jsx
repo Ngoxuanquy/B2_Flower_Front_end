@@ -157,7 +157,7 @@ const RegisteredUsers = ({ apis }) => {
           </div>
           <div>
             Email
-            <Input value={email} onChange={handleEmailChange} />
+            <Input value={email} onChange={handleEmailChange} disabled />
           </div>
           <div>
             Roles
@@ -232,7 +232,7 @@ const RegisteredUsers = ({ apis }) => {
             </tr>
           </thead>
           <tbody>
-            {api.map((api, index) => (
+            {api?.map((api, index) => (
               <tr>
                 <td>#{index + 1}</td>
                 <td>

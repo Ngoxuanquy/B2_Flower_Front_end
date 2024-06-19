@@ -1,24 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  Collapse,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { FaAngleDown, FaAngleRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-
-const SideBarItem = ({
-  icon,
-  primary,
-  subItems,
-  onItemClick,
-  onSubItemClick,
-  isOpen,
-}) => {
+import styles from "./SideBarItem.module.scss";
+import classNames from "classnames/bind";
+const SideBarItem = ({ icon, primary, subItems, onItemClick, onSubItemClick, isOpen, isActive }) => {
   const [open, setOpen] = useState(isOpen);
   const navigate = useNavigate(); // Initialize useNavigate
+  const cx = classNames.bind(styles);
 
   useEffect(() => {
     setOpen(isOpen);
@@ -49,13 +38,7 @@ const SideBarItem = ({
         <ListItemButton onClick={handleClick}>
           <ListItemIcon className="icon">{icon}</ListItemIcon>
           <ListItemText primary={primary} className="text-sidebar" />
-          {subItems && subItems.length > 0 ? (
-            open ? (
-              <FaAngleDown />
-            ) : (
-              <FaAngleRight />
-            )
-          ) : null}
+          {subItems && subItems.length > 0 ? open ? <FaAngleDown /> : <FaAngleRight /> : null}
         </ListItemButton>
         {subItems && subItems.length > 0 && (
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -65,6 +48,7 @@ const SideBarItem = ({
                   key={index}
                   sx={{ pl: 4 }}
                   onClick={() => handleSubItemClick(subItem)}
+                  className={cx(`${isActive ? "active" : ""}`)}
                 >
                   <ListItemText primary={subItem} className="list-item" />
                 </ListItemButton>
