@@ -12,9 +12,7 @@ const PageTitle = ({ title, items }) => {
         <h3>{title}</h3>
         <ul>
           {items.map((item, index) => (
-            <li key={index}>
-              {item.link ? <a href={item.link}>{item.text}</a> : item.text}
-            </li>
+            <li key={index}>{item.link ? <a href={item.link}>{item.text}</a> : item.text}</li>
           ))}
         </ul>
       </div>

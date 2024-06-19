@@ -16,7 +16,9 @@ import {
 import Admin from "../Views/Pages/Admin/Admin";
 import Chats from "../Views/Pages/Admin/Chats";
 import DashBoard from "../Views/Pages/Admin/DashBoard";
-import UserList from "../Views/Pages/Admin/User/UserList";
+
+import User from "../Views/Pages/Admin/User/UserList";
+import SelectProducts from "../Views/Pages/Admin/SelectProduct/index";
 
 export const publicRoute = [
   { path: "/", component: <HomePage /> },
@@ -31,12 +33,17 @@ export const publicRoute = [
 export const privateRoute = [
   { path: "/login", component: <Login /> },
   { path: "/dangky", component: <DangKy /> },
+];
+
+export const adminRoute = [
   { path: "/api/create/product", component: <CreateProduct /> },
   { path: "/api/admin/listkhachhang", component: <ListKhachHang /> },
   { path: "/api/admin", component: <Index /> },
   { path: "/api/select/product", component: <SelectProduct /> },
   { path: "/admin", component: <Admin /> },
   { path: "/admin/Message", component: <Chats /> },
+  { path: "/admin/user", component: <User /> },
+  { path: "/admin/products", component: <SelectProducts /> },
   { path: "/admin/dash-board", component: <DashBoard /> },
-  { path: "/admin/user-list", component: <UserList /> },
+  // { path: "/admin/user-list", component: <UserList /> },
 ];

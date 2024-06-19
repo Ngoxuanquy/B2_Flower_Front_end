@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 import ThemeConText from "../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
 import { Call_Post_Api } from "../CallApi/CallApis";
+import logo from "../../access/logo-1.png";
 
 const cx = classNames.bind(styles);
 const { Search } = Input;
@@ -312,11 +313,7 @@ function Header() {
           <div className="container_">
             <div className={cx("header")}>
               <div onClick={() => (window.location.href = "/")} style={{ cursor: "pointer" }}>
-                <img
-                  src="http://localhost:3000/static/media/logo-1.0b4e3a18f02ba2d48e78.png"
-                  className={cx("img_logo")}
-                  style={{ borderRadius: "300px", marginRight: "-10px" }}
-                />
+                <img src={logo} className={cx("img_logo")} style={{ borderRadius: "300px", marginRight: "-10px" }} />
               </div>
               <div className={cx("header_center")}>
                 <Tabs defaultActiveKey={defau} centered onChange={(e) => handeTab(e)} tabBarStyle={{ color: "pink" }}>

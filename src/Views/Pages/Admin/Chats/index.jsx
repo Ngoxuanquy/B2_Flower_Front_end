@@ -4,7 +4,7 @@ import styles from "./index.module.scss";
 import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
 import socketIOClient from "socket.io-client";
-import { Button, Input, List, message } from "antd";
+import { Badge, Button, Input, List, message } from "antd";
 
 const ENDPOINT = "https://chat-b2-flower.onrender.com";
 
@@ -13,6 +13,9 @@ const Chats = () => {
   const URL = process.env.REACT_APP_URL;
   const [apis, setApi] = useState([]);
   const [roomId, setRoomId] = useState("");
+  const [email, setEmail] = useState("");
+  const [count, setCount] = useState(0);
+
   const [messageApi, contextHolder] = message.useMessage();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -51,6 +54,7 @@ const Chats = () => {
     newSocket.on("message", ({ cleanId, message }) => {
       console.log({ cleanId });
       console.log({ message });
+      setCount(count + 1);
       setMessages((prevMessages) => [
         ...prevMessages,
         {
@@ -61,6 +65,7 @@ const Chats = () => {
     });
 
     newSocket.on("notification", (data) => {
+      console.log("ábcbcbccb");
       messageApi.open({
         type: "success",
         content: data.message,
@@ -85,10 +90,11 @@ const Chats = () => {
     }
   };
 
-  const handleOpentChat = (id) => {
+  const handleOpentChat = (id, email) => {
     if (id) {
       setRoomId(id);
       fetchMessages(id);
+      setEmail(email);
       setMessages([]);
     }
   };
@@ -170,14 +176,44 @@ const Chats = () => {
       <div className={cx("box")}>
         <div className={cx("box-title")}>
           {apis.map((api) => (
-            <div className={cx("box-chat", { active: roomId === api._id })} onClick={() => handleOpentChat(api._id)}>
+            <div className={cx("box-chat", { active: roomId === api._id })} onClick={() => handleOpentChat(api._id, api.email)}>
               <div>
-                <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/441570670_802929555136374_1350330455299972228_n.jpg?stp=dst-jpg_p206x206&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=91HeDsJJZNkQ7kNvgHu9Jur&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGfs4Qv1AuLHqZ9HHGwwc_mVoRelzACXi0oV7mkiqnIFw&oe=6686363C" />
+                <Badge count={count}>
+                  <img
+                    style={{
+                      borderRadius: "20px",
+                      width: "50px",
+                      height: "50px",
+                      margin: 0,
+                    }}
+                    src="https://scontent.xx.fbcdn.net/v/t1.15752-9/441570670_802929555136374_1350330455299972228_n.jpg?stp=dst-jpg_p206x206&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=91HeDsJJZNkQ7kNvgHu9Jur&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGfs4Qv1AuLHqZ9HHGwwc_mVoRelzACXi0oV7mkiqnIFw&oe=6686363C"
+                  />
+                </Badge>
               </div>
-              <div className={cx("title")}>
+              <div
+                className={cx("title")}
+                style={{
+                  marginLeft: "10px",
+                }}
+              >
                 <div>{api.email}</div>
-                <div className={cx("title-status")}>
-                  <div className={cx("online")}></div>
+                <div
+                  className={cx("title-status")}
+                  style={{
+                    display: "flex",
+                  }}
+                >
+                  <div
+                    className={cx("online")}
+                    style={{
+                      width: "10px",
+                      height: "10px",
+                      backgroundColor: "green",
+                      borderRadius: "50%",
+                      marginTop: "2px",
+                      marginRight: "5px",
+                    }}
+                  ></div>
                   <div>18/12/2002</div>
                 </div>
               </div>
@@ -191,26 +227,28 @@ const Chats = () => {
                 <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/441570670_802929555136374_1350330455299972228_n.jpg?stp=dst-jpg_p206x206&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=91HeDsJJZNkQ7kNvgHu9Jur&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGfs4Qv1AuLHqZ9HHGwwc_mVoRelzACXi0oV7mkiqnIFw&oe=6686363C" />
               </div>
               <div className={cx("title")}>
-                <div>123</div>
+                <div>{email}</div>
                 <div className={cx("title-status")}>
                   <div className={cx("online")}></div>
                   <div>18/12/2002</div>
                 </div>
               </div>
             </div>
-            <Button type="primary" onClick={() => hanldeTest()}>
-              Gửi
-            </Button>
 
             <div className={cx("input")}>
               <Input
                 style={{
                   height: "40px",
+                  width: "70%",
+                  zIndex: 100,
                 }}
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
                 onPressEnter={sendMessage}
               />
+              <Button type="primary" onClick={() => hanldeTest()}>
+                Gửi
+              </Button>
             </div>
             <List
               dataSource={messages}
@@ -219,10 +257,10 @@ const Chats = () => {
                   className={cx({ right: item.id === testCleanId, left: item.id !== testCleanId })}
                   style={{ backgroundColor: getColorForMessage(item.message) }}
                 >
-                  {item.message}
+                  <div>{item.message}</div>
                 </List.Item>
               )}
-              style={{ maxHeight: "60vh", overflow: "auto" }}
+              style={{ maxHeight: "80vh", overflow: "auto" }}
             />
           </div>
         </div>

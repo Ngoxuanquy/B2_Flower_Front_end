@@ -238,7 +238,7 @@ const DefaultLayout = ({ children }) => {
           </Button>
         </Space.Compact>
       </Drawer>
-      <Drawer title="Chat" onClose={onClose} open={open}>
+      <Drawer title="Chat với admin" onClose={onClose} open={open}>
         <List
           dataSource={messages}
           renderItem={(item) => (
@@ -251,18 +251,26 @@ const DefaultLayout = ({ children }) => {
               {item?.message}
             </List.Item>
           )}
-          style={{ maxHeight: "60vh", overflow: "auto" }}
+          style={{ maxHeight: "75vh", overflow: "auto" }}
         />
-        <Input.TextArea
-          rows={4}
-          value={messageInput}
-          onChange={(e) => setMessageInput(e.target.value)}
-          onPressEnter={sendMessage}
-          placeholder="Type your message..."
-        />
-        <Button type="primary" onClick={sendMessage} style={{ marginTop: 10 }}>
-          Send
-        </Button>
+        <div
+          style={{
+            position: "fixed",
+            bottom: "0px",
+            width: "340px",
+          }}
+        >
+          <Input.TextArea
+            rows={4}
+            value={messageInput}
+            onChange={(e) => setMessageInput(e.target.value)}
+            onPressEnter={sendMessage}
+            placeholder="Type your message..."
+          />
+          <Button type="primary" onClick={sendMessage} style={{ marginTop: 10 }}>
+            Send
+          </Button>
+        </div>
       </Drawer>
       {/* <ButtomNavigation /> */}
     </div>

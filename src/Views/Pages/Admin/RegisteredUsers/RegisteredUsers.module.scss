@@ -142,3 +142,28 @@
     }
   }
 }
+
+.status-active {
+  color: green;
+}
+
+.status-inactive {
+  color: red;
+}
+
+.status-pending {
+  color: orange;
+}
+
+/* Role styles */
+.role-read {
+  color: blue;
+}
+
+.role-edit {
+  color: purple;
+}
+
+.role-delete {
+  color: red;
+}

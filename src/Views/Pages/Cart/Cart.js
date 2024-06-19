@@ -217,6 +217,7 @@ const Cart = () => {
 
       Call_Post_Api(
         {
+          userId: cleanId,
           user: selectedValueAdress,
           product: checkedList,
           shopId: "test",
@@ -228,7 +229,7 @@ const Cart = () => {
       ).then((data) => {
         console.log(data);
         setIsLoad(false);
-
+        localStorage.setItem("products", JSON.stringify(checkedList));
         window.location.replace(data);
         Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
           console.log(data);
