@@ -27,7 +27,7 @@ function Logins() {
   useEffect(() => {
     function start() {
       gapi.client.init({
-        clientId: "620404535219-dep6m8nrhmdji646gofivtbu5lfp6dmt.apps.googleusercontent.com",
+        clientId: "75458164961-jjmi99liu47e0ttlapaoqrvs87tqkfbk.apps.googleusercontent.com",
         scope: "",
       });
     }
@@ -108,39 +108,36 @@ function Logins() {
   }
 
   // const handleFacebookLogin = () => {
-  //     // Xử lý đăng nhập bằng Facebook
-  //     auth.signInWithPopup(authProvider)
-  //         .then((result) => {
-  //             // Handle successful login
-  //             console.log('Successfully logged in:', result.user);
-  //         })
-  //         .catch((error) => {
-  //             // Handle login error
-  //             console.log('Error occurred during login:', error);
-  //         });
+  //   // Xử lý đăng nhập bằng Facebook
+  //   auth
+  //     .signInWithPopup(authProvider)
+  //     .then((result) => {
+  //       // Handle successful login
+  //       console.log("Successfully logged in:", result.user);
+  //     })
+  //     .catch((error) => {
+  //       // Handle login error
+  //       console.log("Error occurred during login:", error);
+  //     });
   // };
 
   // auth.onAuthStateChanged((user) => {
-  //     // console.log(user._delegate)
-  //     if (user) {
-  //         Cookies.set(
-  //             'accessToken',
-  //             JSON.stringify(user._delegate.accessToken),
-  //             { expires: 7 },
-  //         );
-  //         Cookies.set('name', JSON.stringify(user._delegate.displayName), {
-  //             expires: 7,
-  //         });
-  //         Cookies.set('img', JSON.stringify(user._delegate.photoURL), {
-  //             expires: 7,
-  //         });
+  //   // console.log(user._delegate)
+  //   if (user) {
+  //     Cookies.set("accessToken", JSON.stringify(user._delegate.accessToken), { expires: 7 });
+  //     Cookies.set("name", JSON.stringify(user._delegate.displayName), {
+  //       expires: 7,
+  //     });
+  //     Cookies.set("img", JSON.stringify(user._delegate.photoURL), {
+  //       expires: 7,
+  //     });
 
-  //         // navigate('/');
-  //     }
+  //     // navigate('/');
+  //   }
   // });
 
   // const handleGoogleLogin = () => {
-  //     // Xử lý đăng nhập bằng Google
+  //   // Xử lý đăng nhập bằng Google
   // };
 
   const REDIRECT_URI = "https://plenty-planets-beam-42-118-51-2.loca.lt/account/login";
@@ -331,7 +328,7 @@ function Logins() {
 
                 <div className={cx("button")}>
                   <LoginSocialGoogle
-                    client_id="620404535219-dep6m8nrhmdji646gofivtbu5lfp6dmt.apps.googleusercontent.com"
+                    client_id="75458164961-jjmi99liu47e0ttlapaoqrvs87tqkfbk.apps.googleusercontent.com"
                     onResolve={(res) => {
                       handerLoginGG(res);
                     }}
