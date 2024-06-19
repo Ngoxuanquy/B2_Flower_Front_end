@@ -7,10 +7,23 @@
 }
 
 .right {
+  max-width: 70%;
+  width: fit-content;
   display: flex !important;
   justify-content: flex-end !important;
-  width: 100%;
-  margin-left: -20px;
+  background-color: #55a2f3 !important;
+  align-items: flex-end;
+  padding: 10px !important;
+  border-radius: 10px;
+  margin-top: 3px;
+  margin-left: auto;
+}
+.left {
+  width: fit-content;
+  background-color: #cccccc !important;
+  border-radius: 10px;
+  padding: 10px !important;
+  margin-top: 3px;
 }
 
 @media screen and (max-width: 768px) {
