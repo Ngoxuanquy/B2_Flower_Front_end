@@ -11,7 +11,7 @@ import styles from "./RegisteredUsers.module.scss";
 import classNames from "classnames/bind";
 import { FaUser } from "react-icons/fa";
 import Cookies from "js-cookie";
-import { Input, Modal, Select as AntSelect } from "antd";
+import { Input, Modal, Select as AntSelect, Collapse } from "antd";
 
 const cx = classNames.bind(styles);
 const RegisteredUsers = ({ apis }) => {
@@ -233,49 +233,52 @@ const RegisteredUsers = ({ apis }) => {
           </thead>
           <tbody>
             {api?.map((api, index) => (
-              <tr>
-                <td>#{index + 1}</td>
-                <td>
-                  <div className={cx("info-user")}>
-                    <img src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg" alt="avatar of user" />
-                    <p>{api.name}</p>
-                  </div>
-                </td>
-                <td>
-                  <div className={cx("role")}>
-                    <IoSettingsSharp />
-                    {api?.roles?.map((role, index) => (
-                      <span key={index} className={cx(getRoleClass(role))}>
-                        {role}{" "}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-                <td>
-                  <span>{api.email}</span>
-                </td>
-                <td>0123456789</td>
-                <td>
-                  <p className={cx("status")}>{api.status}</p>
-                </td>
-                <td>{new Date(api.updatedAt).toLocaleDateString()}</td>
-                <td>
-                  <div className={cx("actions")}>
-                    <Button className={cx("secondary")} color="secondary">
-                      <FaEye />
-                    </Button>
-                    <Button className={cx("success")} color="success">
-                      <FaPencil onClick={() => showModal(api)} />
-                    </Button>
-                    <Button className={cx("error")} color="error">
-                      <MdOutlineBlock />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
+              <React.Fragment key={index}>
+                <tr>
+                  <td>#{index + 1}</td>
+                  <td>
+                    <div className={cx("info-user")}>
+                      <img src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg" alt="avatar of user" />
+                      <p>{api.name}</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div className={cx("role")}>
+                      <IoSettingsSharp />
+                      {api?.roles?.map((role, index) => (
+                        <span key={index} className={cx(getRoleClass(role))}>
+                          {role}{" "}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td>
+                    <span>{api.email}</span>
+                  </td>
+                  <td>0123456789</td>
+                  <td>
+                    <p className={cx("status")}>{api.status}</p>
+                  </td>
+                  <td>{new Date(api.updatedAt).toLocaleDateString()}</td>
+                  <td>
+                    <div className={cx("actions")}>
+                      <Button className={cx("secondary")} color="secondary">
+                        <FaEye />
+                      </Button>
+                      <Button className={cx("success")} color="success">
+                        <FaPencil onClick={() => showModal(api)} />
+                      </Button>
+                      <Button className={cx("error")} color="error">
+                        <MdOutlineBlock />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              </React.Fragment>
             ))}
           </tbody>
         </table>
+
         <div className={cx("page")}>
           <Pagination count={10} />
         </div>

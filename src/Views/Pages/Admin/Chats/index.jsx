@@ -6,7 +6,8 @@ import Cookies from "js-cookie";
 import socketIOClient from "socket.io-client";
 import { Badge, Button, Input, List, message } from "antd";
 
-const ENDPOINT = "https://chat-b2-flower.onrender.com";
+// const ENDPOINT = "https://chat-b2-flower.onrender.com";
+const ENDPOINT = "http://localhost:4000";
 
 const Chats = () => {
   const cx = classNames.bind(styles);
@@ -23,7 +24,7 @@ const Chats = () => {
   const testId = Cookies.get("id");
   const testCleanId = testId?.replace(/^"|"$/g, "");
 
-  useEffect(() => {
+  const getAPi = () => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/^"|"$/g, "");
@@ -43,18 +44,30 @@ const Chats = () => {
     fetch(URL + "/users/userId/" + cleanId, requestOptions)
       .then((res) => res.json())
       .then((res) => {
-        setApi(res.metadata);
+        const sortedMetadata = res.metadata.sort((a, b) => {
+          return new Date(b.updatedAt) - new Date(a.updatedAt);
+        });
+
+        console.log(sortedMetadata);
+        setApi(sortedMetadata);
       });
+  };
+
+  useEffect(() => {
+    getAPi();
   }, []);
 
   useEffect(() => {
     const newSocket = socketIOClient(ENDPOINT);
     setSocket(newSocket);
 
+    newSocket.on("notification", (data) => {
+      getAPi();
+    });
+
     newSocket.on("message", ({ cleanId, message }) => {
-      console.log({ cleanId });
-      console.log({ message });
-      setCount(count + 1);
+      getAPi();
+
       setMessages((prevMessages) => [
         ...prevMessages,
         {
@@ -64,8 +77,7 @@ const Chats = () => {
       ]);
     });
 
-    newSocket.on("notification", (data) => {
-      console.log("ábcbcbccb");
+    newSocket.on("notification123", (data) => {
       messageApi.open({
         type: "success",
         content: data.message,
@@ -92,6 +104,8 @@ const Chats = () => {
 
   const handleOpentChat = (id, email) => {
     if (id) {
+      console.log(id);
+
       setRoomId(id);
       fetchMessages(id);
       setEmail(email);
@@ -130,6 +144,7 @@ const Chats = () => {
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
+          updateCountMessage();
           setMessageInput("");
         });
     }
@@ -151,6 +166,32 @@ const Chats = () => {
 
   const hanldeTest = () => {
     console.log(messages);
+  };
+
+  const updateCountMessage = () => {
+    const token = Cookies.get("accessToken");
+    const id12 = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/^"|"$/g, "");
+    const Idclean = id12?.replace(/^"|"$/g, "");
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+        authorization: cleanedJwtString,
+        "x-client-id": Idclean,
+      },
+      body: JSON.stringify({
+        id: roomId,
+        count: 0,
+      }),
+    };
+
+    fetch(URL + "/shop/updateCountMessage", requestOptions)
+      .then((res) => res.json())
+      .then((res) => {
+        getAPi();
+      });
   };
 
   const getColorForMessage = (message) => {
@@ -178,7 +219,7 @@ const Chats = () => {
           {apis.map((api) => (
             <div className={cx("box-chat", { active: roomId === api._id })} onClick={() => handleOpentChat(api._id, api.email)}>
               <div>
-                <Badge count={count}>
+                <Badge count={api.countMessage}>
                   <img
                     style={{
                       borderRadius: "20px",

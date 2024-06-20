@@ -136,7 +136,7 @@ const Sidebar = () => {
         />
       )}
 
-      {roles.includes("ADMIN") && (
+      {roles.includes("CHAT") && (
         <SideBarItem
           icon={<MdContactMail />}
           primary="Message"

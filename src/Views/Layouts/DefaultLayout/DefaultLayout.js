@@ -3,18 +3,22 @@ import { Header, Footer } from "../../../Components";
 import classNames from "classnames/bind";
 import styles from "./defaultlayout.module.scss";
 import { useContext, useEffect, useRef, useState } from "react";
-import { FloatButton, Drawer, Input, Button, List, message, Space } from "antd";
+import { FloatButton, Drawer, Input, Button, List, message, Space, Badge } from "antd";
 import { CommentOutlined, CustomerServiceOutlined, DashboardOutlined } from "@ant-design/icons";
 import socketIOClient from "socket.io-client";
 import Cookies from "js-cookie";
 import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
 
-const ENDPOINT = "https://chat-b2-flower.onrender.com";
+// const ENDPOINT = "https://chat-b2-flower.onrender.com";
+const ENDPOINT = "http://localhost:4000";
+
 const cx = classNames.bind(styles);
 
 const DefaultLayout = ({ children }) => {
-  const [apis, setApi] = useState([]);
+  const URL = process.env.REACT_APP_URL;
+
+  const [countMessage, setCountMessage] = useState();
   const [socket, setSocket] = useState(null);
   const [messageApi, contextHolder] = message.useMessage();
   const [theme, ordersLength] = useContext(ThemeConText);
@@ -43,14 +47,14 @@ const DefaultLayout = ({ children }) => {
     setIsCommentClicked(!isCommentClicked);
   };
 
-  useEffect(() => {
+  const getApi = () => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/^"|"$/g, "");
     const cleanId = id?.replace(/^"|"$/g, "");
 
     const requestOptions = {
-      method: "post",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.REACT_APP_API_KEY,
@@ -60,11 +64,16 @@ const DefaultLayout = ({ children }) => {
     };
 
     // Lấy dữ liệu của khách hàng
-    fetch(URL + "/users/userId/" + cleanId, requestOptions)
+    fetch(URL + "/users/countMessage/" + cleanId, requestOptions)
       .then((res) => res.json())
       .then((res) => {
-        setApi(res.metadata);
+        console.log(res.metadata);
+        setCountMessage(res.metadata.countMessage);
       });
+  };
+
+  useEffect(() => {
+    getApi();
   }, []);
 
   useEffect(() => {
@@ -72,8 +81,37 @@ const DefaultLayout = ({ children }) => {
     setSocket(newSocket);
 
     newSocket.on("message", ({ cleanId, message }) => {
-      console.log({ cleanId });
-      console.log({ message });
+      const token = Cookies.get("accessToken");
+      const id = Cookies.get("id");
+      const cleanedJwtString = token?.replace(/^"|"$/g, "");
+      const Idclean = id?.replace(/^"|"$/g, "");
+
+      setCountMessage((prevCountMessage) => {
+        const newCountMessage = prevCountMessage !== undefined && prevCountMessage !== null ? prevCountMessage + 1 : 1;
+
+        const requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.REACT_APP_API_KEY,
+            authorization: cleanedJwtString,
+            "x-client-id": Idclean,
+          },
+          body: JSON.stringify({
+            id: Idclean,
+            count: newCountMessage,
+          }),
+        };
+
+        fetch(URL + "/shop/updateCountMessage", requestOptions)
+          .then((res) => res.json())
+          .then((res) => {
+            console.log({ res });
+          });
+
+        return newCountMessage;
+      });
+
       setMessages((prevMessages) => [
         ...prevMessages,
         {
@@ -82,7 +120,6 @@ const DefaultLayout = ({ children }) => {
         },
       ]);
     });
-
     newSocket.on("notification", (data) => {
       messageApi.open({
         type: "success",
@@ -113,8 +150,14 @@ const DefaultLayout = ({ children }) => {
     if (messageInput.trim() !== "") {
       const id = Cookies.get("id");
       const cleanId = id?.replace(/^"|"$/g, "");
+      const name = Cookies.get("name")?.replace(/"/g, "");
 
       socket.emit("message", { cleanId, roomId, message: messageInput });
+      const notificationMessage = {
+        email: `${name} `,
+        message: messageInput,
+      };
+      socket.emit("globalNotification", notificationMessage);
 
       const requestOptions = {
         method: "post",
@@ -195,16 +238,18 @@ const DefaultLayout = ({ children }) => {
             />
           }
         />
-        <FloatButton
-          onClick={showDrawer}
-          icon={
-            <CommentOutlined
-              style={{
-                color: isCommentClicked ? "blue" : "inherit",
-              }}
-            />
-          }
-        />
+        <Badge count={countMessage}>
+          <FloatButton
+            onClick={showDrawer}
+            icon={
+              <CommentOutlined
+                style={{
+                  color: isCommentClicked ? "blue" : "inherit",
+                }}
+              />
+            }
+          />
+        </Badge>
       </FloatButton.Group>
       <Drawer title="Basic Drawer" onClose={onClose} open={open}>
         <ul id="messages">

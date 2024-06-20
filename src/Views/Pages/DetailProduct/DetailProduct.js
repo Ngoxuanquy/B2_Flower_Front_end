@@ -50,20 +50,6 @@ function DetailProduct() {
     slidesToScroll: 1,
   };
 
-  const sliders = [
-    {
-      id: 1,
-      img: "https://vapa.vn/wp-content/uploads/2022/12/anh-3d-thien-nhien.jpeg",
-    },
-    {
-      id: 1,
-      img: "https://images.pexels.com/photos/9304329/pexels-photo-9304329.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-    {
-      id: 1,
-      img: "https://images.pexels.com/photos/3654869/pexels-photo-3654869.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    },
-  ];
   const onChange = (key) => {
     console.log(key);
   };
@@ -102,8 +88,17 @@ function DetailProduct() {
     {
       key: "2",
       label: "Bình luận",
-      children:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat.2",
+      children: (
+        <div>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+          enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat.'
+          <div>
+            <Input />
+            <Button>Gửi</Button>
+          </div>
+        </div>
+      ),
     },
     {
       key: "3",
@@ -343,6 +338,7 @@ function DetailProduct() {
               alignItems: "center",
               backgroundColor: theme.background,
               color: theme.color,
+              marginBottom: "20px",
             }}
           >
             <Sliders />

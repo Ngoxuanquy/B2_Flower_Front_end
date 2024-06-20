@@ -1556,7 +1556,6 @@ function Index() {
         className={cx("rigth")}
         style={{
           position: "relative",
-          height: "200vh" /* 100% chiều cao của viewport */,
           // width: "100vw", /* 100% chiều rộng của viewport */
         }}
       >

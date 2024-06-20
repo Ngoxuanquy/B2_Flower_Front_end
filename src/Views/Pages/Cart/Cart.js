@@ -9,6 +9,8 @@ import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
 import { Link, useNavigate } from "react-router-dom";
 import { usePayOS, PayOSConfig } from "payos-checkout";
+import axios from "axios";
+
 const cx = classNames.bind(styles);
 
 const Cart = () => {
@@ -36,18 +38,106 @@ const Cart = () => {
 
   const [selectedValueAdress, setSelectedValueAdress] = useState(null);
 
+  const [distance, setDistance] = useState(null);
+
+  const getCoordinates = async (address) => {
+    setIsLoad(true);
+    try {
+      const response = await axios.get("https://nominatim.openstreetmap.org/search", {
+        params: {
+          q: address,
+          format: "json",
+        },
+      });
+      const { lat, lon } = response.data[0];
+      setIsLoad(false);
+
+      return { latitude: parseFloat(lat), longitude: parseFloat(lon) };
+    } catch (error) {
+      console.error(`Error fetching coordinates for ${address}: `, error);
+      return null;
+    }
+  };
+
+  const calculateDistance = (coord1, coord2) => {
+    const toRad = (value) => (value * Math.PI) / 180;
+
+    const R = 6371; // Radius of the Earth in km
+    const dLat = toRad(coord2.latitude - coord1.latitude);
+    const dLon = toRad(coord2.longitude - coord1.longitude);
+    const lat1 = toRad(coord1.latitude);
+    const lat2 = toRad(coord2.latitude);
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in km
+
+    return distance;
+  };
+
+  const fetchAndCalculateDistance = async (payload) => {
+    const hanoiCoords = await getCoordinates("96, Định công, hoàng mai, Hà Nội, Vietnam");
+    const ngheAnCoords = await getCoordinates(`${(payload.diaChiCuThe, payload.phuongXa, payload.quanHuyen, payload.tinhThanh)}`);
+
+    if (hanoiCoords && ngheAnCoords) {
+      const distance = calculateDistance(hanoiCoords, ngheAnCoords);
+      tinhPhiShip(distance);
+      setDistance(distance);
+    }
+  };
+
   const onChangeAdress = (e) => {
     setSelectedValueAdress(e.target.value);
+    fetchAndCalculateDistance(e.target.value);
   };
 
   const handleOptionChange = (option) => {
-    console.log(option);
     setSelectedOption(option);
-    if (option === "fast") {
-      setPhiShip(50);
-    } else {
-      setPhiShip(20);
+  };
+
+  useEffect(() => {
+    // Hàm này sẽ được gọi mỗi khi selectedOption thay đổi
+    if (selectedOption !== null) {
+      tinhPhiShip(distance);
     }
+  }, [selectedOption, distance]);
+
+  const tinhPhiShip = (distance) => {
+    if (!distance) return; // Handle if distance is null or undefined
+
+    let phiShip = 0;
+
+    if (selectedOption === "fast") {
+      if (distance < 10) {
+        phiShip = 7 * distance;
+      } else if (distance < 20) {
+        phiShip = 4 * distance;
+      } else if (distance < 30) {
+        phiShip = 3 * distance;
+      } else if (distance < 50) {
+        phiShip = 2.5 * distance;
+      } else if (distance < 100) {
+        phiShip = 1.5 * distance;
+      } else {
+        phiShip = 1 * distance;
+      }
+    } else if (selectedOption === "slow") {
+      if (distance < 10) {
+        phiShip = 3 * distance;
+      } else if (distance < 20) {
+        phiShip = 2.5 * distance;
+      } else if (distance < 30) {
+        phiShip = 2 * distance;
+      } else if (distance < 50) {
+        phiShip = 1.5 * distance;
+      } else if (distance < 100) {
+        phiShip = 1 * distance;
+      } else {
+        phiShip = 0.5 * distance;
+      }
+    }
+    console.log(phiShip.toFixed(2));
+    setPhiShip(phiShip.toFixed(2));
   };
 
   const onChange = (e) => {
@@ -622,7 +712,7 @@ const Cart = () => {
             <hr />
             <div className={cx("tongcong")}>
               <div>Tổng cộng</div>
-              <div>{tong + phiShip}</div>
+              <div>{(tong + Number(phiShip)).toFixed(2)}</div>
             </div>
             {current < steps.length - 1 && (
               // <button

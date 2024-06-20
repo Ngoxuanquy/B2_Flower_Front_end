@@ -1,13 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
-import {
-  MdOutlineMenuOpen,
-  MdOutlineMenu,
-  MdLightMode,
-  MdDarkMode,
-  MdContactMail,
-} from "react-icons/md";
+import { MdOutlineMenuOpen, MdOutlineMenu, MdLightMode, MdDarkMode, MdContactMail } from "react-icons/md";
 import { FaShoppingCart, FaBell } from "react-icons/fa";
 import { IoShieldHalfSharp } from "react-icons/io5";
 import Menu from "@mui/material/Menu";
@@ -18,10 +12,16 @@ import Logout from "@mui/icons-material/Logout";
 import logo from "../../../access/logo-1.png";
 import SearchBox from "./SeachBox/SearchBox";
 import { Divider } from "@mui/material";
-
+import socketIOClient from "socket.io-client";
+import { Badge, message } from "antd";
 const AdminHeader = () => {
+  const ENDPOINT = "http://localhost:4000";
   const [theme, setTheme] = useState("light");
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [menu, setMenu] = useState(true);
+  const [noti, setNoti] = useState([]);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenNotificationDrop, setIsOpenNotificationDrop] = useState(null);
   const openMyAcc = Boolean(anchorEl);
@@ -44,8 +44,31 @@ const AdminHeader = () => {
   const hanleClickMenu = () => {
     setMenu(!menu);
   };
+
+  useEffect(() => {
+    const newSocket = socketIOClient(ENDPOINT);
+
+    newSocket.on("notification", (data) => {
+      console.log(data);
+      setNoti([...noti, data]);
+      messageApi.open({
+        type: "success",
+        content: `${data.email} đã gửi cho bạn 1 tin nhắn`,
+      });
+    });
+
+    // Cleanup function to disconnect the socket when the component unmounts
+    return () => {
+      newSocket.disconnect();
+    };
+
+    console.log(noti);
+  }, []);
+
   return (
     <div>
+      {contextHolder}
+
       <header className="d-flex align-items-center">
         <div className="container-fluid w-100">
           <div className="row d-flex align-items-center ">
@@ -74,11 +97,10 @@ const AdminHeader = () => {
               <Button className="rounded-circle mr-3">
                 <MdContactMail />
               </Button>
-              <Button
-                className="rounded-circle mr-3"
-                onClick={handleOpenNotificationDrop}
-              >
-                <FaBell />
+              <Button className="rounded-circle mr-3" onClick={handleOpenNotificationDrop}>
+                <Badge count={noti.length}>
+                  <FaBell />
+                </Badge>
               </Button>
               <div>
                 <Menu
@@ -112,70 +134,42 @@ const AdminHeader = () => {
                   <Divider className="mb-1" />
                   <div className="scroll">
                     <MenuItem onClick={handleCloseNotificationDrop}>
-                      <div className="d-flex ">
-                        <div>
-                          <div className="userImg">
-                            <span className="rounded-circle">
-                              <img
-                                alt="avt-admin"
-                                src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-6/401833912_1372698800004765_8461095991256187070_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHfexlhAnZppZ8X5yrIKWYVgbfefhm5-jOBt95-Gbn6M-H0C2bRFEmCzostuH_LgeEbtT1-GgxppCQqi729ubHn&_nc_ohc=BsyFj6CiEakQ7kNvgHwGC_T&_nc_ht=scontent.fhan2-4.fna&oh=00_AYDBm-km-HwD10to2zKuSlosM52pQqrmZdC_r3mnKcUBKA&oe=666343BF"
-                              />
-                            </span>
+                      {noti?.map((item) => (
+                        <Link to="/admin/message">
+                          <div className="d-flex ">
+                            <div>
+                              <div className="userImg">
+                                <span className="rounded-circle">
+                                  <img
+                                    alt="avt-admin"
+                                    src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-6/401833912_1372698800004765_8461095991256187070_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHfexlhAnZppZ8X5yrIKWYVgbfefhm5-jOBt95-Gbn6M-H0C2bRFEmCzostuH_LgeEbtT1-GgxppCQqi729ubHn&_nc_ohc=BsyFj6CiEakQ7kNvgHwGC_T&_nc_ht=scontent.fhan2-4.fna&oh=00_AYDBm-km-HwD10to2zKuSlosM52pQqrmZdC_r3mnKcUBKA&oe=666343BF"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                            <div className="dropdownInfo">
+                              <h4>
+                                <span>
+                                  <b>{item?.email}</b>
+                                  gửi cho bạn tin nhắn:
+                                  <b> {item?.message}</b>
+                                </span>
+                              </h4>
+                              <p className="text-sky">few seconds ago</p>
+                            </div>
                           </div>
-                        </div>
-                        <div className="dropdownInfo">
-                          <h4>
-                            <span>
-                              <b>CongTusJr</b>
-                              added to his favorite list
-                              <b> Leather belt steve madden</b>
-                            </span>
-                          </h4>
-                          <p className="text-sky">few seconds ago</p>
-                        </div>
-                      </div>
-                    </MenuItem>
-                    <MenuItem onClick={handleCloseNotificationDrop}>
-                      <div className="d-flex ">
-                        <div>
-                          <div className="userImg">
-                            <span className="rounded-circle">
-                              <img
-                                alt="avt-admin"
-                                src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-6/401833912_1372698800004765_8461095991256187070_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHfexlhAnZppZ8X5yrIKWYVgbfefhm5-jOBt95-Gbn6M-H0C2bRFEmCzostuH_LgeEbtT1-GgxppCQqi729ubHn&_nc_ohc=BsyFj6CiEakQ7kNvgHwGC_T&_nc_ht=scontent.fhan2-4.fna&oh=00_AYDBm-km-HwD10to2zKuSlosM52pQqrmZdC_r3mnKcUBKA&oe=666343BF"
-                              />
-                            </span>
-                          </div>
-                        </div>
-                        <div className="dropdownInfo">
-                          <h4>
-                            <span>
-                              <b>CongTusJr</b>
-                              added to his favorite list
-                              <b> Leather belt steve madden</b>
-                            </span>
-                          </h4>
-                          <p className="text-sky">few seconds ago</p>
-                        </div>
-                      </div>
+                        </Link>
+                      ))}
                     </MenuItem>
                   </div>
-                  <div
-                    className="w-100"
-                    style={{ padding: 8, paddingBottom: 0 }}
-                  >
-                    <Button className="btn-blue w-100">
-                      View all notifications
-                    </Button>
+                  <div className="w-100" style={{ padding: 8, paddingBottom: 0 }}>
+                    <Button className="btn-blue w-100">View all notifications</Button>
                   </div>
                 </Menu>
               </div>
 
               <div className="myAccWrapper">
-                <Button
-                  className="myAcc d-flex align-items-center"
-                  onClick={handleOpenMyAcc}
-                >
+                <Button className="myAcc d-flex align-items-center" onClick={handleOpenMyAcc}>
                   <div className="userImg">
                     <span className="rounded-circle">
                       <img
@@ -219,10 +213,7 @@ const AdminHeader = () => {
                     </ListItemIcon>
                     My account
                   </MenuItem>
-                  <MenuItem
-                    onClick={handleCloseMyAcc}
-                    style={{ color: "#ffa000" }}
-                  >
+                  <MenuItem onClick={handleCloseMyAcc} style={{ color: "#ffa000" }}>
                     <ListItemIcon style={{ color: "#  " }}>
                       <IoShieldHalfSharp fontSize="small" />
                     </ListItemIcon>

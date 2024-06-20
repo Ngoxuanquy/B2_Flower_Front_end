@@ -16,6 +16,7 @@ const UserList = () => {
   const options = [
     { value: "ADMIN", label: "ADMIN" },
     { value: "SHOP", label: "SHOP" },
+    { value: "CHAT", label: "CHAT" },
     { value: "CREATE", label: "CREATE" },
     { value: "READ", label: "READ" },
     { value: "EDIT", label: "EDIT" },
