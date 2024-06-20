@@ -165,7 +165,6 @@ const RegisteredUsers = ({ apis }) => {
               placeholder="Please select"
               value={roles}
               onChange={handleRolesChange}
-              style={{ width: "100%" }}
               options={options}
             />
           </div>

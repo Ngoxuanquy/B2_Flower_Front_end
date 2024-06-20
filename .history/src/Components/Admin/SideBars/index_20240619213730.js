@@ -43,6 +43,10 @@ const Sidebar = () => {
     navigate("/admin/products");
   };
 
+  const handleOpentUser = () => {
+    navigate("/admin/user");
+  };
+
   useEffect(() => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
@@ -64,7 +68,14 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="sidebar">
+    <div
+      className="sidebar"
+      style={{
+        marginTop: "80px",
+        minHeight: "100vh",
+        backgroundColor: "white",
+      }}
+    >
       {roles.includes("ADMIN") && (
         <SideBarItem
           icon={<MdDashboard />}
@@ -115,7 +126,7 @@ const Sidebar = () => {
           icon={<FaCircleUser />}
           primary="User"
           subItems={["User List", "User Profile", "My Account"]}
-          onItemClick={handleItemClick}
+          onItemClick={handleOpentUser}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "User"}
         />

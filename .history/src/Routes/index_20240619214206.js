@@ -17,8 +17,9 @@ import Admin from "../Views/Pages/Admin/Admin";
 import Chats from "../Views/Pages/Admin/Chats";
 import DashBoard from "../Views/Pages/Admin/DashBoard";
 
-import UserList from "../Views/Pages/Admin/User/UserList";
+import User from "../Views/Pages/Admin/User/UserList";
 import SelectProducts from "../Views/Pages/Admin/SelectProduct/index";
+import UserList from "../Views/Pages/Admin/User/UserList";
 
 export const publicRoute = [
   { path: "/", component: <HomePage /> },

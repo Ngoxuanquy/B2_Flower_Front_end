@@ -43,6 +43,10 @@ const Sidebar = () => {
     navigate("/admin/products");
   };
 
+  const handleOpentUser = () => {
+    navigate("/admin/user");
+  };
+
   useEffect(() => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
@@ -115,7 +119,7 @@ const Sidebar = () => {
           icon={<FaCircleUser />}
           primary="User"
           subItems={["User List", "User Profile", "My Account"]}
-          onItemClick={handleItemClick}
+          onItemClick={handleOpentUser}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "User"}
         />

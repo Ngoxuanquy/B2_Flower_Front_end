@@ -64,7 +64,14 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="sidebar">
+    <div
+      className="sidebar"
+      style={{
+        marginTop: "80px",
+        minHeight: "100vh",
+        backgroundColor: "white",
+      }}
+    >
       {roles.includes("ADMIN") && (
         <SideBarItem
           icon={<MdDashboard />}

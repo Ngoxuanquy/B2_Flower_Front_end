@@ -9,6 +9,17 @@
     }
   }
 }
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  margin-top: 60px;
+
+  div {
+    margin-bottom: 15px;
+  }
+}
 
 .model-header {
   line-height: 35px;

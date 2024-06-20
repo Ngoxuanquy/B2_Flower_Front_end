@@ -103,13 +103,22 @@ const App = () => {
                   <>
                     <AdminHeader />
                     <div className="main d-flex">
-                      <div className="sidebarWrapper">
+                      <div
+                        className="sidebarWapper"
+                        style={{
+                          height: "100vh",
+                          position: "fixed",
+                          width: "250px",
+                        }}
+                      >
                         <SideBar />
                       </div>
                       <div
                         className="contents"
                         style={{
-                          width: "100%",
+                          marginLeft: "250px", // This should match the width of the sidebar
+                          width: "calc(100% - 250px)", // Adjust accordingly to sidebar width
+                          height: "100%",
                         }}
                       >
                         {Page}

@@ -39,20 +39,12 @@ const App = () => {
 
       if (cleanedJwtString) {
         try {
-          const data = await Call_Post_Api(
-            { userId: cleanId },
-            cleanedJwtString,
-            cleanId,
-            "/cart/getlistCart"
-          );
+          const data = await Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart");
 
           if (data && data.metadata && data.metadata.cart_products) {
             console.log(data.metadata.cart_products.length);
             setOrderLength(data.metadata.cart_products.length);
-            EventRegister.emit(
-              "chaneLength",
-              data.metadata.cart_products.length
-            );
+            EventRegister.emit("chaneLength", data.metadata.cart_products.length);
           }
         } catch (err) {
           console.error("Error fetching cart data:", err);
@@ -66,9 +58,7 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeConText.Provider
-      value={[mode === true ? theme.dark : theme.ligth, ordersLength]}
-    >
+    <ThemeConText.Provider value={[mode === true ? theme.dark : theme.ligth, ordersLength]}>
       <Router>
         <ScrollToTop />
         <Routes>
@@ -103,13 +93,22 @@ const App = () => {
                   <>
                     <AdminHeader />
                     <div className="main d-flex">
-                      <div className="sidebarWrapper">
+                      <div
+                        className="sidebarWapper"
+                        style={{
+                          height: "100vh",
+                          position: "fixed",
+                          width: "250px",
+                        }}
+                      >
                         <SideBar />
                       </div>
                       <div
                         className="contents"
                         style={{
-                          width: "100%",
+                          marginLeft: "250px", // This should match the width of the sidebar
+                          width: "calc(100% - 250px)", // Adjust accordingly to sidebar width
+                          height: "100%",
                         }}
                       >
                         {Page}

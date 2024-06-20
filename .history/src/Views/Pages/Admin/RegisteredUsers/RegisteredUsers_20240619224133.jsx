@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaEye, FaPencil } from "react-icons/fa6";
 import { MdOutlineBlock } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5";
+import { IoSchoolSharp, IoSettingsSharp } from "react-icons/io5";
 
 import { Button, MenuItem, Pagination } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
@@ -9,6 +9,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import styles from "./RegisteredUsers.module.scss";
 import classNames from "classnames/bind";
+import { FaUser } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { Input, Modal, Select as AntSelect } from "antd";
 
@@ -266,12 +267,8 @@ const RegisteredUsers = ({ apis }) => {
                     <Button className={cx("secondary")} color="secondary">
                       <FaEye />
                     </Button>
-                    <Button
-                      className={cx("success")}
-                      color="success"
-                      onClick={() => showModal(api)}
-                    >
-                      <FaPencil />
+                    <Button className={cx("success")} color="success">
+                      <FaPencil onClick={() => showModal(api)} />
                     </Button>
                     <Button className={cx("error")} color="error">
                       <MdOutlineBlock />
