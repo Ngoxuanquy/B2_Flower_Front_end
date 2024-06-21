@@ -45,9 +45,33 @@ function Blog() {
                 <div className={cx("danhgia")}>
                   <div className={cx("button-layout")}>
                     <div>
-                      <div className={cx("button")}>Quà tặng</div>
-                      <div className={cx("button")}>Hộp quà</div>
-                      <div className={cx("button")}>Đóng gói</div>
+                      <div
+                        className={cx("button")}
+                        style={{
+                          backgroundColor: theme.button,
+                          color: theme.color,
+                        }}
+                      >
+                        Quà tặng
+                      </div>
+                      <div
+                        className={cx("button")}
+                        style={{
+                          backgroundColor: theme.button,
+                          color: theme.color,
+                        }}
+                      >
+                        Hộp quà
+                      </div>
+                      <div
+                        className={cx("button")}
+                        style={{
+                          backgroundColor: theme.button,
+                          color: theme.color,
+                        }}
+                      >
+                        Đóng gói
+                      </div>
                     </div>
                   </div>
                   <div className={cx("conten")}>

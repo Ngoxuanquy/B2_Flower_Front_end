@@ -24,7 +24,7 @@ import logo from "../../access/logo-1.png";
 const cx = classNames.bind(styles);
 const { Search } = Input;
 
-function Header() {
+function Header({ colorHeader }) {
   const [theme, ordersLength] = useContext(ThemeConText);
   const navigate = useNavigate();
   const [scrollDirection, setScrollDirection] = useState("scroll-up");
@@ -40,6 +40,13 @@ function Header() {
   const close = () => {
     console.log("Notification was closed. Either the close button was clicked or duration time elapsed.");
   };
+
+  useEffect(() => {
+    console.log(colorHeader);
+    console.log(ordersLength);
+
+    console.log(theme);
+  }, []);
 
   const openNotification = () => {
     const key = `open${Date.now()}`;
@@ -239,7 +246,12 @@ function Header() {
   );
 
   return (
-    <div className={cx("container_")}>
+    <div
+      className={cx("container_")}
+      style={{
+        backgroundColor: theme.button,
+      }}
+    >
       {contextHolder}
       <Drawer title="Menu" placement="right" onClose={onClose} open={open} width="70%">
         <Tabs

@@ -407,7 +407,15 @@ const Cart = () => {
       >
         <div className={cx("Vanchuyen")}>
           <div className={cx("address")}>
-            <h2 className={cx("title-address")}>Thông tin tài khoản</h2>
+            <h2
+              className={cx("title-address")}
+              style={{
+                backgroundColor: theme.button,
+                color: theme.color,
+              }}
+            >
+              Thông tin tài khoản
+            </h2>
 
             <div>Địa chỉ nhận hàng</div>
             <Radio.Group onChange={onChangeAdress} value={selectedValueAdress}>
@@ -448,9 +456,23 @@ const Cart = () => {
             </Radio.Group>
           </div>
           <div className={cx("conten-vanchuyen")}>
-            <h2>Hình thức giao hàng</h2>
+            <h2
+              style={{
+                backgroundColor: theme.button,
+                color: theme.color,
+              }}
+            >
+              Hình thức giao hàng
+            </h2>
             <div className={cx("box")}>
-              <div className={cx("box1")} onClick={() => handleOptionChange("fast")}>
+              <div
+                className={cx("box1")}
+                onClick={() => handleOptionChange("fast")}
+                style={{
+                  backgroundColor: theme.button,
+                  color: theme.color,
+                }}
+              >
                 <div className={cx("radio-label")}>
                   <input type="radio" name="deliveryOption" checked={selectedOption === "fast"} onChange={() => {}} />
                   <span>Giao hàng nhanh</span>
@@ -460,7 +482,14 @@ const Cart = () => {
                   <iframe src="https://lottie.host/embed/02d37c44-2fd8-4b50-872a-ef3d9974337d/cVZ6Y7ns0O.json"></iframe>
                 </div>
               </div>
-              <div className={cx("box1")} onClick={() => handleOptionChange("slow")}>
+              <div
+                className={cx("box1")}
+                onClick={() => handleOptionChange("slow")}
+                style={{
+                  backgroundColor: theme.button,
+                  color: theme.color,
+                }}
+              >
                 <div className={cx("radio-label")}>
                   <input type="radio" name="deliveryOption" checked={selectedOption === "slow"} onChange={() => {}} />
                   <span>Giao hàng chậm</span>
@@ -478,7 +507,14 @@ const Cart = () => {
             }}
           ></div>
           <div className={cx("conten-thanhtoan")}>
-            <h2>Thanh toán</h2>
+            <h2
+              style={{
+                backgroundColor: theme.button,
+                color: theme.color,
+              }}
+            >
+              Thanh toán
+            </h2>
             <div className={cx("phuongthucTT")}>
               <Radio.Group
                 onChange={onChange}
@@ -540,10 +576,10 @@ const Cart = () => {
           <div className={cx("Sp-daChon")}>
             <h2
               style={{
-                backgroundColor: "rgb(170, 170, 170)",
+                backgroundColor: theme.button,
+                color: theme.color,
                 padding: "5px",
                 fontSize: "20px",
-                color: "white",
                 borderRadius: "6px",
                 marginTop: "20px",
               }}
@@ -699,7 +735,14 @@ const Cart = () => {
               }}
             >
               <Input placeholder="Mã giảm giá" />
-              <button className={cx("button")}>Áp dụng</button>
+              <button
+                className={cx("button")}
+                style={{
+                  backgroundColor: theme.button,
+                }}
+              >
+                Áp dụng
+              </button>
             </div>
             <div className={cx("tamtinh")}>
               <div>Tạm tính</div>
@@ -732,6 +775,9 @@ const Cart = () => {
                   type="primary"
                   disabled={current === 0 && checkedList.length === 0}
                   className={cx(current === 0 && checkedList.length === 0 ? "disabled-button" : "")}
+                  style={{
+                    backgroundColor: theme.button,
+                  }}
                 >
                   {current === 0 ? <div onClick={() => next()}> Next</div> : <div onClick={() => handlerDatHang()}>Đặt Hàng</div>}
                 </Button>

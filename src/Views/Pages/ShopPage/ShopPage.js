@@ -314,7 +314,11 @@ const ShopPage = () => {
       <div className="container_">
         <div className={cx("shop-has-sidebar")}>
           <div className={cx("nova-page-header__overlay")}>
-            <div>
+            <div
+              style={{
+                backgroundColor: theme.button,
+              }}
+            >
               <AlignRightOutlined
                 style={{
                   fontSize: "25px",

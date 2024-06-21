@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./Information.module.scss";
 import { Image, Spin, Tabs, message } from "antd";
@@ -6,10 +6,13 @@ import ModalMap from "../../../Components/ModalMap/ModalMap";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
 import { Radio } from "antd";
+import ThemeConText from "../../../config/themeConText";
 const { TabPane } = Tabs;
 
 const Information = () => {
   const elementRef = useRef(null);
+  const [theme, ordersLength] = useContext(ThemeConText);
+
   const [address, setAddress] = useState([]);
   const [orders, setOrder] = useState([]);
   const [tabPaneHeight, setTabPaneHeight] = useState("auto"); // State to track height of TabPane dynamically
@@ -82,7 +85,13 @@ const Information = () => {
   }, [orders, address]); // Adjust when orders or address change
 
   return (
-    <div className={cx("container_")}>
+    <div
+      className={cx("container_")}
+      style={{
+        backgroundColor: theme.background,
+        color: theme.color,
+      }}
+    >
       {contextHolder}
       {isLoad && (
         <div
@@ -127,13 +136,18 @@ const Information = () => {
         }}
       />
       <div className={cx("tabs")} style={{ height: tabPaneHeight }}>
-        <Tabs activeKey={activeTab} tabPosition={"left"} style={{ height: "100%" }} onChange={handleTabChange}>
+        <Tabs
+          activeKey={activeTab}
+          tabPosition={"left"}
+          style={{ height: "100%", backgroundColor: theme.background, color: theme.color }}
+          onChange={handleTabChange}
+        >
           {titles?.map((title, index) => (
             <TabPane tab={title} key={String(index)}>
               {activeTab === "3" ? (
                 <div className={cx("tabs-item1")} id="height-client">
                   <div>
-                    <div style={{ fontSize: "20px", fontWeight: "bold" }}>Địa chỉ của tôi</div>
+                    <div style={{ fontSize: "20px", fontWeight: "bold", color: theme.color }}>Địa chỉ của tôi</div>
                     <Radio.Group onChange={onChange} value={selectedValue}>
                       {address?.map((item, index) => (
                         <div key={index}>
@@ -141,6 +155,7 @@ const Information = () => {
                             <div
                               style={{
                                 marginTop: "10px",
+                                color: theme.color,
                               }}
                             >
                               <div
@@ -184,7 +199,17 @@ const Information = () => {
                       ))}
                     </Radio.Group>
                     <div>
-                      <button style={{ padding: "5px" }}>Địa chỉ lấy hàng</button>
+                      <button
+                        style={{
+                          marginTop: "20px",
+                          borderRadius: "10px",
+                          padding: "10px",
+                          backgroundColor: theme.button,
+                          color: theme.color,
+                        }}
+                      >
+                        Địa chỉ lấy hàng
+                      </button>
                     </div>
                   </div>
 
@@ -198,7 +223,14 @@ const Information = () => {
                 </div>
               ) : (
                 activeTab === "2" && (
-                  <div className={cx("tabs-item")} id="height-client">
+                  <div
+                    className={cx("tabs-item")}
+                    id="height-client"
+                    style={{
+                      backgroundColor: theme.background,
+                      color: theme.color,
+                    }}
+                  >
                     <div>
                       <div style={{ fontSize: "20px", fontWeight: "bold" }}>
                         Đơn hàng của tôi -{" "}
@@ -226,10 +258,12 @@ const Information = () => {
                                   justifyContent: "space-between",
                                   alignItems: "center",
                                   padding: "10px",
+                                  backgroundColor: theme.button,
+                                  color: theme.color,
                                 }}
                               >
                                 <h2 style={{ fontSize: "1.5rem", margin: "0" }}>Đơn hàng {index + 1}</h2>
-                                <p style={{ margin: "0", fontSize: "1.2rem", color: "#666" }}>
+                                <p style={{ margin: "0", fontSize: "1.2rem", color: theme.color }}>
                                   Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
                                 </p>
                               </div>

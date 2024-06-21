@@ -3,12 +3,13 @@ import { Header, Footer } from "../../../Components";
 import classNames from "classnames/bind";
 import styles from "./defaultlayout.module.scss";
 import { useContext, useEffect, useRef, useState } from "react";
-import { FloatButton, Drawer, Input, Button, List, message, Space, Badge } from "antd";
+import { FloatButton, Drawer, Input, Button, List, message, Space, Badge, ColorPicker } from "antd";
 import { CommentOutlined, CustomerServiceOutlined, DashboardOutlined } from "@ant-design/icons";
 import socketIOClient from "socket.io-client";
 import Cookies from "js-cookie";
 import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
+import { HappyProvider } from "@ant-design/happy-work-theme";
 
 // const ENDPOINT = "https://chat-b2-flower.onrender.com";
 const ENDPOINT = "http://localhost:4000";
@@ -23,6 +24,9 @@ const DefaultLayout = ({ children }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [theme, ordersLength] = useContext(ThemeConText);
   const [open, setOpen] = useState(false);
+  const [openColor, setOpenColor] = useState(false);
+  const [test, setTest] = useState(false);
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [messageInput, setMessageInput] = useState("");
@@ -33,14 +37,40 @@ const DefaultLayout = ({ children }) => {
 
   const [isCustomerServiceClicked, setIsCustomerServiceClicked] = useState(false);
   const [isCommentClicked, setIsCommentClicked] = useState(false);
+
+  const [colorText, setColorText] = useState("#000000");
+  const [colorButton, setColorButton] = useState("rgb(253, 124, 147)");
+  const [colorBackground, setColorBackground] = useState("#ffffff");
+
+  const handleTextColorChange = (color) => {
+    setColorText(color.toHexString());
+  };
+
+  const handleButtonColorChange = (color) => {
+    setColorButton(color.toHexString());
+  };
+
+  const handleBackgroundColorChange = (color) => {
+    setColorBackground(color.toHexString());
+  };
+
   const handleDarkmode = () => {
     console.log(theme);
-    EventRegister.emit("changeTheme", theme.theme === "dark" ? false : true);
+    console.log(test);
+    setTest(!test);
+    // EventRegister.emit("changeTheme", theme.theme === "dark" ? false : true);
+    EventRegister.emit("changeupdateTheme", {
+      theme: test ? "dark" : "light",
+      colorBackground: colorBackground,
+      colorButton: colorButton,
+      colorText: colorText,
+    });
   };
 
   const handleCustomerServiceClick = () => {
+    setOpenColor(true);
     setIsCustomerServiceClicked(!isCustomerServiceClicked);
-    handleDarkmode();
+    // handleDarkmode();
   };
 
   const handleCommentClick = () => {
@@ -121,6 +151,7 @@ const DefaultLayout = ({ children }) => {
       ]);
     });
     newSocket.on("notification", (data) => {
+      console.log(data);
       messageApi.open({
         type: "success",
         content: data.message,
@@ -211,9 +242,14 @@ const DefaultLayout = ({ children }) => {
     setOpen(false);
   };
 
+  const onCloseColor = () => {
+    setOpenColor(false);
+  };
+
   return (
     <div className={cx("container_")}>
-      <Header />
+      {contextHolder}
+      <Header colorHeader={colorButton} />
       {children}
       <Footer />
       <FloatButton.Group
@@ -251,6 +287,28 @@ const DefaultLayout = ({ children }) => {
           />
         </Badge>
       </FloatButton.Group>
+      <Drawer title="Basic Drawer" onClose={onCloseColor} open={openColor}>
+        <div>
+          <div>
+            <ColorPicker defaultValue="#000000" onChange={handleTextColorChange} />
+            <span> Text: {colorText}</span>
+          </div>
+          <div>
+            <ColorPicker defaultValue="rgb(253, 124, 147)" onChange={handleButtonColorChange} />
+            <span> Button: {colorButton}</span>
+          </div>
+          <div>
+            <ColorPicker defaultValue="#ffffff" onChange={handleBackgroundColorChange} />
+            <span> Background: {colorBackground}</span>
+          </div>
+        </div>
+
+        <HappyProvider>
+          <Button type="primary" onClick={handleDarkmode}>
+            Cập nhật
+          </Button>
+        </HappyProvider>
+      </Drawer>
       <Drawer title="Basic Drawer" onClose={onClose} open={open}>
         <ul id="messages">
           {messages.map((msg, index) => (

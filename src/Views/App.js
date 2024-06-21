@@ -15,6 +15,8 @@ import SideBar from "../Components/Admin/SideBars";
 
 const App = () => {
   const [mode, setMode] = useState(false);
+  const [themeColor, setThemeColor] = useState(false);
+
   const [ordersLength, setOrderLength] = useState(0);
 
   useEffect(() => {
@@ -25,9 +27,15 @@ const App = () => {
     let a = EventRegister.addEventListener("changeTheme", (data) => {
       setMode(data);
     });
+
+    let updateTheme = EventRegister.addEventListener("changeupdateTheme", (data) => {
+      console.log(data);
+      setThemeColor(data);
+    });
     return () => {
       EventRegister.removeEventListener(a);
       EventRegister.removeEventListener(b);
+      EventRegister.removeEventListener(updateTheme);
     };
   }, []);
   useEffect(() => {
@@ -39,20 +47,12 @@ const App = () => {
 
       if (cleanedJwtString) {
         try {
-          const data = await Call_Post_Api(
-            { userId: cleanId },
-            cleanedJwtString,
-            cleanId,
-            "/cart/getlistCart"
-          );
+          const data = await Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart");
 
           if (data && data.metadata && data.metadata.cart_products) {
             console.log(data.metadata.cart_products.length);
             setOrderLength(data.metadata.cart_products.length);
-            EventRegister.emit(
-              "chaneLength",
-              data.metadata.cart_products.length
-            );
+            EventRegister.emit("chaneLength", data.metadata.cart_products.length);
           }
         } catch (err) {
           console.error("Error fetching cart data:", err);
@@ -65,10 +65,16 @@ const App = () => {
     fetchCartData();
   }, []);
 
+  theme.dark = {
+    theme: "dark",
+    color: themeColor.colorText,
+    button: themeColor.colorButton,
+    background: themeColor.colorBackground,
+    maunen: themeColor.colorBackground,
+  };
+
   return (
-    <ThemeConText.Provider
-      value={[mode === true ? theme.dark : theme.ligth, ordersLength]}
-    >
+    <ThemeConText.Provider value={[theme.dark, ordersLength]}>
       <Router>
         <ScrollToTop />
         <Routes>

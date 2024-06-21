@@ -47,7 +47,12 @@ const HomePage = () => {
           {/* layout2 */}
           <div className={cx("layout2")}>
             <div className={cx("box_layout")}>
-              <div className={cx("box")}>
+              <div
+                className={cx("box")}
+                style={{
+                  backgroundColor: theme.button,
+                }}
+              >
                 <div className={cx("conten")}>
                   <div>Tặng quà 20/11</div>
                   <h3>Các mẫu thiết kế</h3>
@@ -57,7 +62,12 @@ const HomePage = () => {
               </div>
             </div>
             <div className={cx("box_layout")}>
-              <div className={cx("box")}>
+              <div
+                className={cx("box")}
+                style={{
+                  backgroundColor: theme.button,
+                }}
+              >
                 <div className={cx("conten")}>
                   <div>Tặng quà 20/11</div>
                   <h3>Các mẫu thiết kế</h3>
@@ -67,7 +77,12 @@ const HomePage = () => {
               </div>
             </div>
             <div className={cx("box_layout")}>
-              <div className={cx("box")}>
+              <div
+                className={cx("box")}
+                style={{
+                  backgroundColor: `${theme.button} `,
+                }}
+              >
                 <div className={cx("conten")}>
                   <div>Tặng quà 20/11</div>
                   <h3>Các mẫu thiết kế</h3>

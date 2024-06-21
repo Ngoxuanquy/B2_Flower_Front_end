@@ -4,7 +4,7 @@ import styles from "./index.module.scss";
 import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
 import socketIOClient from "socket.io-client";
-import { Badge, Button, Input, List, message } from "antd";
+import { Badge, Button, Input, List, Spin, message } from "antd";
 
 // const ENDPOINT = "https://chat-b2-flower.onrender.com";
 const ENDPOINT = "http://localhost:4000";
@@ -16,6 +16,7 @@ const Chats = () => {
   const [roomId, setRoomId] = useState("");
   const [email, setEmail] = useState("");
   const [count, setCount] = useState(0);
+  const [isLoad, setIsLoad] = useState(false);
 
   const [messageApi, contextHolder] = message.useMessage();
   const [socket, setSocket] = useState(null);
@@ -104,8 +105,6 @@ const Chats = () => {
 
   const handleOpentChat = (id, email) => {
     if (id) {
-      console.log(id);
-
       setRoomId(id);
       fetchMessages(id);
       setEmail(email);
@@ -152,12 +151,13 @@ const Chats = () => {
 
   const fetchMessages = async (id) => {
     try {
+      setIsLoad(true);
       const response = await fetch("https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const messages = await response.json();
-      console.log(messages);
+      setIsLoad(false);
       setMessages(messages.metadata.message);
     } catch (error) {
       console.error("There has been a problem with your fetch operation:", error);
@@ -214,6 +214,25 @@ const Chats = () => {
 
   return (
     <div className={cx("container_")}>
+      {isLoad && (
+        <div
+          style={{
+            position: "fixed",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            width: "100%",
+            height: "100vh",
+            zIndex: 100,
+            top: 0,
+            top: 0,
+            left: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin />
+        </div>
+      )}
       <div className={cx("box")}>
         <div className={cx("box-title")}>
           {apis.map((api) => (
