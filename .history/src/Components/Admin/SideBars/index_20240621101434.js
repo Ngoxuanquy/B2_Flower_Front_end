@@ -11,8 +11,11 @@ import { Button } from "@mui/material";
 import { TbLogout } from "react-icons/tb";
 import { Call_Post_Api } from "../../CallApi/CallApis";
 import Cookies from "js-cookie";
+import styles from "./index.module.scss";
+import classNames from "classnames/bind";
 
 const Sidebar = () => {
+  const cx = classNames.bind(styles);
   const [openItem, setOpenItem] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
   const [roles, setRoles] = useState([]);
