@@ -1,13 +1,14 @@
+// User.module.scss
+
 .container {
-  font-family: "Open Sans", sans-serif !important;
-  padding: 90px 30px 30px;
-  width: 100%;
-  color: #403e57;
-  .contents {
-    .list-floatcard {
-      display: flex;
-      gap: 24px;
-    }
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  margin-top: 60px;
+
+  div {
+    margin-bottom: 15px;
   }
 }
 

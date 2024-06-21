@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaEye, FaPencil } from "react-icons/fa6";
 import { MdOutlineBlock } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5";
+import { IoSchoolSharp, IoSettingsSharp } from "react-icons/io5";
 
 import { Button, MenuItem, Pagination } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
@@ -9,8 +9,9 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import styles from "./RegisteredUsers.module.scss";
 import classNames from "classnames/bind";
+import { FaUser } from "react-icons/fa";
 import Cookies from "js-cookie";
-import { Input, Modal, Select as AntSelect, Collapse } from "antd";
+import { Input, Modal, Select as AntSelect } from "antd";
 
 const cx = classNames.bind(styles);
 const RegisteredUsers = ({ apis }) => {
@@ -156,7 +157,7 @@ const RegisteredUsers = ({ apis }) => {
           </div>
           <div>
             Email
-            <Input value={email} onChange={handleEmailChange} disabled />
+            <Input value={email} onChange={handleEmailChange} />
           </div>
           <div>
             Roles
@@ -231,53 +232,53 @@ const RegisteredUsers = ({ apis }) => {
             </tr>
           </thead>
           <tbody>
-            {api?.map((api, index) => (
-              <React.Fragment key={index}>
-                <tr>
-                  <td>#{index + 1}</td>
-                  <td>
-                    <div className={cx("info-user")}>
-                      <img src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg" alt="avatar of user" />
-                      <p>{api.name}</p>
-                    </div>
-                  </td>
-                  <td>
-                    <div className={cx("role")}>
-                      <IoSettingsSharp />
-                      {api?.roles?.map((role, index) => (
-                        <span key={index} className={cx(getRoleClass(role))}>
-                          {role}{" "}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td>
-                    <span>{api.email}</span>
-                  </td>
-                  <td>0123456789</td>
-                  <td>
-                    <p className={cx("status")}>{api.status}</p>
-                  </td>
-                  <td>{new Date(api.updatedAt).toLocaleDateString()}</td>
-                  <td>
-                    <div className={cx("actions")}>
-                      <Button className={cx("secondary")} color="secondary">
-                        <FaEye />
-                      </Button>
-                      <Button className={cx("success")} color="success">
-                        <FaPencil onClick={() => showModal(api)} />
-                      </Button>
-                      <Button className={cx("error")} color="error">
-                        <MdOutlineBlock />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              </React.Fragment>
+            {api.map((api, index) => (
+              <tr>
+                <td>#{index + 1}</td>
+                <td>
+                  <div className={cx("info-user")}>
+                    <img
+                      src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg"
+                      alt="avatar of user"
+                    />
+                    <p>{api.name}</p>
+                  </div>
+                </td>
+                <td>
+                  <div className={cx("role")}>
+                    <IoSettingsSharp />
+                    {api?.roles?.map((role, index) => (
+                      <span key={index} className={cx(getRoleClass(role))}>
+                        {role}{" "}
+                      </span>
+                    ))}
+                  </div>
+                </td>
+                <td>
+                  <span>{api.email}</span>
+                </td>
+                <td>0123456789</td>
+                <td>
+                  <p className={cx("status")}>{api.status}</p>
+                </td>
+                <td>{new Date(api.updatedAt).toLocaleDateString()}</td>
+                <td>
+                  <div className={cx("actions")}>
+                    <Button className={cx("secondary")} color="secondary">
+                      <FaEye />
+                    </Button>
+                    <Button className={cx("success")} color="success">
+                      <FaPencil onClick={() => showModal(api)} />
+                    </Button>
+                    <Button className={cx("error")} color="error">
+                      <MdOutlineBlock />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
-
         <div className={cx("page")}>
           <Pagination count={10} />
         </div>

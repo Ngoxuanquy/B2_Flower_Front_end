@@ -1,0 +1,44 @@
+.container {
+  font-family: "Open Sans", sans-serif !important;
+  padding: 90px 30px 30px;
+  color: #403e57;
+  .contents {
+    .list-floatcard {
+      display: flex;
+      gap: 24px;
+    }
+  }
+}
+
+.deleteButton {
+  color: #228556;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.status-active {
+  color: green;
+}
+
+.status-inactive {
+  color: red;
+}
+
+.status-pending {
+  color: orange;
+}
+
+/* Role styles */
+.role-read {
+  color: blue;
+}
+
+.role-edit {
+  color: purple;
+}
+
+.role-delete {
+  color: red;
+}
