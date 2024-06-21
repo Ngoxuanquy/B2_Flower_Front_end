@@ -9,7 +9,6 @@ import socketIOClient from "socket.io-client";
 import Cookies from "js-cookie";
 import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
-import { HappyProvider } from "@ant-design/happy-work-theme";
 
 // const ENDPOINT = "https://chat-b2-flower.onrender.com";
 const ENDPOINT = "http://localhost:4000";
@@ -303,11 +302,9 @@ const DefaultLayout = ({ children }) => {
           </div>
         </div>
 
-        <HappyProvider>
-          <Button type="primary" onClick={handleDarkmode}>
-            Cập nhật
-          </Button>
-        </HappyProvider>
+        <Button type="primary" onClick={handleDarkmode}>
+          Cập nhật
+        </Button>
       </Drawer>
       <Drawer title="Basic Drawer" onClose={onClose} open={open}>
         <ul id="messages">
