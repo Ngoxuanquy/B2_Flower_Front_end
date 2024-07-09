@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./Information.module.scss";
-import { Image, Spin, Tabs, message } from "antd";
+import { Button, Image, Spin, Tabs, message } from "antd";
 import ModalMap from "../../../Components/ModalMap/ModalMap";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
@@ -15,6 +15,8 @@ const Information = () => {
 
   const [address, setAddress] = useState([]);
   const [orders, setOrder] = useState([]);
+  const [ordersSend, setOrderSend] = useState([]);
+
   const [tabPaneHeight, setTabPaneHeight] = useState("auto"); // State to track height of TabPane dynamically
   const [messageApi, contextHolder] = message.useMessage();
   const [isLoad, setIsLoad] = useState(false);
@@ -54,6 +56,21 @@ const Information = () => {
       .catch((err) => console.log({ err }));
   };
 
+  const getApiTransactionOrderSend = () => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrder_doneUseId/${cleanId}`, "Get")
+      .then((data) => {
+        setOrderSend(data.metadata);
+        setIsLoad(false);
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
+
   const [selectedValue, setSelectedValue] = useState(null);
 
   const onChange = (e) => {
@@ -61,11 +78,33 @@ const Information = () => {
     console.log(e.target);
   };
 
+  const handelHuyDon = (transactionId) => {
+    setIsLoad(true);
+
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/deleteTransaction/${transactionId}`)
+      .then((data) => {
+        setIsLoad(false);
+        messageApi.open({
+          type: "success",
+          content: data.metadata.mgs,
+        });
+        getApiTransactionOrder();
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
+
   const handleTabChange = (key) => {
     setActiveTab(key);
     switch (key) {
       case "2":
         getApiTransactionOrder();
+        getApiTransactionOrderSend();
         break;
       case "3":
         getApiAdrressUser();
@@ -74,6 +113,11 @@ const Information = () => {
       default:
         break;
     }
+  };
+
+  const handleEventFromChild = (info) => {
+    // Handle event from child component here
+    getApiAdrressUser();
   };
 
   // Effect to update TabPane height dynamically
@@ -218,7 +262,7 @@ const Information = () => {
                       marginRight: "50px",
                     }}
                   >
-                    <ModalMap props={"Cập Nhật"} />
+                    <ModalMap props={"Cập Nhật"} onClickHandler={handleEventFromChild} />
                   </div>
                 </div>
               ) : (
@@ -265,6 +309,11 @@ const Information = () => {
                                 <h2 style={{ fontSize: "1.5rem", margin: "0" }}>Đơn hàng {index + 1}</h2>
                                 <p style={{ margin: "0", fontSize: "1.2rem", color: theme.color }}>
                                   Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
+                                </p>
+                                <p style={{ margin: "0", fontSize: "1.2rem", color: theme.color }}>
+                                  {order.status === "Đang nhận đơn" ? (
+                                    <Button onClick={() => handelHuyDon(order._id)}>Hủy đơn</Button>
+                                  ) : null}
                                 </p>
                               </div>
                               <div className={cx("order-table")} style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -344,6 +393,98 @@ const Information = () => {
                             >
                               Đơn đã gửi
                             </i>
+                          </div>
+                          <div className={cx("orders-container")}>
+                            {ordersSend?.length > 0 ? (
+                              ordersSend.map((order, index) => (
+                                <div
+                                  key={order._id}
+                                  style={{ marginBottom: "20px", border: "1px solid #ccc", borderRadius: "5px", padding: "20px" }}
+                                >
+                                  <div
+                                    className={cx("order-header")}
+                                    style={{
+                                      marginBottom: "10px",
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      padding: "10px",
+                                      backgroundColor: theme.button,
+                                      color: theme.color,
+                                    }}
+                                  >
+                                    <h2 style={{ fontSize: "1.5rem", margin: "0" }}>Đơn hàng {index + 1}</h2>
+                                    <p style={{ margin: "0", fontSize: "1.2rem", color: theme.color }}>
+                                      Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
+                                    </p>
+                                    <p style={{ margin: "0", fontSize: "1.2rem", color: theme.color }}>
+                                      {order.status === "Đang nhận đơn" ? (
+                                        <Button onClick={() => handelHuyDon(order._id)}>Hủy đơn</Button>
+                                      ) : null}
+                                    </p>
+                                  </div>
+                                  <div className={cx("order-table")} style={{ width: "100%", borderCollapse: "collapse" }}>
+                                    <div
+                                      className={cx("order-row", "order-header")}
+                                      style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}
+                                    >
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                        STT
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                        Sản phẩm
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
+                                        Hình ảnh
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                        Số lượng
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                        Giá
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                        Ngày đặt
+                                      </div>
+                                    </div>
+                                    {order.transaction_products.map((product, prodIndex) => (
+                                      <div
+                                        key={prodIndex}
+                                        className={cx("order-row")}
+                                        style={{ display: "flex", alignItems: "center", borderBottom: "1px solid #eee", padding: "10px 0" }}
+                                      >
+                                        <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                          {prodIndex + 1}
+                                        </div>
+                                        <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                          {product.product_name}
+                                        </div>
+                                        <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
+                                          <Image
+                                            src={product.product_thumb}
+                                            style={{
+                                              width: "80px",
+                                              height: "80px",
+                                            }}
+                                          />
+                                        </div>
+                                        <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                          {product.quantity}
+                                        </div>
+                                        <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                          {product.product_price}
+                                        </div>
+                                        <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                          {new Date(product.updatedAt).toLocaleDateString("vi-VN")}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <p style={{ fontStyle: "italic", textAlign: "center", marginTop: "20px" }}>Chưa có đơn hàng</p>
+                            )}
                           </div>
                         </div>
                       </div>

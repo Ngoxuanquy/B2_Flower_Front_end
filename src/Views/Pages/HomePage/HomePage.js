@@ -1,21 +1,28 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./homepage.module.scss";
 import AnhNen from "../../../access/anhnen.png";
 import Banner1 from "../../../access/banner1.png";
 import { Button, Radio, Space, Divider } from "antd";
 import AOS from "aos";
-// import 'aos/dist/aos.css';
 import ButtomNavigation from "../../../Components/ButtomNavigation/ButtomNavigation";
 import ThemeConText from "../../../config/themeConText";
+import Cookies from "js-cookie";
 
 const cx = classNames.bind(styles);
+
 const HomePage = () => {
-  const [theme, ordersLength] = useContext(ThemeConText);
+  const [theme] = useContext(ThemeConText);
+  const [colorButton, setColorButton] = useState("rgb(253, 124, 147)"); // Default color
 
   useEffect(() => {
-    AOS.init();
-  }, []);
+    const colorButtonFromCookie = Cookies.get("buttonColor");
+    if (colorButtonFromCookie) {
+      setColorButton(colorButtonFromCookie.replace(/"/g, ""));
+    }
+
+    AOS.init(); // Initialize AOS animation library
+  }, []); // Empty dependency array means this effect runs only once on mount
 
   return (
     <div
@@ -29,7 +36,7 @@ const HomePage = () => {
         <div className={cx("elementor-widget-container_")}>
           <div className={cx("layout1")}>
             <div data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1500">
-              <h1>LI GIFT</h1>
+              <h1>2Be Flower</h1>
               <h3>
                 Chào quý khách hàng thân yêu
                 <br /> Chúng tôi rất tự hào và hân hạnh được giới thiệu đến bạn dịch vụ độc đáo và phong cách của chúng tôi trong lĩnh vực
@@ -41,16 +48,17 @@ const HomePage = () => {
               <div className={cx("muangay")}>Mua ngay bây giờ</div>
             </div>
             <div data-aos="fade-left" data-aos-anchor="#example-anchor" data-aos-offset="500" data-aos-duration="1500">
-              <img src={AnhNen} className={cx("img_layout1")} />
+              <img src={AnhNen} className={cx("img_layout1")} alt="AnhNen" />
             </div>
           </div>
-          {/* layout2 */}
+
+          {/* Layout 2 */}
           <div className={cx("layout2")}>
             <div className={cx("box_layout")}>
               <div
                 className={cx("box")}
                 style={{
-                  backgroundColor: theme.button,
+                  backgroundColor: colorButton,
                 }}
               >
                 <div className={cx("conten")}>
@@ -58,14 +66,14 @@ const HomePage = () => {
                   <h3>Các mẫu thiết kế</h3>
                   <button>XEM TẤT CẢ</button>
                 </div>
-                <img src={Banner1} className={cx("img_conten1")} />
+                <img src={Banner1} className={cx("img_conten1")} alt="Banner1" />
               </div>
             </div>
             <div className={cx("box_layout")}>
               <div
                 className={cx("box")}
                 style={{
-                  backgroundColor: theme.button,
+                  backgroundColor: theme.button || colorButton,
                 }}
               >
                 <div className={cx("conten")}>
@@ -73,14 +81,14 @@ const HomePage = () => {
                   <h3>Các mẫu thiết kế</h3>
                   <button>XEM TẤT CẢ</button>
                 </div>
-                <img src={Banner1} className={cx("img_conten1")} />
+                <img src={Banner1} className={cx("img_conten1")} alt="Banner1" />
               </div>
             </div>
             <div className={cx("box_layout")}>
               <div
                 className={cx("box")}
                 style={{
-                  backgroundColor: `${theme.button} `,
+                  backgroundColor: theme.button !== null ? colorButton : theme.button,
                 }}
               >
                 <div className={cx("conten")}>
@@ -88,13 +96,12 @@ const HomePage = () => {
                   <h3>Các mẫu thiết kế</h3>
                   <button>XEM TẤT CẢ</button>
                 </div>
-                <img src={Banner1} className={cx("img_conten1")} />
+                <img src={Banner1} className={cx("img_conten1")} alt="Banner1" />
               </div>
             </div>
           </div>
 
-          {/* layout3 */}
-
+          {/* Layout 3 */}
           <div className={cx("layout3")} data-aos="fade-up" data-aos-duration="3000">
             <div className={cx("box_layout3")}>
               <div className={cx("conten")}>
@@ -127,33 +134,29 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          {/* sản phẩm */}
 
-          <div
-            className={cx("sanpham")}
-            data-aos="fade-up"
-            data-aos-duration="3000"
-            style={{
-              marginBottom: "50px",
-            }}
-          >
+          {/* Sản phẩm */}
+          <div className={cx("sanpham")} data-aos="fade-up" data-aos-duration="3000" style={{ marginBottom: "50px" }}>
             <div className={cx("box_sanpham")}>
               <div>
                 <img
                   className={cx("img1")}
                   src="https://inkythuatso.com/uploads/thumbnails/800/2022/03/46dddd2899d84ae726305a643600b091-23-09-18-29.jpg"
+                  alt="Img1"
                 />
               </div>
               <div>
-                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698825956/banhang/cq5dxtvrcssx6lsphmni.jpg" />
-                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826029/banhang/yyptfqyrcuyuweziyhew.jpg" />
-                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826142/banhang/omqv445si5b4r0ax0wqs.jpg" />
-                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826172/banhang/ms5adyn7olihvzdofsll.jpg" />
+                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698825956/banhang/cq5dxtvrcssx6lsphmni.jpg" alt="Img2" />
+                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826029/banhang/yyptfqyrcuyuweziyhew.jpg" alt="Img3" />
+                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826142/banhang/omqv445si5b4r0ax0wqs.jpg" alt="Img4" />
+                <img src="https://res.cloudinary.com/dvqmndx5j/image/upload/v1698826172/banhang/ms5adyn7olihvzdofsll.jpg" alt="Img5" />
               </div>
             </div>
           </div>
         </div>
       </div>
+      {/* Footer */}
+      <ButtomNavigation />
     </div>
   );
 };

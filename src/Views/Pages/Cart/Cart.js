@@ -136,8 +136,7 @@ const Cart = () => {
         phiShip = 0.5 * distance;
       }
     }
-    console.log(phiShip.toFixed(2));
-    setPhiShip(phiShip.toFixed(2));
+    setPhiShip(phiShip.toFixed(0));
   };
 
   const onChange = (e) => {
@@ -304,14 +303,15 @@ const Cart = () => {
       });
     } else if (value === 2) {
       setIsLoad(true);
-
+      const name = Cookies.get("name")?.replace(/"/g, "");
       Call_Post_Api(
         {
           userId: cleanId,
           user: selectedValueAdress,
           product: checkedList,
           shopId: "test",
-          amount: tong + phiShip,
+          amount: tong + Number(phiShip),
+          email: name,
         },
         null,
         null,
@@ -333,6 +333,13 @@ const Cart = () => {
       console.log(data);
     });
   }, []);
+
+  const handelValueSession = () => {
+    Call_Post_Api(null, null, null, "/vnpay/get-session", "GET").then((data) => {
+      console.log("ancbcb");
+      console.log(data);
+    });
+  };
 
   const GetHtmlCart = () => {
     return (
@@ -722,6 +729,10 @@ const Cart = () => {
                 Previous
               </Button>
             )}
+          </div>
+
+          <div>
+            <Button onClick={() => handelValueSession()}>Lấy session</Button>
           </div>
         </div>
         <div className={cx("TongTien")}>

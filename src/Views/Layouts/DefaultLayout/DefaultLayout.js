@@ -10,8 +10,8 @@ import Cookies from "js-cookie";
 import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
 
-// const ENDPOINT = "https://chat-b2-flower.onrender.com";
-const ENDPOINT = "http://localhost:4000";
+const ENDPOINT = "https://chat-b2-flower.onrender.com";
+// const ENDPOINT = "http://localhost:4000";
 
 const cx = classNames.bind(styles);
 
@@ -54,8 +54,8 @@ const DefaultLayout = ({ children }) => {
   };
 
   const handleDarkmode = () => {
-    console.log(theme);
-    console.log(test);
+    Cookies.set("buttonColor", JSON.stringify(colorButton), { expires: 7 });
+
     setTest(!test);
     // EventRegister.emit("changeTheme", theme.theme === "dark" ? false : true);
     EventRegister.emit("changeupdateTheme", {
@@ -288,21 +288,21 @@ const DefaultLayout = ({ children }) => {
       </FloatButton.Group>
       <Drawer title="Basic Drawer" onClose={onCloseColor} open={openColor}>
         <div>
-          <div>
+          <div className={cx("color-picker-container")}>
             <ColorPicker defaultValue="#000000" onChange={handleTextColorChange} />
             <span> Text: {colorText}</span>
           </div>
-          <div>
+          <div className={cx("color-picker-container")}>
             <ColorPicker defaultValue="rgb(253, 124, 147)" onChange={handleButtonColorChange} />
             <span> Button: {colorButton}</span>
           </div>
-          <div>
+          <div className={cx("color-picker-container")}>
             <ColorPicker defaultValue="#ffffff" onChange={handleBackgroundColorChange} />
             <span> Background: {colorBackground}</span>
           </div>
         </div>
 
-        <Button type="primary" onClick={handleDarkmode}>
+        <Button className={cx("update-button")} type="primary" onClick={handleDarkmode}>
           Cập nhật
         </Button>
       </Drawer>

@@ -39,9 +39,13 @@
   }
 
   .row h1 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: white;
+    font-family: "Arial", sans-serif; /* Chọn font */
+    font-size: 2em; /* Kích thước chữ lớn hơn */
+    color: #ffe0f0; /* Màu chữ hồng */
+    text-shadow: 2px 2px 4px #000000; /* Tạo hiệu ứng đổ bóng cho chữ */
+    text-align: center; /* Canh giữa chữ */
+    letter-spacing: 2px;
+    font-style: italic;
   }
 
   .footer__widget table {

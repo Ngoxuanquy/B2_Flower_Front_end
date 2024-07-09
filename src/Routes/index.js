@@ -12,6 +12,7 @@ import {
   ListKhachHang,
   SelectProduct,
   Information,
+  ForgotPassword,
 } from "../Views";
 import Admin from "../Views/Pages/Admin/Admin";
 import Chats from "../Views/Pages/Admin/Chats";
@@ -19,6 +20,8 @@ import DashBoard from "../Views/Pages/Admin/DashBoard";
 
 import UserList from "../Views/Pages/Admin/User/UserList";
 import SelectProducts from "../Views/Pages/Admin/SelectProduct/index";
+import Orders from "../Views/Pages/Admin/Orders/Orders";
+import OrdersSent from "../Views/Pages/Admin/OrdersSent/OrdersSent";
 
 export const publicRoute = [
   { path: "/", component: <HomePage /> },
@@ -33,6 +36,7 @@ export const publicRoute = [
 export const privateRoute = [
   { path: "/login", component: <Login /> },
   { path: "/dangky", component: <DangKy /> },
+  { path: "/quenmatkhau", component: <ForgotPassword /> },
 ];
 
 export const adminRoute = [
@@ -47,4 +51,6 @@ export const adminRoute = [
   { path: "/admin/product-list", component: <SelectProducts /> },
   { path: "/admin/dash-board", component: <DashBoard /> },
   { path: "/admin/user-list", component: <UserList /> },
+  { path: "/admin/listOrders", component: <Orders /> },
+  { path: "/admin/đơn-đã-gửi", component: <OrdersSent /> },
 ];
