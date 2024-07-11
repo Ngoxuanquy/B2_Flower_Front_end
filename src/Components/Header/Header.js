@@ -271,7 +271,7 @@ function Header({ colorHeader }) {
           />
           <Tabs.TabPane
             tab={
-              <Link style={{ color: "#292929" }} to="/about">
+              <Link style={{ color: "#292929" }} to="/introduce">
                 GIỚI THIỆU
               </Link>
             }
@@ -339,7 +339,7 @@ function Header({ colorHeader }) {
                   />
                   <Tabs.TabPane
                     tab={
-                      <Link style={{ color: "#292929" }} to="/about">
+                      <Link style={{ color: "#292929" }} to="/introduce">
                         GIỚI THIỆU
                       </Link>
                     }

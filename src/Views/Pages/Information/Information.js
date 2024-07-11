@@ -16,6 +16,7 @@ const Information = () => {
   const [address, setAddress] = useState([]);
   const [orders, setOrder] = useState([]);
   const [ordersSend, setOrderSend] = useState([]);
+  const [moneys, setMoneys] = useState(0);
 
   const [tabPaneHeight, setTabPaneHeight] = useState("auto"); // State to track height of TabPane dynamically
   const [messageApi, contextHolder] = message.useMessage();
@@ -25,6 +26,30 @@ const Information = () => {
   const cx = classNames.bind(styles);
   const titles = ["Tài khoản", "Ví của B2-FLOWER", "Đơn hàng", "Địa chỉ"];
   const [activeTab, setActiveTab] = useState("0"); // State to track the active tab
+  const madonhang = Cookies.get("MaDonHang");
+
+  const getOrder = () => {
+    if (madonhang) {
+      const Clearmadonhang = madonhang.replace(/"/g, "");
+
+      Call_Post_Api(null, null, null, `/vnpay/abc/${Clearmadonhang}`, "GET")
+        .then((data) => {
+          console.log(data);
+          // Delete the madonhang cookie after successful API call
+          document.cookie = "MaDonHang=; Max-Age=0; path=/";
+          return;
+        })
+        .catch((err) => console.log({ err }));
+    } else {
+      console.log("No madonhang found in cookies");
+    }
+  };
+
+  useEffect(() => {
+    if (madonhang) {
+      getOrder();
+    }
+  }, [madonhang]);
 
   const getApiAdrressUser = () => {
     const token = Cookies.get("accessToken");
@@ -34,12 +59,18 @@ const Information = () => {
 
     Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
       .then((data) => {
+        console.log(data);
         setAddress(data.metadata.address);
+        setMoneys(data.metadata.moneys);
         setIsLoad(false);
         return;
       })
       .catch((err) => console.log({ err }));
   };
+
+  useEffect(() => {
+    getApiAdrressUser();
+  }, []);
 
   const getApiTransactionOrder = () => {
     const token = Cookies.get("accessToken");
@@ -49,7 +80,7 @@ const Information = () => {
 
     Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullUseId/${cleanId}`, "Get")
       .then((data) => {
-        setOrder(data.metadata);
+        setOrder(data.metadata.reverse());
         setIsLoad(false);
         return;
       })
@@ -64,7 +95,7 @@ const Information = () => {
 
     Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrder_doneUseId/${cleanId}`, "Get")
       .then((data) => {
-        setOrderSend(data.metadata);
+        setOrderSend(data.metadata.reverse());
         setIsLoad(false);
         return;
       })
@@ -78,14 +109,13 @@ const Information = () => {
     console.log(e.target);
   };
 
-  const handelHuyDon = (transactionId) => {
+  const handelHuyDon = (transactionId, status, moneys) => {
     setIsLoad(true);
 
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
-
     Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/deleteTransaction/${transactionId}`)
       .then((data) => {
         setIsLoad(false);
@@ -94,6 +124,30 @@ const Information = () => {
           content: data.metadata.mgs,
         });
         getApiTransactionOrder();
+
+        if (status === "Đã thanh toán" || status === "Thanh toán qua Ví 2Be Flower") {
+          const token = Cookies.get("accessToken");
+          const id = Cookies.get("id");
+          const cleanedJwtString = token?.replace(/"/g, "");
+          const cleanId = id?.replace(/"/g, "");
+          Call_Post_Api(
+            {
+              userId: cleanId,
+              moneys: moneys,
+            },
+            cleanedJwtString,
+            cleanId,
+            `/users/updateMoney/${cleanId}`
+          )
+            .then((data) => {
+              setIsLoad(false);
+
+              getApiTransactionOrder();
+              return;
+            })
+            .catch((err) => console.log({ err }));
+        } else {
+        }
         return;
       })
       .catch((err) => console.log({ err }));
@@ -109,7 +163,9 @@ const Information = () => {
       case "3":
         getApiAdrressUser();
         break;
-
+      case "1":
+        getApiAdrressUser();
+        break;
       default:
         break;
     }
@@ -188,6 +244,37 @@ const Information = () => {
         >
           {titles?.map((title, index) => (
             <TabPane tab={title} key={String(index)}>
+              {activeTab === "0" && (
+                <div>
+                  {/* Content for Tab 0 */}
+                  <p>Tab 0 content goes here.</p>
+                </div>
+              )}
+              {activeTab === "1" && (
+                <div
+                  style={{
+                    fontSize: "18px",
+                    display: "flex",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  {/* Content for Tab 1 */}
+                  <p>
+                    Ví:{" "}
+                    <span
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {moneys} đ
+                    </span>{" "}
+                  </p>
+                  <div>
+                    <Button>Nạp tiền vào ví</Button>
+                  </div>
+                </div>
+              )}
               {activeTab === "3" ? (
                 <div className={cx("tabs-item1")} id="height-client">
                   <div>
@@ -307,12 +394,34 @@ const Information = () => {
                                 }}
                               >
                                 <h2 style={{ fontSize: "1.5rem", margin: "0" }}>Đơn hàng {index + 1}</h2>
+                                {order.notifications === "Đã thanh toán" || order.notifications === "Thanh toán qua Ví 2Be Flower" ? (
+                                  <span
+                                    style={{
+                                      color: "green",
+                                      fontSize: "12px",
+                                    }}
+                                  >
+                                    {" "}
+                                    Đã thanh toán
+                                  </span>
+                                ) : (
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "12px",
+                                    }}
+                                  >
+                                    Chưa thanh toán
+                                  </span>
+                                )}
                                 <p style={{ margin: "0", fontSize: "1.2rem", color: theme.color }}>
                                   Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
                                 </p>
                                 <p style={{ margin: "0", fontSize: "1.2rem", color: theme.color }}>
                                   {order.status === "Đang nhận đơn" ? (
-                                    <Button onClick={() => handelHuyDon(order._id)}>Hủy đơn</Button>
+                                    <Button onClick={() => handelHuyDon(order._id, order.notifications, order.total_amounts)}>
+                                      Hủy đơn
+                                    </Button>
                                   ) : null}
                                 </p>
                               </div>
@@ -492,7 +601,7 @@ const Information = () => {
                   </div>
                 )
               )}
-              {activeTab !== "2" && activeTab !== "3" && <div>Chưa có địa chỉ, vui lòng nhập địa chỉ</div>}
+              {/* {activeTab !== "2" && activeTab !== "3" && <div>Chưa có địa chỉ, vui lòng nhập địa chỉ</div>} */}
             </TabPane>
           ))}
         </Tabs>

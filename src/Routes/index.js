@@ -22,10 +22,12 @@ import UserList from "../Views/Pages/Admin/User/UserList";
 import SelectProducts from "../Views/Pages/Admin/SelectProduct/index";
 import Orders from "../Views/Pages/Admin/Orders/Orders";
 import OrdersSent from "../Views/Pages/Admin/OrdersSent/OrdersSent";
+import ShopIntroduce from "../Views/Pages/ShopIntroduce/ShopIntroduce";
 
 export const publicRoute = [
   { path: "/", component: <HomePage /> },
   { path: "/shop", component: <ShopPage /> },
+  { path: "/introduce", component: <ShopIntroduce /> },
   { path: "/lienhe", component: <LienHe /> },
   { path: "/blog", component: <BLog /> },
   { path: "/cart", component: <Cart /> },

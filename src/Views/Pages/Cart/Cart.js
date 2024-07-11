@@ -9,6 +9,7 @@ import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
 import { Link, useNavigate } from "react-router-dom";
 import { usePayOS, PayOSConfig } from "payos-checkout";
+import logo from "../../../access/logo-1.png";
 import axios from "axios";
 
 const cx = classNames.bind(styles);
@@ -29,16 +30,38 @@ const Cart = () => {
   const [adrees, setAdrees] = useState("");
   const [phone, setPhone] = useState("");
   const [note, setNote] = useState("");
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(2);
   const [checkedList, setCheckedList] = useState([]);
   const [current, setCurrent] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [address, setAddress] = useState([]);
   const [url, setUrl] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const [selectedValueAdress, setSelectedValueAdress] = useState(null);
 
   const [distance, setDistance] = useState(null);
+  const [moneys, setMoneys] = useState(0);
+
+  const getMoneysUser = () => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
+      .then((data) => {
+        console.log(data);
+        setMoneys(data.metadata.moneys);
+        setIsLoad(false);
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
+
+  useEffect(() => {
+    getMoneysUser();
+  }, []);
 
   const getCoordinates = async (address) => {
     setIsLoad(true);
@@ -142,6 +165,15 @@ const Cart = () => {
   const onChange = (e) => {
     setValue(e.target.value);
   };
+
+  useEffect(() => {
+    const phiShipFixed = Number(phiShip).toFixed(0);
+    const disableCheck = moneys < tong + parseInt(phiShipFixed);
+    if (disableCheck) {
+      setValue(2);
+    }
+    setIsDisabled(disableCheck);
+  }, [moneys, tong, phiShip]);
 
   const checkAll = orders.length === checkedList.length;
   const indeterminate = checkedList.length > 0 && checkedList.length < orders.length;
@@ -281,6 +313,7 @@ const Cart = () => {
           paymentExpression: selectedOption,
           phiShip,
           email: Cookies.get("name")?.replace(/"/g, ""),
+          total_amounts: tong,
         },
         cleanedJwtString,
         cleanId,
@@ -294,7 +327,7 @@ const Cart = () => {
           // }, 3000);
           setCurrent(2);
           setIsLoad(false);
-
+          EventRegister.emit("chaneLength", orders.length);
           messageApi.open({
             type: "success",
             content: "Đặt hàng thành công!!!",
@@ -303,6 +336,8 @@ const Cart = () => {
       });
     } else if (value === 2) {
       setIsLoad(true);
+      const MaDonHang = Math.floor(100000 + Math.random() * 900000);
+
       const name = Cookies.get("name")?.replace(/"/g, "");
       Call_Post_Api(
         {
@@ -312,6 +347,7 @@ const Cart = () => {
           shopId: "test",
           amount: tong + Number(phiShip),
           email: name,
+          MaDonHang: MaDonHang,
         },
         null,
         null,
@@ -319,10 +355,65 @@ const Cart = () => {
       ).then((data) => {
         console.log(data);
         setIsLoad(false);
-        localStorage.setItem("products", JSON.stringify(checkedList));
+        Cookies.set("MaDonHang", JSON.stringify(MaDonHang), {
+          expires: 7,
+        });
+
         window.location.replace(data);
-        Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
-          console.log(data);
+        EventRegister.emit("chaneLength", orders.length);
+
+        // Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
+        //   console.log(data);
+        // });
+      });
+    } else if (value === 1) {
+      setIsLoad(true);
+      Call_Post_Api(
+        {
+          user: { ...selectedValueAdress, _id: cleanId },
+          product: checkedList,
+          shopId: "test",
+          paymentExpression: selectedOption,
+          notifications: "Thanh toán qua Ví 2Be Flower",
+          phiShip,
+          email: Cookies.get("name")?.replace(/"/g, ""),
+          total_amounts: tong,
+        },
+        cleanedJwtString,
+        cleanId,
+        "/transaction"
+      ).then(() => {
+        Call_Post_Api({ userId: cleanId, newCartData: checkedList }, cleanedJwtString, cleanId, "/cart/updateTransaciton").then(() => {
+          setIsLoad(false);
+          getApi();
+
+          setCurrent(2);
+          setIsLoad(false);
+          EventRegister.emit("chaneLength", orders.length);
+          messageApi.open({
+            type: "success",
+            content: "Đặt hàng thành công!!!",
+          });
+          const token = Cookies.get("accessToken");
+          const id = Cookies.get("id");
+          const cleanedJwtString = token?.replace(/"/g, "");
+          const cleanId = id?.replace(/"/g, "");
+          Call_Post_Api(
+            {
+              userId: cleanId,
+              moneys: -(tong + Number(phiShip)).toFixed(0),
+            },
+            cleanedJwtString,
+            cleanId,
+            `/users/updateMoney/${cleanId}`
+          )
+            .then((data) => {
+              setIsLoad(false);
+
+              navigate("/information");
+              return;
+            })
+            .catch((err) => console.log({ err }));
         });
       });
     }
@@ -532,18 +623,20 @@ const Cart = () => {
                   justifyContent: "space-around",
                 }}
               >
-                <Radio value={1} style={{ fontSize: "18px" }}>
+                <Radio value={1} style={{ fontSize: "18px" }} disabled={isDisabled}>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
                     <img
-                      src="https://lacfarm.netlify.app/assets/vnpay-logo-82927e0d.webp"
+                      src={logo}
                       style={{
-                        width: "200px",
-                        height: "80px",
+                        width: "120px",
+                        height: "120px",
                       }}
                     />
                     <div
@@ -551,7 +644,7 @@ const Cart = () => {
                         fontFamily: "italic",
                       }}
                     >
-                      Thanh toán qua VN pay
+                      Thanh toán qua Ví 2Be Flower
                     </div>
                   </div>
                 </Radio>
@@ -567,7 +660,7 @@ const Cart = () => {
                 </Radio>
                 <Radio value={3} style={{ fontSize: "18px" }}>
                   <img
-                    src="https://lacfarm.netlify.app/assets/vnpay-qr-code-cbc23988.png"
+                    src="https://sv0.vacdn.link/user_libraries/shipcod.png"
                     style={{
                       width: "120px",
                       height: "120px",
@@ -732,7 +825,7 @@ const Cart = () => {
           </div>
 
           <div>
-            <Button onClick={() => handelValueSession()}>Lấy session</Button>
+            <Button>Lấy session</Button>
           </div>
         </div>
         <div className={cx("TongTien")}>
@@ -754,6 +847,17 @@ const Cart = () => {
               >
                 Áp dụng
               </button>
+            </div>
+            <div className={cx("tamtinh")}>
+              <div
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                }}
+              >
+                Ví 2Be Flower
+              </div>
+              <div>{moneys} đ</div>
             </div>
             <div className={cx("tamtinh")}>
               <div>Tạm tính</div>
