@@ -20,6 +20,8 @@ import DashBoard from "../Views/Pages/Admin/DashBoard";
 
 import UserList from "../Views/Pages/Admin/User/UserList";
 import SelectProducts from "../Views/Pages/Admin/SelectProduct/index";
+import ProductList from "../Views/Pages/Admin/Product/ProductList/ProductList";
+import ProductUpload from "../Views/Pages/Admin/Product/ProductUpload/ProductUpload";
 import Orders from "../Views/Pages/Admin/Orders/Orders";
 import OrdersSent from "../Views/Pages/Admin/OrdersSent/OrdersSent";
 import ShopIntroduce from "../Views/Pages/ShopIntroduce/ShopIntroduce";
@@ -50,7 +52,8 @@ export const adminRoute = [
   { path: "/admin/Message", component: <Chats /> },
   { path: "/admin/user", component: <UserList /> },
   // { path: "/admin/user-list", component: <User /> },
-  { path: "/admin/product-list", component: <SelectProducts /> },
+  { path: "/admin/product-list", component: <ProductList /> },
+  { path: "/admin/product-upload", component: <ProductUpload /> },
   { path: "/admin/dash-board", component: <DashBoard /> },
   { path: "/admin/user-list", component: <UserList /> },
   { path: "/admin/listOrders", component: <Orders /> },
