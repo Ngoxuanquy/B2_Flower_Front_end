@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Input, Select, Spin } from "antd";
+import { Modal, Button, Input, Select, Spin, message } from "antd";
 import classNames from "classnames/bind";
 import styles from "./ModalMap.module.scss";
 import axios from "axios";
 import { Call_Post_Api } from "../CallApi/CallApis";
 import Cookies from "js-cookie";
 
-function ModalMap({ props }) {
+function ModalMap({ props, onClickHandler }) {
   const cx = classNames.bind(styles);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [apiTinhThanhs, setApiTinhThanh] = useState([]);
@@ -99,6 +100,15 @@ function ModalMap({ props }) {
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
+
+    if (!cleanId || !valuePhuongXa || !valueQuanHuyen || !valueTinhThanh || !valueAddressCuThe || !valueNumber || !valueName) {
+      messageApi.open({
+        type: "warning",
+        content: "Please fill in all required fields.",
+      });
+      return;
+    }
+
     setIsModalOpen(false);
 
     Call_Post_Api(
@@ -119,7 +129,7 @@ function ModalMap({ props }) {
     )
       .then((data) => {
         setIsLoad(false);
-
+        onClickHandler("Thông tin từ modal");
         return;
       })
       .catch((err) => console.log({ err }));
@@ -127,6 +137,7 @@ function ModalMap({ props }) {
 
   return (
     <>
+      {contextHolder}
       {isLoad && (
         <div
           style={{

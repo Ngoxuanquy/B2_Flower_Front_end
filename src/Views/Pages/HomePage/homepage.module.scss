@@ -58,8 +58,7 @@
       .box_layout {
         cursor: pointer;
         .box {
-          position: relative ;
-          background-color: rgb(253, 124, 147) ;
+          position: relative;
           width: 350px;
           height: 250px;
           display: flex;
@@ -245,7 +244,6 @@
             position: relative;
             width: 90%;
             border-radius: 15px;
-            background-color: rgb(253, 124, 147);
             margin-top: 10px;
 
             .img_conten1 {

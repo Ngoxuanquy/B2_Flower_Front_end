@@ -397,7 +397,16 @@ function Logins() {
                         <Input.Password placeholder="Password" onChange={(e) => setMatKhau(e.target.value)} />
                       </Form.Item>
                     </div>
-
+                    <Link to={"/quenmatkhau"}>
+                      <div
+                        style={{
+                          marginTop: "-15px",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        Quên mật khẩu
+                      </div>
+                    </Link>
                     <Form.Item>
                       <Button type="primary" htmlType="submit" onClick={() => handerSubmit()}>
                         Submit

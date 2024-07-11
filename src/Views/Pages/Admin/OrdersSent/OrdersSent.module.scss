@@ -1,0 +1,34 @@
+.container {
+  margin-top: 100px;
+}
+.orders-container {
+  max-width: 100%;
+  width: 90% !important;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 20px;
+  background-color: #fff;
+  height: 100% !important;
+}
+
+.order-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 4px;
+  border-bottom: 1px solid #ccc;
+}
+
+.order-header {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+.order-cell {
+  flex: 1;
+  padding: 1px;
+}
+
+.footer_svg__6xIHg {
+  display: none;
+}

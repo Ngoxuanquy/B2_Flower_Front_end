@@ -3,7 +3,7 @@ const theme = {
     theme: "ligth",
     color: "#1b1b1b",
     button: "pink",
-    background: "#ffffff",
+    background: "red",
     maunen: "#f1f1f7",
   },
   dark: {

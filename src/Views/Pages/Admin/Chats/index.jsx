@@ -6,8 +6,8 @@ import Cookies from "js-cookie";
 import socketIOClient from "socket.io-client";
 import { Badge, Button, Input, List, Spin, message } from "antd";
 
-// const ENDPOINT = "https://chat-b2-flower.onrender.com";
-const ENDPOINT = "http://localhost:4000";
+const ENDPOINT = "https://chat-b2-flower.onrender.com";
+// const ENDPOINT = "http://localhost:4000";
 
 const Chats = () => {
   const cx = classNames.bind(styles);

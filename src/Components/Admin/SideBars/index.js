@@ -49,13 +49,7 @@ const Sidebar = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/shop/get_roles/${cleanId}`,
-      "GET"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/shop/get_roles/${cleanId}`, "GET")
       .then((data) => {
         setRoles(data.metadata);
         console.log(data);
@@ -106,7 +100,7 @@ const Sidebar = () => {
         <SideBarItem
           icon={<BsCartCheckFill />}
           primary="Order"
-          subItems={["Product 1", "Product 2", "Product 3"]}
+          subItems={["listOrders", "Đơn đã gửi", "Product 3"]}
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Order"}
@@ -147,12 +141,7 @@ const Sidebar = () => {
       )}
 
       {roles.includes("ADMIN") && (
-        <SideBarItem
-          icon={<FaBell />}
-          primary="Notification"
-          onItemClick={handleItemClick}
-          isOpen={openItem === "Notification"}
-        />
+        <SideBarItem icon={<FaBell />} primary="Notification" onItemClick={handleItemClick} isOpen={openItem === "Notification"} />
       )}
 
       {roles.includes("ADMIN") && (
@@ -174,8 +163,7 @@ const Sidebar = () => {
               cookies.forEach((cookie) => {
                 const eqPos = cookie.indexOf("=");
                 const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie =
-                  name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
               });
               navigate("/login");
             }}
