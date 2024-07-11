@@ -1,0 +1,15 @@
+.container {
+  font-family: "Open Sans", sans-serif !important;
+  padding: 90px 30px 30px;
+  width: 100%;
+  color: #403e57;
+  .contents {
+    .list-floatcard {
+      display: flex;
+      gap: 24px;
+    }
+    .information {
+      padding: 20px;
+    }
+  }
+}

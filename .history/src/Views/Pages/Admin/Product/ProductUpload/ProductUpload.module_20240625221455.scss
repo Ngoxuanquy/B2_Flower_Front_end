@@ -1,0 +1,33 @@
+.container {
+  font-family: "Open Sans", sans-serif !important;
+  padding: 90px 30px 30px;
+  width: 100%;
+  color: #403e57;
+  .contents {
+    .list-floatcard {
+      display: flex;
+      gap: 24px;
+    }
+    .information {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      .info-header {
+        align-items: flex-start;
+        display: flex;
+        gap: 0;
+        justify-content: space-between;
+        margin-bottom: 18px;
+        h4 {
+          font-size: 17px;
+          font-weight: 600;
+          line-height: 27px;
+          text-transform: capitalize;
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+  }
+}
