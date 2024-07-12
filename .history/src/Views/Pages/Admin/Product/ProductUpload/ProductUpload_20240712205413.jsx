@@ -123,16 +123,7 @@ const ProductUpload = () => {
       setIsLoading(false);
     }
   };
-  const resetForm = () => {
-    setName("");
-    setPrice("");
-    setDescription("");
-    setType("");
-    setQuantity("");
-    setColor("");
-    setSize("");
-    setUploadedImage(null);
-  };
+
   const handleButtonClick = () => {
     document.getElementById("fileInput").click();
   };
@@ -170,7 +161,6 @@ const ProductUpload = () => {
                   <span>Tên sản phẩm:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      value={name}
                       required
                       type="text"
                       className={cx("input")}
@@ -209,7 +199,6 @@ const ProductUpload = () => {
                   <span>Giá:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      value={price}
                       required
                       type="text"
                       className={cx("input")}
@@ -254,7 +243,6 @@ const ProductUpload = () => {
                   <span>Màu sắc:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      value={color}
                       required
                       type="text"
                       className={cx("input")}
@@ -315,6 +303,7 @@ const ProductUpload = () => {
                     >
                       Upload file
                     </Button>
+
                     <VisuallyHiddenInput
                       id="fileInput"
                       type="file"
@@ -340,7 +329,6 @@ const ProductUpload = () => {
                   <span>Size:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      value={size}
                       required
                       type="text"
                       className={cx("input")}
@@ -379,7 +367,6 @@ const ProductUpload = () => {
                   <span>Số lượng:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      value={quantity}
                       required
                       type="text"
                       className={cx("input")}
@@ -444,7 +431,6 @@ const ProductUpload = () => {
                     <input
                       required
                       type="text"
-                      value={type}
                       className={cx("input")}
                       onChange={(e) => setType(e.target.value)}
                     />
@@ -497,7 +483,10 @@ const ProductUpload = () => {
               </Col>
             </Row>
             <div style={{ marginTop: "20px" }}>
-              <Button variant="outlined" onClick={resetForm}>
+              <Button
+                variant="outlined"
+                onClick={() => window.location.reload()}
+              >
                 Reset
               </Button>
               <Button

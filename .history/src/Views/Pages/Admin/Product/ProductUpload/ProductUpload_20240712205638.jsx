@@ -123,16 +123,7 @@ const ProductUpload = () => {
       setIsLoading(false);
     }
   };
-  const resetForm = () => {
-    setName("");
-    setPrice("");
-    setDescription("");
-    setType("");
-    setQuantity("");
-    setColor("");
-    setSize("");
-    setUploadedImage(null);
-  };
+
   const handleButtonClick = () => {
     document.getElementById("fileInput").click();
   };
@@ -497,7 +488,10 @@ const ProductUpload = () => {
               </Col>
             </Row>
             <div style={{ marginTop: "20px" }}>
-              <Button variant="outlined" onClick={resetForm}>
+              <Button
+                variant="outlined"
+                onClick={() => window.location.reload()}
+              >
                 Reset
               </Button>
               <Button
