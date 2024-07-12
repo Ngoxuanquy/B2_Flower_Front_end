@@ -236,8 +236,14 @@ function DetailProduct() {
                     <Input value={value} />
                     <Button onClick={handerCong}>+</Button>
                   </div>
-                  <button className={cx("addtocart")} onClick={() => handlerAddCart(products)}>
-                    Add To cart
+                  <button
+                    className={cx("addtocart")}
+                    onClick={() => handlerAddCart(products)}
+                    disabled={products.product_quantity <= 0}
+                    title={products.product_quantity <= 0 ? "Product is out of stock" : "Add to cart"}
+                  >
+                    {" "}
+                    Add To Cart
                   </button>
                   <HeartOutlined
                     style={{

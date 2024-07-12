@@ -256,6 +256,22 @@ const Cart = () => {
     });
   };
 
+  const updateQuantity = () => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    const convertedProducts = checkedList.map((product) => ({
+      id: product._id,
+      quantity: -product.quantity,
+    }));
+
+    Call_Post_Api(convertedProducts, cleanedJwtString, cleanId, "/product/updateQuantity").then((data) => {
+      console.log(data);
+    });
+  };
+
   const handlerDatHang = () => {
     setIsLoad(true);
     const token = Cookies.get("accessToken");
@@ -327,6 +343,7 @@ const Cart = () => {
           // }, 3000);
           setCurrent(2);
           setIsLoad(false);
+          updateQuantity();
           EventRegister.emit("chaneLength", orders.length);
           messageApi.open({
             type: "success",
@@ -342,7 +359,7 @@ const Cart = () => {
       Call_Post_Api(
         {
           userId: cleanId,
-          user: selectedValueAdress,
+          user: { ...selectedValueAdress, _id: cleanId },
           product: checkedList,
           shopId: "test",
           amount: tong + Number(phiShip),
@@ -355,6 +372,8 @@ const Cart = () => {
       ).then((data) => {
         console.log(data);
         setIsLoad(false);
+        updateQuantity();
+
         Cookies.set("MaDonHang", JSON.stringify(MaDonHang), {
           expires: 7,
         });
@@ -390,6 +409,8 @@ const Cart = () => {
           setCurrent(2);
           setIsLoad(false);
           EventRegister.emit("chaneLength", orders.length);
+          updateQuantity();
+
           messageApi.open({
             type: "success",
             content: "Đặt hàng thành công!!!",
@@ -825,7 +846,7 @@ const Cart = () => {
           </div>
 
           <div>
-            <Button>Lấy session</Button>
+            <Button onClick={updateQuantity}>Lấy session</Button>
           </div>
         </div>
         <div className={cx("TongTien")}>

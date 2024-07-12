@@ -246,7 +246,7 @@ const Chats = () => {
                       height: "50px",
                       margin: 0,
                     }}
-                    src="https://scontent.xx.fbcdn.net/v/t1.15752-9/441570670_802929555136374_1350330455299972228_n.jpg?stp=dst-jpg_p206x206&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=91HeDsJJZNkQ7kNvgHu9Jur&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGfs4Qv1AuLHqZ9HHGwwc_mVoRelzACXi0oV7mkiqnIFw&oe=6686363C"
+                    src="https://img5.thuthuatphanmem.vn/uploads/2021/12/30/anh-nen-mau-xanh-la-cay-cute-dang-yeu_032126625.jpg"
                   />
                 </Badge>
               </div>
@@ -284,7 +284,7 @@ const Chats = () => {
           <div>
             <div className={cx("header")}>
               <div>
-                <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/441570670_802929555136374_1350330455299972228_n.jpg?stp=dst-jpg_p206x206&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=91HeDsJJZNkQ7kNvgHu9Jur&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGfs4Qv1AuLHqZ9HHGwwc_mVoRelzACXi0oV7mkiqnIFw&oe=6686363C" />
+                <img src="https://img5.thuthuatphanmem.vn/uploads/2021/12/30/anh-nen-mau-xanh-la-cay-cute-dang-yeu_032126625.jpg" />
               </div>
               <div className={cx("title")}>
                 <div>{email}</div>

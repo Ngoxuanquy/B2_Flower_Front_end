@@ -162,3 +162,9 @@
     }
   }
 }
+
+.addtocart:disabled {
+  background-color: #cccccc !important;
+  color: #5a5a5a;
+  cursor: not-allowed;
+}

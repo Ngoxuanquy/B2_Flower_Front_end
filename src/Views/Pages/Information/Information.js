@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./Information.module.scss";
-import { Button, Image, Spin, Tabs, message } from "antd";
+import { Button, Image, Input, Modal, Spin, Tabs, message } from "antd";
 import ModalMap from "../../../Components/ModalMap/ModalMap";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
@@ -26,9 +26,35 @@ const Information = () => {
   const cx = classNames.bind(styles);
   const titles = ["Tài khoản", "Ví của B2-FLOWER", "Đơn hàng", "Địa chỉ"];
   const [activeTab, setActiveTab] = useState("0"); // State to track the active tab
-  const madonhang = Cookies.get("MaDonHang");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [amount, setAmount] = useState("");
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const formatNumberWithDots = (value) => {
+    // Remove existing dots and non-numeric characters
+    const numericValue = value.replace(/\D/g, "");
+    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const handleChange = (e) => {
+    let value = e.target.value;
+    value = formatNumberWithDots(value);
+    setAmount(value);
+  };
 
   const getOrder = () => {
+    let madonhang = Cookies.get("MaDonHang");
+
     if (madonhang) {
       const Clearmadonhang = madonhang.replace(/"/g, "");
 
@@ -37,7 +63,6 @@ const Information = () => {
           console.log(data);
           // Delete the madonhang cookie after successful API call
           document.cookie = "MaDonHang=; Max-Age=0; path=/";
-          return;
         })
         .catch((err) => console.log({ err }));
     } else {
@@ -46,10 +71,12 @@ const Information = () => {
   };
 
   useEffect(() => {
+    const madonhang = Cookies.get("MaDonHang");
     if (madonhang) {
       getOrder();
+      document.cookie = "MaDonHang=; Max-Age=0; path=/";
     }
-  }, [madonhang]);
+  }, []);
 
   const getApiAdrressUser = () => {
     const token = Cookies.get("accessToken");
@@ -109,7 +136,28 @@ const Information = () => {
     console.log(e.target);
   };
 
-  const handelHuyDon = (transactionId, status, moneys) => {
+  const handelDonet = () => {
+    setIsModalVisible(true);
+  };
+
+  const updateQuantity = (products) => {
+    console.log(products);
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    const convertedProducts = products.map((product) => ({
+      id: product._id,
+      quantity: product.quantity,
+    }));
+
+    Call_Post_Api(convertedProducts, cleanedJwtString, cleanId, "/product/updateQuantity").then((data) => {
+      console.log(data);
+    });
+  };
+
+  const handelHuyDon = (transactionId, status, moneys, product) => {
     setIsLoad(true);
 
     const token = Cookies.get("accessToken");
@@ -124,6 +172,7 @@ const Information = () => {
           content: data.metadata.mgs,
         });
         getApiTransactionOrder();
+        updateQuantity(product);
 
         if (status === "Đã thanh toán" || status === "Thanh toán qua Ví 2Be Flower") {
           const token = Cookies.get("accessToken");
@@ -202,7 +251,6 @@ const Information = () => {
             height: "100vh",
             zIndex: 100,
             top: 0,
-            top: 0,
             left: 0,
             display: "flex",
             alignItems: "center",
@@ -259,6 +307,12 @@ const Information = () => {
                   }}
                 >
                   {/* Content for Tab 1 */}
+                  <Modal title="Nạp tiền vào ví 2Be flower" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                    <div>
+                      <div>Số tiền cần Nạp</div>
+                      <Input value={amount} onChange={handleChange} />
+                    </div>
+                  </Modal>
                   <p>
                     Ví:{" "}
                     <span
@@ -271,7 +325,7 @@ const Information = () => {
                     </span>{" "}
                   </p>
                   <div>
-                    <Button>Nạp tiền vào ví</Button>
+                    <Button onClick={handelDonet}>Nạp tiền vào ví</Button>
                   </div>
                 </div>
               )}
@@ -419,7 +473,11 @@ const Information = () => {
                                 </p>
                                 <p style={{ margin: "0", fontSize: "1.2rem", color: theme.color }}>
                                   {order.status === "Đang nhận đơn" ? (
-                                    <Button onClick={() => handelHuyDon(order._id, order.notifications, order.total_amounts)}>
+                                    <Button
+                                      onClick={() =>
+                                        handelHuyDon(order._id, order.notifications, order.total_amounts, order.transaction_products)
+                                      }
+                                    >
                                       Hủy đơn
                                     </Button>
                                   ) : null}
