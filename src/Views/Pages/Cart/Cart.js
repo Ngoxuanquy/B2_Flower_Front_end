@@ -132,34 +132,36 @@ const Cart = () => {
 
     if (selectedOption === "fast") {
       if (distance < 10) {
-        phiShip = 7 * distance;
+        phiShip = 7000 * distance;
       } else if (distance < 20) {
-        phiShip = 4 * distance;
+        phiShip = 4000 * distance;
       } else if (distance < 30) {
-        phiShip = 3 * distance;
+        phiShip = 3000 * distance;
       } else if (distance < 50) {
-        phiShip = 2.5 * distance;
+        phiShip = 2500 * distance;
       } else if (distance < 100) {
-        phiShip = 1.5 * distance;
+        phiShip = 1500 * distance;
       } else {
-        phiShip = 1 * distance;
+        phiShip = 1000 * distance;
       }
     } else if (selectedOption === "slow") {
       if (distance < 10) {
-        phiShip = 3 * distance;
+        phiShip = 3000 * distance;
       } else if (distance < 20) {
-        phiShip = 2.5 * distance;
+        phiShip = 2500 * distance;
       } else if (distance < 30) {
-        phiShip = 2 * distance;
+        phiShip = 2000 * distance;
       } else if (distance < 50) {
-        phiShip = 1.5 * distance;
+        phiShip = 1500 * distance;
       } else if (distance < 100) {
-        phiShip = 1 * distance;
+        phiShip = 1000 * distance;
       } else {
-        phiShip = 0.5 * distance;
+        phiShip = 0.500 * distance;
       }
     }
-    setPhiShip(phiShip.toFixed(0));
+    console.log(phiShip)
+  
+    setPhiShip(  Math.round(phiShip.toFixed(0) / 100) * 100);
   };
 
   const onChange = (e) => {
@@ -373,7 +375,7 @@ const Cart = () => {
         console.log(data);
         setIsLoad(false);
         updateQuantity();
-
+        getApi();
         Cookies.set("MaDonHang", JSON.stringify(MaDonHang), {
           expires: 7,
         });
@@ -882,16 +884,16 @@ const Cart = () => {
             </div>
             <div className={cx("tamtinh")}>
               <div>Tạm tính</div>
-              <div>{tong}</div>
+              <div>{tong.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</div>
             </div>
             <div className={cx("vanchuyen")}>
               <div>Phí vận chuyển</div>
-              <div>{phiShip}</div>
+              <div>{phiShip.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</div>
             </div>
             <hr />
             <div className={cx("tongcong")}>
               <div>Tổng cộng</div>
-              <div>{(tong + Number(phiShip)).toFixed(2)}</div>
+              <div>{(tong + Number(phiShip)).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</div>
             </div>
             {current < steps.length - 1 && (
               // <button

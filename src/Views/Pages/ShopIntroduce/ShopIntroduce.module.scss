@@ -1,3 +1,112 @@
 .container_ {
   margin-top: 100px;
 }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.shop {
+  text-align: center;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.shop h1 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.shop img {
+  max-width: 100%;
+  height: auto;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+.shop-description {
+  font-size: 1.2em;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.shop-contact, .shop-services, .shop-reviews, .shop-contact-form {
+  margin-bottom: 40px;
+}
+
+.shop-contact h2, .shop-services h2, .shop-reviews h2, .shop-contact-form h2 {
+  font-size: 1.8em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.shop-contact p, .shop-services ul, .shop-reviews p, .shop-contact-form label {
+  font-size: 1.2em;
+  color: #666;
+}
+
+.shop-services ul {
+  list-style: none;
+  padding: 0;
+}
+
+.shop-services li {
+  margin-bottom: 10px;
+}
+
+.shop-reviews .review {
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.shop-contact-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shop-contact-form label {
+  margin-bottom: 5px;
+}
+
+.shop-contact-form input, .shop-contact-form textarea {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.shop-contact-form button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  border-radius: 4px;
+}
+
+.shop-contact-form button:hover {
+  background-color: #218838;
+}
+
+.shop a {
+  color: #e91e63;
+  text-decoration: none;
+}
+
+.shop a:hover {
+  text-decoration: underline;
+}

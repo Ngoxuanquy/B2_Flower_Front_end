@@ -86,9 +86,9 @@ const Sidebar = () => {
           icon={<AiFillProduct />}
           primary="Products"
           subItems={
-            roles.includes("READ")
-              ? ["Product List"]
-              : ["Product List", "Product Upload"]
+            roles.includes("CREATE")
+              ? ["Product List", "Product Upload"]
+              : ["Product List"]
           }
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
