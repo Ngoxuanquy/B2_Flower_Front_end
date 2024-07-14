@@ -5,6 +5,7 @@ import FloatCard from "../../../../../Components/Admin/FloatCard/FloatCard";
 import { FaBagShopping } from "react-icons/fa6";
 import { AiFillProduct } from "react-icons/ai";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
+import Cookies from "js-cookie";
 import ListProduct from "../../../../../Components/Admin/Products/ListProduct/ListProduct";
 import PageTitle from "../../../../../Components/Admin/PageTitle/PageTitle";
 import { Call_Post_Api } from "../../../../../Components/CallApi/CallApis";
@@ -19,6 +20,7 @@ const ProductList = () => {
       { text: "Product List" },
     ],
   };
+  const URL = process.env.REACT_APP_URL;
   const [apiproducts, setApiProduct] = useState("");
   const [totalProducts, setTotalProducts] = useState(0);
   useEffect(() => {

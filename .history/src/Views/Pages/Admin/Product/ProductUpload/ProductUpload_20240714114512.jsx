@@ -136,6 +136,25 @@ const ProductUpload = () => {
       setIsLoading(false);
     }
   };
+  const handlePriceValidation = () => {
+    if (Number(price) < 0) {
+      showAlert(
+        "Lỗi nhập liệu",
+        "Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
+      );
+      priceInputRef.current.focus();
+    }
+  };
+
+  const handleQuantityValidation = () => {
+    if (Number(quantity) < 0) {
+      showAlert(
+        "Lỗi nhập liệu",
+        "Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
+      );
+      quantityInputRef.current.focus();
+    }
+  };
   const resetForm = () => {
     setName("");
     setPrice("");

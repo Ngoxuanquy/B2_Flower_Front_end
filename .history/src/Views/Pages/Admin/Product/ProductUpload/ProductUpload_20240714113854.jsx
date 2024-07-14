@@ -87,12 +87,12 @@ const ProductUpload = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (Number(price) < 0) {
-      alert("Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
+      alert("Giá phải lớn hơn hoặc bằng 0.");
       priceInputRef.current.focus();
       return;
     }
     if (Number(quantity) < 0) {
-      alert("Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
+      alert("Số lượng phải lớn hơn hoặc bằng 0.");
       quantityInputRef.current.focus();
       return;
     }

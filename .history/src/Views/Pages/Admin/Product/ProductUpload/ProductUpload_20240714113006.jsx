@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styles from "./ProductUpload.module.scss";
 import classNames from "classnames/bind";
 import PageTitle from "../../../../../Components/Admin/PageTitle/PageTitle";
@@ -35,8 +35,6 @@ const ProductUpload = () => {
   const [quantity, setQuantity] = useState("");
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
-  const priceInputRef = useRef(null);
-  const quantityInputRef = useRef(null);
 
   const pageTitleProps = {
     title: "Product Upload",
@@ -86,14 +84,8 @@ const ProductUpload = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (Number(price) < 0) {
-      alert("Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
-      priceInputRef.current.focus();
-      return;
-    }
-    if (Number(quantity) < 0) {
-      alert("Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
-      quantityInputRef.current.focus();
+    if (Number(price) < 0 || Number(quantity) < 0) {
+      alert("Giá và số lượng phải lớn hơn hoặc bằng 0.");
       return;
     }
 
@@ -222,7 +214,6 @@ const ProductUpload = () => {
                   <span>Giá:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      ref={priceInputRef}
                       value={price}
                       required
                       type="text"
@@ -393,7 +384,6 @@ const ProductUpload = () => {
                   <span>Số lượng:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      ref={quantityInputRef}
                       value={quantity}
                       required
                       type="text"

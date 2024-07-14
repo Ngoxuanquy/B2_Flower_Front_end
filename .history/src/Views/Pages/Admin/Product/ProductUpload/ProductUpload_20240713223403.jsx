@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styles from "./ProductUpload.module.scss";
 import classNames from "classnames/bind";
 import PageTitle from "../../../../../Components/Admin/PageTitle/PageTitle";
@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Call_Post_Api } from "../../../../../Components/CallApi/CallApis";
 import { ClimbingBoxLoader } from "react-spinners";
+import UpdateProduct from "../../../Seller/SelectProduct";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -35,8 +36,6 @@ const ProductUpload = () => {
   const [quantity, setQuantity] = useState("");
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
-  const priceInputRef = useRef(null);
-  const quantityInputRef = useRef(null);
 
   const pageTitleProps = {
     title: "Product Upload",
@@ -86,17 +85,6 @@ const ProductUpload = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (Number(price) < 0) {
-      alert("Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
-      priceInputRef.current.focus();
-      return;
-    }
-    if (Number(quantity) < 0) {
-      alert("Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
-      quantityInputRef.current.focus();
-      return;
-    }
-
     const images = await uploadImage();
     try {
       const token = Cookies.get("accessToken");
@@ -222,7 +210,6 @@ const ProductUpload = () => {
                   <span>Giá:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      ref={priceInputRef}
                       value={price}
                       required
                       type="text"
@@ -393,7 +380,6 @@ const ProductUpload = () => {
                   <span>Số lượng:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      ref={quantityInputRef}
                       value={quantity}
                       required
                       type="text"
@@ -526,6 +512,7 @@ const ProductUpload = () => {
           </form>
         </div>
       </div>
+      <UpdateProduct />
     </div>
   );
 };
