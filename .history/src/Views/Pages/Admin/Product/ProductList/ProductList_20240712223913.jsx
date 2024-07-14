@@ -5,6 +5,7 @@ import FloatCard from "../../../../../Components/Admin/FloatCard/FloatCard";
 import { FaBagShopping } from "react-icons/fa6";
 import { AiFillProduct } from "react-icons/ai";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
+import Cookies from "js-cookie";
 import ListProduct from "../../../../../Components/Admin/Products/ListProduct/ListProduct";
 import PageTitle from "../../../../../Components/Admin/PageTitle/PageTitle";
 import { Call_Post_Api } from "../../../../../Components/CallApi/CallApis";
@@ -19,8 +20,44 @@ const ProductList = () => {
       { text: "Product List" },
     ],
   };
+  const URL = process.env.REACT_APP_URL;
   const [apiproducts, setApiProduct] = useState("");
   const [totalProducts, setTotalProducts] = useState(0);
+  // useEffect(() => {
+  //   const token = Cookies.get("accessToken");
+  //   const id = Cookies.get("id");
+
+  //   if (token && id) {
+  //     const cleanedJwtString = token.replace(/^"|"$/g, "");
+  //     const cleanId = id.replace(/^"|"$/g, "");
+  //     const requestOptions = {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "x-api-key": process.env.REACT_APP_API_KEY,
+  //         authorization: cleanedJwtString,
+  //         "x-client-id": cleanId,
+  //       },
+  //     };
+
+  //     fetch(`${URL}/product/getAll`, requestOptions)
+  //       .then((response) => {
+  //         if (!response.ok) {
+  //           throw new Error("Network response was not ok");
+  //         }
+  //         return response.json();
+  //       })
+  //       .then((data) => {
+  //         setApiProduct(data.metadata);
+  //         setTotalProducts(data.metadata.length);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Fetch error: ", error);
+  //       });
+  //   } else {
+  //     console.error("Token or ID is not set in cookies.");
+  //   }
+  // }, [URL]);
   useEffect(() => {
     let isMounted = true;
 

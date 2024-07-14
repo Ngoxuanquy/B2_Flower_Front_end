@@ -5,6 +5,7 @@ import FloatCard from "../../../../../Components/Admin/FloatCard/FloatCard";
 import { FaBagShopping } from "react-icons/fa6";
 import { AiFillProduct } from "react-icons/ai";
 import { IoShieldCheckmarkSharp } from "react-icons/io5";
+import Cookies from "js-cookie";
 import ListProduct from "../../../../../Components/Admin/Products/ListProduct/ListProduct";
 import PageTitle from "../../../../../Components/Admin/PageTitle/PageTitle";
 import { Call_Post_Api } from "../../../../../Components/CallApi/CallApis";
@@ -19,8 +20,11 @@ const ProductList = () => {
       { text: "Product List" },
     ],
   };
+  const URL = process.env.REACT_APP_URL;
   const [apiproducts, setApiProduct] = useState("");
   const [totalProducts, setTotalProducts] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(10);
   useEffect(() => {
     let isMounted = true;
 
@@ -40,6 +44,17 @@ const ProductList = () => {
       isMounted = false;
     };
   }, []);
+
+  // Tính toán index bắt đầu và kết thúc của sản phẩm trên trang hiện tại
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = apiproducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  // Chuyển đổi trang
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
@@ -67,7 +82,23 @@ const ProductList = () => {
             iconColor="#f3a0ff"
           />
         </div>
-        <ListProduct apis={apiproducts} />
+        <ListProduct apis={currentProducts} />
+        {/* Phân trang */}
+        <ul className={cx("pagination")}>
+          {Array.from(
+            { length: Math.ceil(totalProducts / productsPerPage) },
+            (_, i) => i + 1
+          ).map((page) => (
+            <li key={page} className={cx("page-item")}>
+              <button
+                onClick={() => paginate(page)}
+                className={cx("page-link")}
+              >
+                {page}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

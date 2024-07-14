@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./ProductUpload.module.scss";
 import classNames from "classnames/bind";
 import PageTitle from "../../../../../Components/Admin/PageTitle/PageTitle";
@@ -35,6 +35,7 @@ const ProductUpload = () => {
   const [quantity, setQuantity] = useState("");
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
+
   const priceInputRef = useRef(null);
   const quantityInputRef = useRef(null);
 
@@ -87,12 +88,12 @@ const ProductUpload = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (Number(price) < 0) {
-      alert("Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
+      alert("Giá phải lớn hơn hoặc bằng 0.");
       priceInputRef.current.focus();
       return;
     }
     if (Number(quantity) < 0) {
-      alert("Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
+      alert("Số lượng phải lớn hơn hoặc bằng 0.");
       quantityInputRef.current.focus();
       return;
     }
@@ -136,6 +137,7 @@ const ProductUpload = () => {
       setIsLoading(false);
     }
   };
+
   const resetForm = () => {
     setName("");
     setPrice("");
@@ -146,6 +148,7 @@ const ProductUpload = () => {
     setSize("");
     setUploadedImage(null);
   };
+
   const handleButtonClick = () => {
     document.getElementById("fileInput").click();
   };
@@ -308,22 +311,10 @@ const ProductUpload = () => {
                       </span>
                     </label>
                   </div>
-                </div>
-                <div>
-                  <span>Hình ảnh:</span>
-                  <br />
-                  <div
-                    style={{
-                      display: "flex",
-                      height: "80px",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div style={{ marginTop: "10px" }}>
                     <Button
+                      variant="outlined"
                       component="label"
-                      role={undefined}
-                      variant="contained"
-                      tabIndex={-1}
                       startIcon={<CloudUploadIcon />}
                       onClick={handleButtonClick}
                     >
