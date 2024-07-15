@@ -25,6 +25,7 @@ import ProductUpload from "../Views/Pages/Admin/Product/ProductUpload/ProductUpl
 import Orders from "../Views/Pages/Admin/Orders/Orders";
 import OrdersSent from "../Views/Pages/Admin/OrdersSent/OrdersSent";
 import ShopIntroduce from "../Views/Pages/ShopIntroduce/ShopIntroduce";
+import Discounts from "../Views/Pages/Discounts/Discounts";
 
 export const publicRoute = [
   { path: "/", component: <HomePage /> },
@@ -58,4 +59,6 @@ export const adminRoute = [
   { path: "/admin/user-list", component: <UserList /> },
   { path: "/admin/listOrders", component: <Orders /> },
   { path: "/admin/đơn-đã-gửi", component: <OrdersSent /> },
+  { path: "/admin/discount", component: <Discounts /> },
+
 ];

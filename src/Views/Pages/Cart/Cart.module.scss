@@ -479,3 +479,18 @@ h2 {
     display: none;
   }
 }
+
+.discount-option {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.discount-container {
+  display: flex;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+  font-size: 16px;
+}

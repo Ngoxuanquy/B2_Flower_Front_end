@@ -10,13 +10,15 @@ import Select from "@mui/material/Select";
 import styles from "./RegisteredUsers.module.scss";
 import classNames from "classnames/bind";
 import Cookies from "js-cookie";
-import { Input, Modal, Select as AntSelect, Collapse } from "antd";
+import { Input, Modal, Select as AntSelect, Collapse, DatePicker } from "antd";
 
 const cx = classNames.bind(styles);
 const RegisteredUsers = ({ apis }) => {
   const URL = process.env.REACT_APP_URL;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenDiscount, setIsModalOpenDiscount] = useState(false);
+  const [users, setUsers] = useState([]);
   const [name, setName] = useState("");
   const [detailApi, setDetailApi] = useState(null);
   const [api, setApi] = useState(apis);
@@ -26,6 +28,22 @@ const RegisteredUsers = ({ apis }) => {
   const [status, setStatus] = useState("");
   const [selectShow, setSelectShow] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
+  const [textRadom, setTextRadom] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [value, setValue] = useState("");
+
+  const handleStartValueChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
+  };
+
+  const handleEndDateChange = (e) => {
+    setEndDate(e.target.value);
+  };
 
   const options = [
     { value: "ADMIN", label: "ADMIN" },
@@ -35,6 +53,35 @@ const RegisteredUsers = ({ apis }) => {
     { value: "EDIT", label: "EDIT" },
     { value: "DELETE", label: "DELETE" },
   ];
+
+  const optionUser = api.map((user) => ({
+    label: user.email,
+    value: user.email,
+  }));
+
+  const handleUserChanges = (selectedItems) => {
+    if (selectedItems.includes("select_all")) {
+      // Kiểm tra nếu tất cả các tùy chọn đã được chọn
+      if (roles.length === optionUser.length - 1) {
+        // Nếu đã chọn tất cả, bỏ chọn tất cả
+        setUsers([]);
+      } else {
+        // Nếu chưa chọn tất cả, chọn tất cả
+        setUsers(
+          optionUser
+            .map((option) => option.value)
+            .filter((value) => value !== "select_all")
+        );
+      }
+    } else {
+      // Cập nhật roles mà không bao gồm "Select All"
+      setUsers(selectedItems.filter((item) => item !== "select_all"));
+    }
+  };
+
+  const filteredOptions = optionUser.filter(
+    (option) => option.value !== "select_all"
+  );
 
   useEffect(() => {
     setApi(apis);
@@ -54,6 +101,46 @@ const RegisteredUsers = ({ apis }) => {
     setRoles(api.roles);
     setStatus(api.status);
     setIsModalOpen(true);
+  };
+
+  const handleDiscountOk = () => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/^"|"$/g, "");
+    const cleanId = id?.replace(/^"|"$/g, "");
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+        authorization: cleanedJwtString,
+        "x-client-id": cleanId,
+      },
+      body: JSON.stringify({
+        code: textRadom,
+        users_user: users,
+        start_date: startDate,
+        end_date: endDate,
+        value: value,
+        name: "thích thì giảm",
+      }),
+    };
+
+    fetch(URL + "/discount", requestOptions)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        // getApi();
+      });
+  };
+
+  const handleDiscountCancel = () => {
+    setIsModalOpenDiscount(false);
+  };
+
+  const handelOpentDiscount = () => {
+    setIsModalOpenDiscount(true);
   };
 
   const handleOk = () => {
@@ -107,7 +194,6 @@ const RegisteredUsers = ({ apis }) => {
     fetch(URL + "/users/userId/" + cleanId, requestOptions)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.metadata);
         setApi(res.metadata);
       });
   };
@@ -145,6 +231,22 @@ const RegisteredUsers = ({ apis }) => {
     setRoles(value);
   };
 
+  function getRandomString(length) {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    setTextRadom(result);
+    return result;
+  }
+
+  const handelRamdom = () => {
+    getRandomString(6);
+  };
+
   return (
     <div className={cx("container")}>
       <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
@@ -175,45 +277,154 @@ const RegisteredUsers = ({ apis }) => {
           </div>
         </div>
       </Modal>
-      <h4 className={cx("titleRegistered")}>Registered Users</h4>
-      <div className={cx("select_by")}>
-        <div className="col-md-3">
-          <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
-            <InputLabel id="demo-select-small-label">Show by</InputLabel>
-            <Select
-              labelId="demo-select-small-label"
-              id="demo-select-small"
-              value={selectShow}
-              label="Age"
-              onChange={handleChangeSelectShow}
+      <Modal
+        open={isModalOpenDiscount}
+        onOk={handleDiscountOk}
+        onCancel={handleDiscountCancel}
+      >
+        <div>
+          <h4>Mã khuyến mãi</h4>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              marginTop: "30px",
+            }}
+          >
+            <button
+              style={{
+                padding: "4px",
+              }}
+              onClick={handelRamdom}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>10 row</MenuItem>
-              <MenuItem value={20}>20 row</MenuItem>
-              <MenuItem value={30}>30 row</MenuItem>
-            </Select>
-          </FormControl>
+              Tạo ngẫu nhiên
+            </button>
+            <span>{textRadom}</span>
+          </div>
+          <div
+            style={{
+              marginTop: "20px",
+            }}
+          >
+            <div
+              style={{
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              % khuyến mãi
+              <input
+                type="text"
+                style={{
+                  marginLeft: "10px",
+                }}
+                onChange={handleStartValueChange}
+              />
+            </div>
+            <div>
+              Ngày bắt đầu
+              <input
+                type="date"
+                style={{
+                  marginLeft: "10px",
+                }}
+                onChange={handleStartDateChange}
+              />
+            </div>
+            <div
+              style={{
+                marginTop: "20px",
+              }}
+            >
+              Ngày kết thúc
+              <input
+                type="date"
+                style={{
+                  marginLeft: "10px",
+                }}
+                onChange={handleEndDateChange}
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              marginTop: " 20px",
+            }}
+          >
+            <h5>Danh sách người dùng muốn add</h5>
+            <AntSelect
+              mode="multiple"
+              placeholder="Please select"
+              value={users}
+              onChange={handleUserChanges}
+              style={{ width: "100%" }}
+              options={[
+                {
+                  label: "Select All",
+                  value: "select_all",
+                  disabled: roles.length === filteredOptions.length, // Disable "Select All" nếu đã chọn tất cả
+                },
+                ...filteredOptions,
+              ]}
+            />
+          </div>
         </div>
-        <div className="col-md-3 " style={{ marginLeft: "10px" }}>
-          <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
-            <InputLabel id="demo-select-small-label">Category by</InputLabel>
-            <Select
-              labelId="demo-select-small-label"
-              id="demo-select-small"
-              value={selectCategory}
-              label="Age"
-              onChange={handleChangeSelectCategory}
+      </Modal>
+      <h4 className={cx("titleRegistered")}>Registered Users</h4>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <div className={cx("select_by")}>
+          <div className="col-md-3">
+            <FormControl
+              sx={{ m: 1, minWidth: 120, width: "100%" }}
+              size="small"
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-          </FormControl>
+              <InputLabel id="demo-select-small-label">Show by</InputLabel>
+              <Select
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                value={selectShow}
+                label="Age"
+                onChange={handleChangeSelectShow}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>10 row</MenuItem>
+                <MenuItem value={20}>20 row</MenuItem>
+                <MenuItem value={30}>30 row</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="col-md-3 " style={{ marginLeft: "10px" }}>
+            <FormControl
+              sx={{ m: 1, minWidth: 120, width: "100%" }}
+              size="small"
+            >
+              <InputLabel id="demo-select-small-label">Category by</InputLabel>
+              <Select
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                value={selectCategory}
+                label="Age"
+                onChange={handleChangeSelectCategory}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+        <div>
+          <Button onClick={handelOpentDiscount}>Tạo mã khuyến mãi</Button>
         </div>
       </div>
       <div className={cx("table-responsive")}>
@@ -237,7 +448,10 @@ const RegisteredUsers = ({ apis }) => {
                   <td>#{index + 1}</td>
                   <td>
                     <div className={cx("info-user")}>
-                      <img src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg" alt="avatar of user" />
+                      <img
+                        src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg"
+                        alt="avatar of user"
+                      />
                       <p>{api.name}</p>
                     </div>
                   </td>

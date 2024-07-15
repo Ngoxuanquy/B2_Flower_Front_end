@@ -1,7 +1,22 @@
 import React, { useEffect, useState, useContext } from "react";
 import classNames from "classnames/bind";
 import styles from "./Cart.module.scss";
-import { Button, Form, Image, Input, Steps, message, Space, Checkbox, Divider, Radio, Spin, Tooltip, Table } from "antd";
+import {
+  Button,
+  Form,
+  Image,
+  Input,
+  Steps,
+  message,
+  Space,
+  Checkbox,
+  Divider,
+  Radio,
+  Spin,
+  Tooltip,
+  Table,
+  Modal,
+} from "antd";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -37,11 +52,48 @@ const Cart = () => {
   const [address, setAddress] = useState([]);
   const [url, setUrl] = useState([]);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isDiscounts, setIsDiscount] = useState([]);
+  const [isDiscounted, setIsDiscounted] = useState(0);
+  const [valueDiscount, setValueDiscount] = useState(0);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [selectedValueAdress, setSelectedValueAdress] = useState(null);
 
   const [distance, setDistance] = useState(null);
   const [moneys, setMoneys] = useState(0);
+
+  const getDiscount = () => {
+    setIsLoad(true);
+    const token = Cookies.get("accessToken");
+    const name = Cookies.get("name")?.replace(/"/g, "");
+
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+    Call_Post_Api(
+      {
+        userId: cleanId,
+        moneys: -(tong + Number(phiShip)).toFixed(0),
+      },
+      cleanedJwtString,
+      cleanId,
+      `/discount/getAllDiscountCodesByShop/${name}`,
+      "GET"
+    ).then((data) => {
+      setIsLoad(false);
+      setIsDiscount(data.metadata);
+    });
+  };
+
+  useEffect(() => {
+    getDiscount();
+  }, []);
+
+  const handelDiscount = () => {
+    console.log("abcbcb");
+    setIsModalOpen(!isModalOpen);
+  };
 
   const getMoneysUser = () => {
     const token = Cookies.get("accessToken");
@@ -49,7 +101,13 @@ const Cart = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/users/getAddressUser/${cleanId}`,
+      "GET"
+    )
       .then((data) => {
         console.log(data);
         setMoneys(data.metadata.moneys);
@@ -66,12 +124,15 @@ const Cart = () => {
   const getCoordinates = async (address) => {
     setIsLoad(true);
     try {
-      const response = await axios.get("https://nominatim.openstreetmap.org/search", {
-        params: {
-          q: address,
-          format: "json",
-        },
-      });
+      const response = await axios.get(
+        "https://nominatim.openstreetmap.org/search",
+        {
+          params: {
+            q: address,
+            format: "json",
+          },
+        }
+      );
       const { lat, lon } = response.data[0];
       setIsLoad(false);
 
@@ -91,7 +152,9 @@ const Cart = () => {
     const lat1 = toRad(coord1.latitude);
     const lat2 = toRad(coord2.latitude);
 
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distance in km
 
@@ -99,8 +162,17 @@ const Cart = () => {
   };
 
   const fetchAndCalculateDistance = async (payload) => {
-    const hanoiCoords = await getCoordinates("96, Định công, hoàng mai, Hà Nội, Vietnam");
-    const ngheAnCoords = await getCoordinates(`${(payload.diaChiCuThe, payload.phuongXa, payload.quanHuyen, payload.tinhThanh)}`);
+    const hanoiCoords = await getCoordinates(
+      "96, Định công, hoàng mai, Hà Nội, Vietnam"
+    );
+    const ngheAnCoords = await getCoordinates(
+      `${
+        (payload.diaChiCuThe,
+        payload.phuongXa,
+        payload.quanHuyen,
+        payload.tinhThanh)
+      }`
+    );
 
     if (hanoiCoords && ngheAnCoords) {
       const distance = calculateDistance(hanoiCoords, ngheAnCoords);
@@ -156,12 +228,18 @@ const Cart = () => {
       } else if (distance < 100) {
         phiShip = 1000 * distance;
       } else {
-        phiShip = 0.500 * distance;
+        phiShip = 0.5 * distance;
       }
     }
-    console.log(phiShip)
-  
-    setPhiShip(  Math.round(phiShip.toFixed(0) / 100) * 100);
+    console.log(phiShip);
+
+    setPhiShip(Math.round(phiShip.toFixed(0) / 100) * 100);
+    setIsDiscounted(
+      (tong + Number(phiShip) * (1 - valueDiscount / 100))
+        .toFixed(0)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    );
   };
 
   const onChange = (e) => {
@@ -178,10 +256,13 @@ const Cart = () => {
   }, [moneys, tong, phiShip]);
 
   const checkAll = orders.length === checkedList.length;
-  const indeterminate = checkedList.length > 0 && checkedList.length < orders.length;
+  const indeterminate =
+    checkedList.length > 0 && checkedList.length < orders.length;
 
   const toggleCheckbox = (value) => {
-    const newCheckedList = checkedList.includes(value) ? checkedList.filter((item) => item !== value) : [...checkedList, value];
+    const newCheckedList = checkedList.includes(value)
+      ? checkedList.filter((item) => item !== value)
+      : [...checkedList, value];
     setCheckedList(newCheckedList);
   };
 
@@ -196,10 +277,18 @@ const Cart = () => {
     const cleanId = id?.replace(/"/g, "");
 
     if (cleanedJwtString) {
-      Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart")
+      Call_Post_Api(
+        { userId: cleanId },
+        cleanedJwtString,
+        cleanId,
+        "/cart/getlistCart"
+      )
         .then((data) => {
           setOrder(data?.metadata?.cart_products || []);
-          EventRegister.emit("chaneLength", data.metadata?.cart_products?.length ?? 0);
+          EventRegister.emit(
+            "chaneLength",
+            data.metadata?.cart_products?.length ?? 0
+          );
           setIsLoad(false);
         })
         .catch((err) => {
@@ -221,7 +310,13 @@ const Cart = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/users/getAddressUser/${cleanId}`,
+      "GET"
+    )
       .then((data) => {
         setAddress(data.metadata.address);
         return;
@@ -269,7 +364,12 @@ const Cart = () => {
       quantity: -product.quantity,
     }));
 
-    Call_Post_Api(convertedProducts, cleanedJwtString, cleanId, "/product/updateQuantity").then((data) => {
+    Call_Post_Api(
+      convertedProducts,
+      cleanedJwtString,
+      cleanId,
+      "/product/updateQuantity"
+    ).then((data) => {
       console.log(data);
     });
   };
@@ -331,13 +431,18 @@ const Cart = () => {
           paymentExpression: selectedOption,
           phiShip,
           email: Cookies.get("name")?.replace(/"/g, ""),
-          total_amounts: tong,
+          total_amounts: isDiscounted,
         },
         cleanedJwtString,
         cleanId,
         "/transaction"
       ).then(() => {
-        Call_Post_Api({ userId: cleanId, newCartData: checkedList }, cleanedJwtString, cleanId, "/cart/updateTransaciton").then(() => {
+        Call_Post_Api(
+          { userId: cleanId, newCartData: checkedList },
+          cleanedJwtString,
+          cleanId,
+          "/cart/updateTransaciton"
+        ).then(() => {
           setIsLoad(false);
           getApi();
           // setTimeout(() => {
@@ -358,13 +463,14 @@ const Cart = () => {
       const MaDonHang = Math.floor(100000 + Math.random() * 900000);
 
       const name = Cookies.get("name")?.replace(/"/g, "");
+      console.log(isDiscounted);
       Call_Post_Api(
         {
           userId: cleanId,
           user: { ...selectedValueAdress, _id: cleanId },
           product: checkedList,
           shopId: "test",
-          amount: tong + Number(phiShip),
+          amount: Number(isDiscounted).toFixed(3),
           email: name,
           MaDonHang: MaDonHang,
         },
@@ -398,13 +504,18 @@ const Cart = () => {
           notifications: "Thanh toán qua Ví 2Be Flower",
           phiShip,
           email: Cookies.get("name")?.replace(/"/g, ""),
-          total_amounts: tong,
+          total_amounts: isDiscounted,
         },
         cleanedJwtString,
         cleanId,
         "/transaction"
       ).then(() => {
-        Call_Post_Api({ userId: cleanId, newCartData: checkedList }, cleanedJwtString, cleanId, "/cart/updateTransaciton").then(() => {
+        Call_Post_Api(
+          { userId: cleanId, newCartData: checkedList },
+          cleanedJwtString,
+          cleanId,
+          "/cart/updateTransaciton"
+        ).then(() => {
           setIsLoad(false);
           getApi();
 
@@ -449,10 +560,26 @@ const Cart = () => {
   }, []);
 
   const handelValueSession = () => {
-    Call_Post_Api(null, null, null, "/vnpay/get-session", "GET").then((data) => {
-      console.log("ancbcb");
-      console.log(data);
-    });
+    Call_Post_Api(null, null, null, "/vnpay/get-session", "GET").then(
+      (data) => {
+        console.log("ancbcb");
+        console.log(data);
+      }
+    );
+  };
+
+  const handleOk = () => {
+    setIsDiscounted(
+      (tong + Number(phiShip) * (1 - valueDiscount / 100))
+        .toFixed(0)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    );
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   const GetHtmlCart = () => {
@@ -470,7 +597,12 @@ const Cart = () => {
               <div className={cx("table-head")}>
                 <div className={cx("table-row")}>
                   <div className={cx("table-cell")}>
-                    <Checkbox className={cx("checkbox")} indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+                    <Checkbox
+                      className={cx("checkbox")}
+                      indeterminate={indeterminate}
+                      onChange={onCheckAllChange}
+                      checked={checkAll}
+                    >
                       All
                     </Checkbox>
                   </div>
@@ -485,17 +617,29 @@ const Cart = () => {
                 {orders.map((order, index) => (
                   <div key={order._id} className={cx("table-row")}>
                     <div className={cx("table-cell")}>
-                      <Checkbox className={cx("checkbox")} checked={checkedList.includes(order)} onChange={() => toggleCheckbox(order)} />
+                      <Checkbox
+                        className={cx("checkbox")}
+                        checked={checkedList.includes(order)}
+                        onChange={() => toggleCheckbox(order)}
+                      />
                     </div>
                     <div className={cx("table-cell", "STT")}>{index + 1}</div>
                     <div className={cx("table-cell", "product")}>
-                      <Image src={order.product_thumb} className={cx("Image")} />
+                      <Image
+                        src={order.product_thumb}
+                        className={cx("Image")}
+                      />
                       <div>{order.product_name}</div>
                     </div>
                     <div className={cx("table-cell")}>{order.quantity}</div>
-                    <div className={cx("table-cell")}>{order.quantity * order.product_price}</div>
                     <div className={cx("table-cell")}>
-                      <DeleteOutlined className={cx("DeleteOutlined")} onClick={() => handlerDelete(order._id)} />
+                      {order.quantity * order.product_price}
+                    </div>
+                    <div className={cx("table-cell")}>
+                      <DeleteOutlined
+                        className={cx("DeleteOutlined")}
+                        onClick={() => handlerDelete(order._id)}
+                      />
                     </div>
                   </div>
                 ))}
@@ -567,7 +711,8 @@ const Cart = () => {
 
                       <div>
                         <p>
-                          {item.diaChiCuThe}, {item.phuongXa}, {item.quanHuyen}, {item.tinhThanh}
+                          {item.diaChiCuThe}, {item.phuongXa}, {item.quanHuyen},{" "}
+                          {item.tinhThanh}
                         </p>
                       </div>
                     </div>
@@ -595,7 +740,12 @@ const Cart = () => {
                 }}
               >
                 <div className={cx("radio-label")}>
-                  <input type="radio" name="deliveryOption" checked={selectedOption === "fast"} onChange={() => {}} />
+                  <input
+                    type="radio"
+                    name="deliveryOption"
+                    checked={selectedOption === "fast"}
+                    onChange={() => {}}
+                  />
                   <span>Giao hàng nhanh</span>
                 </div>
                 <div className={cx("description")}>
@@ -612,7 +762,12 @@ const Cart = () => {
                 }}
               >
                 <div className={cx("radio-label")}>
-                  <input type="radio" name="deliveryOption" checked={selectedOption === "slow"} onChange={() => {}} />
+                  <input
+                    type="radio"
+                    name="deliveryOption"
+                    checked={selectedOption === "slow"}
+                    onChange={() => {}}
+                  />
                   <span>Giao hàng chậm</span>
                 </div>
                 <div className={cx("description")}>
@@ -646,7 +801,11 @@ const Cart = () => {
                   justifyContent: "space-around",
                 }}
               >
-                <Radio value={1} style={{ fontSize: "18px" }} disabled={isDisabled}>
+                <Radio
+                  value={1}
+                  style={{ fontSize: "18px" }}
+                  disabled={isDisabled}
+                >
                   <div
                     style={{
                       display: "flex",
@@ -713,17 +872,46 @@ const Cart = () => {
               {checkedList.map((item, index) => (
                 <div
                   key={item._id}
-                  style={{ display: "flex", alignItems: "center", borderBottom: "1px solid #ddd", padding: "1px 0", height: "100px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    borderBottom: "1px solid #ddd",
+                    padding: "1px 0",
+                    height: "100px",
+                  }}
                 >
-                  <div style={{ width: "10%", textAlign: "center" }} className={"STT"}>
+                  <div
+                    style={{ width: "10%", textAlign: "center" }}
+                    className={"STT"}
+                  >
                     {index + 1}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", marginLeft: "10px" }}>
-                    <img src={item.product_thumb} style={{ width: "50px", height: "50px", objectFit: "cover" }} className={"Image"} />
-                    <div style={{ marginLeft: "10px" }}>{item.product_name}</div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    <img
+                      src={item.product_thumb}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                      }}
+                      className={"Image"}
+                    />
+                    <div style={{ marginLeft: "10px" }}>
+                      {item.product_name}
+                    </div>
                   </div>
-                  <div style={{ marginLeft: "auto", padding: "0 8px" }}>{item.quantity}</div>
-                  <div style={{ marginLeft: "auto", padding: "0 8px" }}>{item.quantity * item.product_price}</div>
+                  <div style={{ marginLeft: "auto", padding: "0 8px" }}>
+                    {item.quantity}
+                  </div>
+                  <div style={{ marginLeft: "auto", padding: "0 8px" }}>
+                    {item.quantity * item.product_price}
+                  </div>
                 </div>
               ))}
             </div>
@@ -737,6 +925,16 @@ const Cart = () => {
     Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
       console.log(data);
     });
+  };
+
+  const setSelectedDiscount = (id, value) => {
+    setValueDiscount(value);
+    // setIsDiscounted(
+    //   (tong + Number(phiShip) * (1 - value / 100))
+    //     .toFixed(0)
+    //     .toString()
+    //     .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    // );
   };
 
   const GetOrdered = () => {
@@ -770,7 +968,10 @@ const Cart = () => {
   ];
 
   useEffect(() => {
-    const total = checkedList.reduce((acc, current) => acc + current.product_price * current.quantity, 0);
+    const total = checkedList.reduce(
+      (acc, current) => acc + current.product_price * current.quantity,
+      0
+    );
     setTong(total);
   }, [checkedList]);
 
@@ -803,6 +1004,38 @@ const Cart = () => {
         color: theme.color,
       }}
     >
+      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <div>
+          <h1>Mã giảm giá</h1>
+          <div className={cx("discount-option")}>
+            {isDiscounts?.map((isDiscount) => (
+              <div key={isDiscount.id} className={cx("discount-container")}>
+                <input
+                  type="radio"
+                  name="discount"
+                  value={isDiscount.id}
+                  onChange={() =>
+                    setSelectedDiscount(
+                      isDiscount.id,
+                      isDiscount.discount_value
+                    )
+                  }
+                  className="discount-radio"
+                />
+                <div className={cx("discount-details")}>
+                  <div className={cx("discount-name")}>
+                    Tên mã giảm giá: {isDiscount.discount_name}
+                  </div>
+                  <div className={cx("discount-value")}>
+                    Value: {isDiscount.discount_value}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Modal>
+
       {contextHolder}
 
       {isLoad && (
@@ -836,7 +1069,10 @@ const Cart = () => {
               </Button>
             )}
             {current === steps.length - 1 && (
-              <Button type="primary" onClick={() => message.success("Processing complete!")}>
+              <Button
+                type="primary"
+                onClick={() => message.success("Processing complete!")}
+              >
                 Done
               </Button>
             )}
@@ -867,6 +1103,7 @@ const Cart = () => {
                 style={{
                   backgroundColor: theme.button,
                 }}
+                onClick={handelDiscount}
               >
                 Áp dụng
               </button>
@@ -888,13 +1125,28 @@ const Cart = () => {
             </div>
             <div className={cx("vanchuyen")}>
               <div>Phí vận chuyển</div>
-              <div>{phiShip.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</div>
+              <div>
+                {phiShip.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+              </div>
             </div>
             <hr />
-            <div className={cx("tongcong")}>
+            <div
+              className={cx("tongcong", { strikethrough: valueDiscount !== 0 })}
+            >
               <div>Tổng cộng</div>
-              <div>{(tong + Number(phiShip)).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</div>
+              <div>
+                {(tong + Number(phiShip))
+                  .toFixed(0)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+              </div>
             </div>
+            {valueDiscount != 0 ? (
+              <div className={cx("tongcong")}>
+                <div>Sau khi giảm giá</div>
+                <div>{isDiscounted}</div>
+              </div>
+            ) : null}
             {current < steps.length - 1 && (
               // <button
               //     onClick={() => next()}
@@ -908,16 +1160,30 @@ const Cart = () => {
               //     Đặt hàng
               // </button>
 
-              <Tooltip title={checkedList.length === 0 ? "Vui lòng chọn sản phẩm" : "Đặt hàng"}>
+              <Tooltip
+                title={
+                  checkedList.length === 0
+                    ? "Vui lòng chọn sản phẩm"
+                    : "Đặt hàng"
+                }
+              >
                 <Button
                   type="primary"
                   disabled={current === 0 && checkedList.length === 0}
-                  className={cx(current === 0 && checkedList.length === 0 ? "disabled-button" : "")}
+                  className={cx(
+                    current === 0 && checkedList.length === 0
+                      ? "disabled-button"
+                      : ""
+                  )}
                   style={{
                     backgroundColor: theme.button,
                   }}
                 >
-                  {current === 0 ? <div onClick={() => next()}> Next</div> : <div onClick={() => handlerDatHang()}>Đặt Hàng</div>}
+                  {current === 0 ? (
+                    <div onClick={() => next()}> Next</div>
+                  ) : (
+                    <div onClick={() => handlerDatHang()}>Đặt Hàng</div>
+                  )}
                 </Button>
               </Tooltip>
             )}

@@ -182,7 +182,7 @@ const Information = () => {
           Call_Post_Api(
             {
               userId: cleanId,
-              moneys: moneys,
+              moneys: Number(moneys),
             },
             cleanedJwtString,
             cleanId,

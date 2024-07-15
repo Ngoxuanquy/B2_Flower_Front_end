@@ -31,6 +31,12 @@ const Sidebar = () => {
     navigate();
   };
 
+  
+  const handleDiscount = (primary) => {
+    setActiveItem("Discount");
+    navigate("/admin/discount");
+  };
+
   const handleOpenDashBroad = (primary) => {
     setOpenItem(primary);
     setActiveItem(primary); // Set active item
@@ -86,7 +92,7 @@ const Sidebar = () => {
           icon={<AiFillProduct />}
           primary="Products"
           subItems={
-            roles.includes("CREATE")
+            (roles.includes("CREATE") || roles.includes("ADMIN"))
               ? ["Product List", "Product Upload"]
               : ["Product List"]
           }
@@ -133,10 +139,10 @@ const Sidebar = () => {
       {roles.includes("ADMIN") && (
         <SideBarItem
           icon={<FaBell />}
-          primary="Notification"
-          onItemClick={handleItemClick}
-          isOpen={openItem === "Notification"}
-          isActive={activeItem === "Notification"} // Set active state
+          primary="Discount"
+          onItemClick={handleDiscount}
+          isOpen={openItem === "Discount"}
+          isActive={activeItem === "Discount"} // Set active state
         />
       )}
 
