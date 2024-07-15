@@ -23,7 +23,6 @@ import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import classNames from "classnames/bind";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
-import { Image } from "antd";
 
 const cx = classNames.bind(styles);
 
@@ -371,7 +370,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
               <th>STOCK</th>
               <th>SIZE</th>
               <th>COLOR</th>
-              <th>DISCOUNT</th>
               <th>ACTION</th>
             </tr>
           </thead>
@@ -384,7 +382,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>
                       <div className={cx("info-user")}>
                         <div className={cx("imgWrapper")}>
-                          <Image
+                          <img
                             src={item.product_thumb}
                             alt="image_products"
                             className="w-100"
@@ -402,7 +400,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     </td>
                     <td>{item.product_attributes.size}</td>
                     <td>{item.product_attributes.color}</td>
-                    <td style={{ color: "red" }}>10%</td>
                     <td>
                       <div className={cx("actions")}>
                         {(roles.includes("UPDATE") ||
