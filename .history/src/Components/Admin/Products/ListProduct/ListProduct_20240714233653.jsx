@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPencil } from "react-icons/fa6";
 import { MdOutlineBlock } from "react-icons/md";
 import Cookies from "js-cookie";
@@ -23,7 +23,6 @@ import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import classNames from "classnames/bind";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
-import { Image } from "antd";
 
 const cx = classNames.bind(styles);
 
@@ -39,6 +38,8 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 const ListProduct = ({ apis, fetchProducts }) => {
+  // const URL = process.env.REACT_APP_URL;
+  console.log(apis);
   const [api, setApi] = useState([]);
   const [selectShow, setSelectShow] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
@@ -48,9 +49,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
   const [openUpdateProduct, setOpenUpdateProduct] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
-  const priceInputRef = useRef(null);
-  const quantityInputRef = useRef(null);
-
   useEffect(() => {
     if (apis && Array.isArray(apis)) {
       setApi(apis);
@@ -78,6 +76,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
 
     fetchData();
   }, []);
+  // const handleUpdateProduct = async (productId) => {
+  //   console.log("Click update product!", productId);
+  // };
   const handleDelete = async (productId) => {
     try {
       // Lấy token và id từ cookie và loại bỏ dấu ngoặc kép nếu có
@@ -134,69 +135,22 @@ const ListProduct = ({ apis, fetchProducts }) => {
       handleDelete(selectedProductId);
     }
   };
-  const [errorMessages, setErrorMessages] = useState({
-    price: "",
-    quantity: "",
-  });
-  const handleOpenUpdate = async (confirm) => {
-    // Kiểm tra các trường dữ liệu không được để trống
-    if (
-      !updateProductData.name ||
-      !updateProductData.price ||
-      !updateProductData.quantity ||
-      !updateProductData.size ||
-      !updateProductData.color ||
-      !updateProductData.type ||
-      !updateProductData.description
-    ) {
-      console.error("Vui lòng điền đầy đủ thông tin sản phẩm.");
-      return;
-    }
-
-    // Kiểm tra giá và số lượng có hợp lệ không
+  const handleCloseUpdate = async (confirm) => {
+    setOpenUpdateProduct(false);
     if (confirm && selectedProductId) {
+      // Kiểm tra giá và số lượng có hợp lệ không
       if (updateProductData.price < 0 || updateProductData.quantity < 0) {
-        setErrorMessages((prevErrors) => ({
-          ...prevErrors,
-          price:
-            updateProductData.price < 0
-              ? "Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
-              : "",
-          quantity:
-            updateProductData.quantity < 0
-              ? "Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
-              : "",
-        }));
-
-        // Focus vào trường dữ liệu sai
-        if (updateProductData.price < 0) {
-          priceInputRef.current.focus();
-        } else if (updateProductData.quantity < 0) {
-          quantityInputRef.current.focus();
-        }
-
+        console.error("Giá và số lượng không được nhỏ hơn 0");
         return;
       }
 
       const result = await handleUpdateProduct(selectedProductId);
       if (result) {
-        // Đóng dialog sau khi cập nhật thành công
-        setOpenUpdateProduct(false);
         fetchProducts();
       }
     }
   };
 
-  const handleCloseUpdate = () => {
-    setOpenUpdateProduct(false);
-  };
-  useEffect(() => {
-    if (errorMessages.price) {
-      priceInputRef.current.focus();
-    } else if (errorMessages.quantity) {
-      quantityInputRef.current.focus();
-    }
-  }, [errorMessages]);
   const handleChangeSelectShow = (event) => {
     setSelectShow(event.target.value);
   };
@@ -246,6 +200,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
         id,
         `/product/updateProduct`
       );
+      console.log(data);
       return data;
     } catch (error) {
       console.error("Lỗi khi cập nhật sản phẩm!", error);
@@ -269,15 +224,10 @@ const ListProduct = ({ apis, fetchProducts }) => {
     });
     setSelectedProductId(productId);
     setOpenUpdateProduct(true);
+    console.log("Thumbnail URL:", product.product_thumb);
   };
   const handleChangeUpdateProductData = (e) => {
     const { id, value } = e.target;
-    // Xóa thông báo lỗi khi người dùng nhập lại dữ liệu
-    setErrorMessages((prevErrors) => ({
-      ...prevErrors,
-      [id]: "",
-    }));
-
     setUpdateProductData((prevData) => ({
       ...prevData,
       [id]: value,
@@ -371,7 +321,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
               <th>STOCK</th>
               <th>SIZE</th>
               <th>COLOR</th>
-              <th>DISCOUNT</th>
               <th>ACTION</th>
             </tr>
           </thead>
@@ -384,7 +333,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>
                       <div className={cx("info-user")}>
                         <div className={cx("imgWrapper")}>
-                          <Image
+                          <img
                             src={item.product_thumb}
                             alt="image_products"
                             className="w-100"
@@ -402,7 +351,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     </td>
                     <td>{item.product_attributes.size}</td>
                     <td>{item.product_attributes.color}</td>
-                    <td style={{ color: "red" }}>10%</td>
                     <td>
                       <div className={cx("actions")}>
                         {(roles.includes("UPDATE") ||
@@ -469,11 +417,10 @@ const ListProduct = ({ apis, fetchProducts }) => {
         <DialogTitle>Cập nhật thông tin sản phẩm</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <strong>Nhập thông tin cập nhật cho sản phẩm.</strong>
+            Nhập thông tin cập nhật cho sản phẩm.
           </DialogContentText>
           <TextField
             autoFocus
-            required
             margin="dense"
             id="name"
             label="Tên sản phẩm"
@@ -490,9 +437,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
             fullWidth
             value={updateProductData.price}
             onChange={handleChangeUpdateProductData}
-            error={!!errorMessages.price}
-            helperText={errorMessages.price}
-            inputRef={priceInputRef}
           />
           <TextField
             margin="dense"
@@ -502,9 +446,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
             fullWidth
             value={updateProductData.quantity}
             onChange={handleChangeUpdateProductData}
-            error={!!errorMessages.quantity}
-            helperText={errorMessages.quantity}
-            inputRef={quantityInputRef}
           />
           <TextField
             margin="dense"
@@ -603,7 +544,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
           <Button onClick={() => handleCloseUpdate(false)} color="primary">
             Hủy
           </Button>
-          <Button onClick={() => handleOpenUpdate(true)} color="error">
+          <Button onClick={() => handleCloseUpdate(true)} color="error">
             Cập nhật
           </Button>
         </DialogActions>

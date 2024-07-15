@@ -466,7 +466,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
         </DialogActions>
       </Dialog>
       <Dialog open={openUpdateProduct} onClose={() => handleCloseUpdate(false)}>
-        <DialogTitle>Cập nhật thông tin sản phẩm</DialogTitle>
+        <DialogTitle>
+          <h2>Cập nhật thông tin sản phẩm</h2>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             <strong>Nhập thông tin cập nhật cho sản phẩm.</strong>

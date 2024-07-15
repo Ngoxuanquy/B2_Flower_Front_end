@@ -384,7 +384,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>
                       <div className={cx("info-user")}>
                         <div className={cx("imgWrapper")}>
-                          <Image
+                          <img
                             src={item.product_thumb}
                             alt="image_products"
                             className="w-100"
@@ -466,7 +466,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
         </DialogActions>
       </Dialog>
       <Dialog open={openUpdateProduct} onClose={() => handleCloseUpdate(false)}>
-        <DialogTitle>Cập nhật thông tin sản phẩm</DialogTitle>
+        <DialogTitle>
+          <h2>Cập nhật thông tin sản phẩm</h2>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             <strong>Nhập thông tin cập nhật cho sản phẩm.</strong>
@@ -535,7 +537,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
               onChange={handleFileChange}
             />
             {uploadedImage && (
-              <img
+              <Image
                 src={
                   uploadedImage instanceof File
                     ? URL.createObjectURL(uploadedImage)

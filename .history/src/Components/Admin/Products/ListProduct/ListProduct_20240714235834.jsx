@@ -23,7 +23,6 @@ import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import classNames from "classnames/bind";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
-import { Image } from "antd";
 
 const cx = classNames.bind(styles);
 
@@ -39,6 +38,8 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 const ListProduct = ({ apis, fetchProducts }) => {
+  // const URL = process.env.REACT_APP_URL;
+  console.log(apis);
   const [api, setApi] = useState([]);
   const [selectShow, setSelectShow] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
@@ -139,20 +140,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
     quantity: "",
   });
   const handleOpenUpdate = async (confirm) => {
-    // Kiểm tra các trường dữ liệu không được để trống
-    if (
-      !updateProductData.name ||
-      !updateProductData.price ||
-      !updateProductData.quantity ||
-      !updateProductData.size ||
-      !updateProductData.color ||
-      !updateProductData.type ||
-      !updateProductData.description
-    ) {
-      console.error("Vui lòng điền đầy đủ thông tin sản phẩm.");
-      return;
-    }
-
     // Kiểm tra giá và số lượng có hợp lệ không
     if (confirm && selectedProductId) {
       if (updateProductData.price < 0 || updateProductData.quantity < 0) {
@@ -167,7 +154,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
               ? "Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
               : "",
         }));
-
         // Focus vào trường dữ liệu sai
         if (updateProductData.price < 0) {
           priceInputRef.current.focus();
@@ -180,13 +166,12 @@ const ListProduct = ({ apis, fetchProducts }) => {
 
       const result = await handleUpdateProduct(selectedProductId);
       if (result) {
-        // Đóng dialog sau khi cập nhật thành công
         setOpenUpdateProduct(false);
+        alert("cập nhật sản phẩm thành công!");
         fetchProducts();
       }
     }
   };
-
   const handleCloseUpdate = () => {
     setOpenUpdateProduct(false);
   };
@@ -269,6 +254,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
     });
     setSelectedProductId(productId);
     setOpenUpdateProduct(true);
+    console.log("Thumbnail URL:", product.product_thumb);
   };
   const handleChangeUpdateProductData = (e) => {
     const { id, value } = e.target;
@@ -371,7 +357,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
               <th>STOCK</th>
               <th>SIZE</th>
               <th>COLOR</th>
-              <th>DISCOUNT</th>
               <th>ACTION</th>
             </tr>
           </thead>
@@ -384,7 +369,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>
                       <div className={cx("info-user")}>
                         <div className={cx("imgWrapper")}>
-                          <Image
+                          <img
                             src={item.product_thumb}
                             alt="image_products"
                             className="w-100"
@@ -402,7 +387,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     </td>
                     <td>{item.product_attributes.size}</td>
                     <td>{item.product_attributes.color}</td>
-                    <td style={{ color: "red" }}>10%</td>
                     <td>
                       <div className={cx("actions")}>
                         {(roles.includes("UPDATE") ||
@@ -466,14 +450,15 @@ const ListProduct = ({ apis, fetchProducts }) => {
         </DialogActions>
       </Dialog>
       <Dialog open={openUpdateProduct} onClose={() => handleCloseUpdate(false)}>
-        <DialogTitle>Cập nhật thông tin sản phẩm</DialogTitle>
+        <DialogTitle style={{ fontSize: "1.5rem" }}>
+          Cập nhật thông tin sản phẩm
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            <strong>Nhập thông tin cập nhật cho sản phẩm.</strong>
+          <DialogContentText style={{ fontSize: "1rem" }}>
+            Nhập thông tin cập nhật cho sản phẩm.
           </DialogContentText>
           <TextField
             autoFocus
-            required
             margin="dense"
             id="name"
             label="Tên sản phẩm"
@@ -481,6 +466,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             fullWidth
             value={updateProductData.name}
             onChange={handleChangeUpdateProductData}
+            style={{ fontSize: "1rem" }}
           />
           <TextField
             margin="dense"
@@ -493,6 +479,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             error={!!errorMessages.price}
             helperText={errorMessages.price}
             inputRef={priceInputRef}
+            style={{ fontSize: "1rem" }}
           />
           <TextField
             margin="dense"
@@ -505,6 +492,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             error={!!errorMessages.quantity}
             helperText={errorMessages.quantity}
             inputRef={quantityInputRef}
+            style={{ fontSize: "1rem" }}
           />
           <TextField
             margin="dense"
@@ -513,8 +501,8 @@ const ListProduct = ({ apis, fetchProducts }) => {
             type="text"
             fullWidth
             disabled
-            // hidden
             value={uploadedImage || ""}
+            style={{ fontSize: "1rem" }}
           />
           <div
             style={{ display: "flex", height: "80px", alignItems: "center" }}
@@ -560,6 +548,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             fullWidth
             value={updateProductData.size}
             onChange={handleChangeUpdateProductData}
+            style={{ fontSize: "1rem" }}
           />
           <TextField
             margin="dense"
@@ -569,16 +558,18 @@ const ListProduct = ({ apis, fetchProducts }) => {
             fullWidth
             value={updateProductData.color}
             onChange={handleChangeUpdateProductData}
+            style={{ fontSize: "1rem" }}
           />
           {/* <TextField
-            margin="dense"
-            id="discount"
-            label="Giảm giá"
-            type="text"
-            fullWidth
-            value={updateProductData.discount}
-            onChange={handleChangeUpdateProductData}
-          /> */}
+      margin="dense"
+      id="discount"
+      label="Giảm giá"
+      type="text"
+      fullWidth
+      value={updateProductData.discount}
+      onChange={handleChangeUpdateProductData}
+      style={{ fontSize: '1rem' }}
+    /> */}
           <TextField
             margin="dense"
             id="type"
@@ -587,6 +578,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             fullWidth
             value={updateProductData.type}
             onChange={handleChangeUpdateProductData}
+            style={{ fontSize: "1rem" }}
           />
           <TextField
             margin="dense"
@@ -596,6 +588,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             fullWidth
             value={updateProductData.description}
             onChange={handleChangeUpdateProductData}
+            style={{ fontSize: "1rem" }}
           />
         </DialogContent>
 

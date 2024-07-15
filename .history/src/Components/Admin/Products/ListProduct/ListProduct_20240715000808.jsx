@@ -23,7 +23,6 @@ import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import classNames from "classnames/bind";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
-import { Image } from "antd";
 
 const cx = classNames.bind(styles);
 
@@ -39,6 +38,8 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 const ListProduct = ({ apis, fetchProducts }) => {
+  // const URL = process.env.REACT_APP_URL;
+  console.log(apis);
   const [api, setApi] = useState([]);
   const [selectShow, setSelectShow] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
@@ -149,6 +150,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
       !updateProductData.type ||
       !updateProductData.description
     ) {
+      // Hiển thị thông báo hoặc thực hiện các hành động phù hợp với yêu cầu của bạn
       console.error("Vui lòng điền đầy đủ thông tin sản phẩm.");
       return;
     }
@@ -269,6 +271,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
     });
     setSelectedProductId(productId);
     setOpenUpdateProduct(true);
+    console.log("Thumbnail URL:", product.product_thumb);
   };
   const handleChangeUpdateProductData = (e) => {
     const { id, value } = e.target;
@@ -371,7 +374,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
               <th>STOCK</th>
               <th>SIZE</th>
               <th>COLOR</th>
-              <th>DISCOUNT</th>
               <th>ACTION</th>
             </tr>
           </thead>
@@ -384,7 +386,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>
                       <div className={cx("info-user")}>
                         <div className={cx("imgWrapper")}>
-                          <Image
+                          <img
                             src={item.product_thumb}
                             alt="image_products"
                             className="w-100"
@@ -402,7 +404,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     </td>
                     <td>{item.product_attributes.size}</td>
                     <td>{item.product_attributes.color}</td>
-                    <td style={{ color: "red" }}>10%</td>
                     <td>
                       <div className={cx("actions")}>
                         {(roles.includes("UPDATE") ||
@@ -466,7 +467,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
         </DialogActions>
       </Dialog>
       <Dialog open={openUpdateProduct} onClose={() => handleCloseUpdate(false)}>
-        <DialogTitle>Cập nhật thông tin sản phẩm</DialogTitle>
+        <DialogTitle>
+          <h2>Cập nhật thông tin sản phẩm</h2>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             <strong>Nhập thông tin cập nhật cho sản phẩm.</strong>
