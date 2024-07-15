@@ -10,7 +10,6 @@ import PageTitle from "../../../../../Components/Admin/PageTitle/PageTitle";
 import { Call_Post_Api } from "../../../../../Components/CallApi/CallApis";
 
 const cx = classNames.bind(styles);
-
 const ProductList = () => {
   const pageTitleProps = {
     title: "Product List",
@@ -20,25 +19,27 @@ const ProductList = () => {
       { text: "Product List" },
     ],
   };
-
-  const [apiproducts, setApiProduct] = useState([]);
+  const [apiproducts, setApiProduct] = useState("");
   const [totalProducts, setTotalProducts] = useState(0);
+  useEffect(() => {
+    let isMounted = true;
 
-  const fetchProducts = () => {
     Call_Post_Api(null, null, null, "/product/getAll")
       .then((data) => {
-        setApiProduct(data.metadata);
-        setTotalProducts(data.metadata.length);
+        if (isMounted) {
+          setApiProduct(data.metadata);
+          setTotalProducts(data.metadata.length);
+          console.log(data.metadata);
+        }
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
       });
-  };
 
-  useEffect(() => {
-    fetchProducts();
+    return () => {
+      isMounted = false;
+    };
   }, []);
-
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
@@ -66,7 +67,7 @@ const ProductList = () => {
             iconColor="#f3a0ff"
           />
         </div>
-        <ListProduct apis={apiproducts} fetchProducts={fetchProducts} />
+        <ListProduct apis={apiproducts} />
       </div>
     </div>
   );

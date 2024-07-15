@@ -384,7 +384,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>
                       <div className={cx("info-user")}>
                         <div className={cx("imgWrapper")}>
-                          <Image
+                          <img
                             src={item.product_thumb}
                             alt="image_products"
                             className="w-100"
@@ -537,7 +537,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
               onChange={handleFileChange}
             />
             {uploadedImage && (
-              <img
+              <Image
                 src={
                   uploadedImage instanceof File
                     ? URL.createObjectURL(uploadedImage)
