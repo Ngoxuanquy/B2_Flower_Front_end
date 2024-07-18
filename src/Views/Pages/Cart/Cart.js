@@ -222,20 +222,22 @@ const Cart = () => {
       } else if (distance < 20) {
         phiShip = 2500 * distance;
       } else if (distance < 30) {
-        phiShip = 2000 * distance;
+        phiShip = 20 * distance;
       } else if (distance < 50) {
         phiShip = 1500 * distance;
       } else if (distance < 100) {
         phiShip = 1000 * distance;
       } else {
-        phiShip = 0.5 * distance;
+        phiShip = 500 * distance;
       }
     }
     console.log(phiShip);
+    console.log(valueDiscount);
+    let formattedPhiShip = Math.round(phiShip / 1000) * 1000;
 
-    setPhiShip(Math.round(phiShip.toFixed(0) / 100) * 100);
+    setPhiShip(formattedPhiShip);
     setIsDiscounted(
-      (tong + Number(phiShip) * (1 - valueDiscount / 100))
+      ((tong + Number(phiShip)) * (1 - valueDiscount / 100))
         .toFixed(0)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -431,7 +433,15 @@ const Cart = () => {
           paymentExpression: selectedOption,
           phiShip,
           email: Cookies.get("name")?.replace(/"/g, ""),
-          total_amounts: isDiscounted,
+          total_amounts:
+            valueDiscount === 0
+              ? Number(
+                  (tong + Number(phiShip))
+                    .toFixed(0)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                )
+              : Number(isDiscounted).toFixed(3),
         },
         cleanedJwtString,
         cleanId,
@@ -470,7 +480,10 @@ const Cart = () => {
           user: { ...selectedValueAdress, _id: cleanId },
           product: checkedList,
           shopId: "test",
-          amount: Number(isDiscounted).toFixed(3),
+          amount:
+            valueDiscount === 0
+              ? Number(tong + Number(phiShip))
+              : Number(isDiscounted).toFixed(3),
           email: name,
           MaDonHang: MaDonHang,
         },
@@ -481,13 +494,11 @@ const Cart = () => {
         console.log(data);
         setIsLoad(false);
         updateQuantity();
-        getApi();
         Cookies.set("MaDonHang", JSON.stringify(MaDonHang), {
           expires: 7,
         });
 
         window.location.replace(data);
-        EventRegister.emit("chaneLength", orders.length);
 
         // Call_Post_Api(null, null, null, "/vnpay/receive-hook").then((data) => {
         //   console.log(data);
@@ -504,7 +515,10 @@ const Cart = () => {
           notifications: "Thanh toán qua Ví 2Be Flower",
           phiShip,
           email: Cookies.get("name")?.replace(/"/g, ""),
-          total_amounts: isDiscounted,
+          total_amounts:
+            valueDiscount === 0
+              ? Number(tong + Number(phiShip))
+              : Number(isDiscounted).toFixed(3),
         },
         cleanedJwtString,
         cleanId,
@@ -535,7 +549,9 @@ const Cart = () => {
           Call_Post_Api(
             {
               userId: cleanId,
-              moneys: -(tong + Number(phiShip)).toFixed(0),
+              moneys: -(valueDiscount === 0
+                ? Number(tong + Number(phiShip))
+                : Number(isDiscounted).toFixed(3)),
             },
             cleanedJwtString,
             cleanId,
@@ -569,8 +585,9 @@ const Cart = () => {
   };
 
   const handleOk = () => {
+    console.log(valueDiscount);
     setIsDiscounted(
-      (tong + Number(phiShip) * (1 - valueDiscount / 100))
+      ((tong + Number(phiShip)) * (1 - valueDiscount / 100))
         .toFixed(0)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -1117,7 +1134,7 @@ const Cart = () => {
               >
                 Ví 2Be Flower
               </div>
-              <div>{moneys} đ</div>
+              <div>{Number(moneys) / 1000} đ</div>
             </div>
             <div className={cx("tamtinh")}>
               <div>Tạm tính</div>
