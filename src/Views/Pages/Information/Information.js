@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./Information.module.scss";
-import { Button, Image, Input, Modal, Spin, Tabs, message } from "antd";
+import { Button, Form, Image, Input, Modal, Spin, Tabs, message } from "antd";
 import ModalMap from "../../../Components/ModalMap/ModalMap";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
@@ -29,12 +29,31 @@ const Information = () => {
   const [activeTab, setActiveTab] = useState("0"); // State to track the active tab
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [amount, setAmount] = useState("");
+  const [isModalOpenUpdateAddress, setIsModalOpenUpdateAddress] =
+    useState(false);
+
   const showModal = () => {
     setIsModalVisible(true);
   };
 
   const handleOk = () => {
     setIsModalVisible(false);
+    console.log(amount);
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+    Call_Post_Api(
+      {
+        amount: amount.replace(/\./g, ""),
+        userId: cleanId,
+      },
+      null,
+      null,
+      "/vnpay/create-payment-link-donet"
+    ).then((data) => {
+      window.location.replace(data);
+    });
   };
 
   const handleCancel = () => {
@@ -93,6 +112,16 @@ const Information = () => {
       console.log("No madonhang found in cookies");
     }
   };
+
+  const getDonnet = () => {
+    Call_Post_Api(null, null, null, `/vnpay/statusDonet`, "GET")
+      .then((data) => {})
+      .catch((err) => console.log({ err }));
+  };
+
+  useEffect(() => {
+    getDonnet();
+  }, []);
 
   useEffect(() => {
     const madonhang = Cookies.get("MaDonHang");
@@ -288,6 +317,80 @@ const Information = () => {
     setTabPaneHeight(newTabPaneHeight);
   }, [orders, address]); // Adjust when orders or address change
 
+  const [idUpdateAddress, setUpdateAddress] = useState("");
+
+  const handelUpdateAdrees = (item) => {
+    setIsModalOpenUpdateAddress(true);
+
+    console.log(item);
+    setUpdateAddress(item?.id);
+    setAddresUpdate(item);
+  };
+
+  const [addresUpdate, setAddresUpdate] = useState({
+    phuongXa: "",
+    quanHuyen: "",
+    tinhThanh: "",
+    diaChiCuThe: "",
+    number: "",
+    name: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAddresUpdate((prevAddress) => ({
+      ...prevAddress,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateAddressOk = () => {
+    setIsModalOpenUpdateAddress(false);
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+    Call_Post_Api(
+      {
+        userId: cleanId,
+        id: idUpdateAddress,
+        newAddress: addresUpdate,
+      },
+      cleanedJwtString,
+      cleanId,
+      "/users/updateAddress"
+    )
+      .then((data) => {
+        getApiAdrressUser();
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
+  const handleUpdateAddressCancel = () => {
+    setIsModalOpenUpdateAddress(false);
+  };
+
+  const handeDeleteAdress = (idAdress) => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+    Call_Post_Api(
+      {
+        userId: cleanId,
+        id: idAdress,
+      },
+      cleanedJwtString,
+      cleanId,
+      "/users/deleteAddress"
+    )
+      .then((data) => {
+        getApiAdrressUser();
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
+
   return (
     <div
       className={cx("container_")}
@@ -385,7 +488,7 @@ const Information = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {Number(moneys) / 1000} đ
+                      {Number(moneys).toLocaleString()} đ
                     </span>{" "}
                   </p>
                   <div>
@@ -396,6 +499,63 @@ const Information = () => {
               {activeTab === "3" ? (
                 <div className={cx("tabs-item1")} id="height-client">
                   <div>
+                    <Modal
+                      title="Update Address"
+                      open={isModalOpenUpdateAddress}
+                      onOk={handleUpdateAddressOk}
+                      onCancel={handleUpdateAddressCancel}
+                    >
+                      <Form layout="vertical">
+                        <Form.Item label="Tên">
+                          <Input
+                            placeholder="Tên"
+                            name="name"
+                            value={addresUpdate.name}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Số điện thoại">
+                          <Input
+                            placeholder="Số điện thoại"
+                            name="number"
+                            value={addresUpdate.number}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Phường/Xã">
+                          <Input
+                            placeholder="Phường/Xã"
+                            name="phuongXa"
+                            value={addresUpdate.phuongXa}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Quận/Huyện">
+                          <Input
+                            placeholder="Quận/Huyện"
+                            name="quanHuyen"
+                            value={addresUpdate.quanHuyen}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Tỉnh/Thành">
+                          <Input
+                            placeholder="Tỉnh/Thành"
+                            name="tinhThanh"
+                            value={addresUpdate.tinhThanh}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Địa chỉ cụ thể">
+                          <Input
+                            placeholder="Địa chỉ cụ thể"
+                            name="diaChiCuThe"
+                            value={addresUpdate.diaChiCuThe}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Item>
+                      </Form>
+                    </Modal>
                     <div
                       style={{
                         fontSize: "20px",
@@ -405,57 +565,82 @@ const Information = () => {
                     >
                       Địa chỉ của tôi
                     </div>
-                    <Radio.Group onChange={onChange} value={selectedValue}>
-                      {address?.map((item, index) => (
-                        <div key={index}>
-                          <Radio value={item}>
+                    {address?.map((item, index) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          minWidth: "70vw",
+                        }}
+                      >
+                        <div
+                          key={index}
+                          style={{
+                            width: "70%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              marginTop: "10px",
+                              color: theme.color,
+                            }}
+                          >
                             <div
+                              className="number"
                               style={{
-                                marginTop: "10px",
-                                color: theme.color,
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                flexDirection: "column",
                               }}
                             >
-                              <div
-                                className="number"
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "flex-start",
-                                  flexDirection: "column",
-                                }}
-                              >
-                                <div>
-                                  <span
-                                    style={{
-                                      fontWeight: 600,
-                                      fontFamily: "blod",
-                                    }}
-                                  >
-                                    Họ tên:
-                                  </span>{" "}
-                                  {item.name}
-                                </div>
-                                <div>
-                                  {" "}
-                                  <span
-                                    style={{
-                                      fontWeight: 600,
-                                      fontFamily: "blod",
-                                    }}
-                                  >
-                                    Số điện thoại:
-                                  </span>{" "}
-                                  {item.number}
-                                </div>
+                              <div>
+                                <span
+                                  style={{
+                                    fontWeight: 600,
+                                    fontFamily: "blod",
+                                  }}
+                                >
+                                  Họ tên:
+                                </span>{" "}
+                                {item.name}
                               </div>
                               <div>
-                                {item.diaChiCuThe}, {item.phuongXa},{" "}
-                                {item.quanHuyen}, {item.tinhThanh}
+                                {" "}
+                                <span
+                                  style={{
+                                    fontWeight: 600,
+                                    fontFamily: "blod",
+                                  }}
+                                >
+                                  Số điện thoại:
+                                </span>{" "}
+                                {item.number}
                               </div>
                             </div>
-                          </Radio>
+                            <div>
+                              {item.diaChiCuThe}, {item.phuongXa},{" "}
+                              {item.quanHuyen}, {item.tinhThanh}
+                            </div>
+                          </div>
                         </div>
-                      ))}
-                    </Radio.Group>
+                        <div
+                          style={{
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handelUpdateAdrees(item)}
+                        >
+                          Cập nhật
+                        </div>
+                        <div
+                          style={{
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handeDeleteAdress(item.id)}
+                        >
+                          Xóa
+                        </div>
+                      </div>
+                    ))}
                     <div>
                       <button
                         style={{
@@ -474,10 +659,11 @@ const Information = () => {
                   <div
                     style={{
                       marginRight: "50px",
+                      lineHeight: "50px",
                     }}
                   >
                     <ModalMap
-                      props={"Cập Nhật"}
+                      props={"Thêm"}
                       onClickHandler={handleEventFromChild}
                     />
                   </div>

@@ -101,7 +101,15 @@ function ModalMap({ props, onClickHandler }) {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    if (!cleanId || !valuePhuongXa || !valueQuanHuyen || !valueTinhThanh || !valueAddressCuThe || !valueNumber || !valueName) {
+    if (
+      !cleanId ||
+      !valuePhuongXa ||
+      !valueQuanHuyen ||
+      !valueTinhThanh ||
+      !valueAddressCuThe ||
+      !valueNumber ||
+      !valueName
+    ) {
       messageApi.open({
         type: "warning",
         content: "Please fill in all required fields.",
@@ -125,7 +133,7 @@ function ModalMap({ props, onClickHandler }) {
       },
       cleanedJwtString,
       cleanId,
-      "/users/updateAddress"
+      "/users/createAddress"
     )
       .then((data) => {
         setIsLoad(false);
@@ -160,7 +168,13 @@ function ModalMap({ props, onClickHandler }) {
       <Button type="primary" onClick={showModal}>
         {props}
       </Button>
-      <Modal title="Thông tin cá nhân" width={700} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal
+        title="Thông tin cá nhân"
+        width={700}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
         <div>
           <div className={cx("box-1")}>
             <div className={cx("item-box-1")}>
@@ -180,10 +194,18 @@ function ModalMap({ props, onClickHandler }) {
                 style={{ width: 200 }}
                 placeholder="Search to Select"
                 optionFilterProp="children"
-                filterOption={(input, option) => option.name?.toLowerCase().indexOf(input?.toLowerCase()) >= 0}
+                filterOption={(input, option) =>
+                  option.name?.toLowerCase().indexOf(input?.toLowerCase()) >= 0
+                }
                 filterSort={(optionA, optionB) => {
-                  const nameA = ((optionA && optionA.name) || "")?.toLowerCase();
-                  const nameB = ((optionB && optionB.name) || "")?.toLowerCase();
+                  const nameA = (
+                    (optionA && optionA.name) ||
+                    ""
+                  )?.toLowerCase();
+                  const nameB = (
+                    (optionB && optionB.name) ||
+                    ""
+                  )?.toLowerCase();
                   return nameA?.localeCompare(nameB);
                 }}
                 options={apiTinhThanhs?.map((province) => ({
@@ -204,10 +226,18 @@ function ModalMap({ props, onClickHandler }) {
                 style={{ width: 200 }}
                 placeholder="Search to Select"
                 optionFilterProp="children"
-                filterOption={(input, option) => option.name?.toLowerCase().indexOf(input?.toLowerCase()) >= 0}
+                filterOption={(input, option) =>
+                  option.name?.toLowerCase().indexOf(input?.toLowerCase()) >= 0
+                }
                 filterSort={(optionA, optionB) => {
-                  const nameA = ((optionA && optionA.name) || "")?.toLowerCase();
-                  const nameB = ((optionB && optionB.name) || "")?.toLowerCase();
+                  const nameA = (
+                    (optionA && optionA.name) ||
+                    ""
+                  )?.toLowerCase();
+                  const nameB = (
+                    (optionB && optionB.name) ||
+                    ""
+                  )?.toLowerCase();
                   return nameA?.localeCompare(nameB);
                 }}
                 options={apiQuanHuyens?.map((province) => ({
@@ -229,10 +259,18 @@ function ModalMap({ props, onClickHandler }) {
                 style={{ width: 200 }}
                 placeholder="Search to Select"
                 optionFilterProp="children"
-                filterOption={(input, option) => option.name?.toLowerCase().indexOf(input?.toLowerCase()) >= 0}
+                filterOption={(input, option) =>
+                  option.name?.toLowerCase().indexOf(input?.toLowerCase()) >= 0
+                }
                 filterSort={(optionA, optionB) => {
-                  const nameA = ((optionA && optionA.name) || "")?.toLowerCase();
-                  const nameB = ((optionB && optionB.name) || "")?.toLowerCase();
+                  const nameA = (
+                    (optionA && optionA.name) ||
+                    ""
+                  )?.toLowerCase();
+                  const nameB = (
+                    (optionB && optionB.name) ||
+                    ""
+                  )?.toLowerCase();
                   return nameA?.localeCompare(nameB);
                 }}
                 options={apiPhuongXas?.map((province) => ({
@@ -248,7 +286,11 @@ function ModalMap({ props, onClickHandler }) {
           <div className={cx("box-4")}>
             <div className={cx("item-box-4")}>
               <div>Địa chỉ chi tiết :</div>
-              <Input className={cx("input")} value={valueAddressCuThe} onChange={handleChangeAddressCuThe} />
+              <Input
+                className={cx("input")}
+                value={valueAddressCuThe}
+                onChange={handleChangeAddressCuThe}
+              />
             </div>
           </div>
         </div>

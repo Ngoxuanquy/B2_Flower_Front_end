@@ -26,6 +26,7 @@ import Orders from "../Views/Pages/Admin/Orders/Orders";
 import OrdersSent from "../Views/Pages/Admin/OrdersSent/OrdersSent";
 import ShopIntroduce from "../Views/Pages/ShopIntroduce/ShopIntroduce";
 import Discounts from "../Views/Pages/Discounts/Discounts";
+import ResertPassword from "../Views/Pages/ResertPassword/ResertPassword";
 
 export const publicRoute = [
   { path: "/", component: <HomePage /> },
@@ -35,6 +36,7 @@ export const publicRoute = [
   { path: "/blog", component: <BLog /> },
   { path: "/cart", component: <Cart /> },
   { path: "/information", component: <Information /> },
+  { path: "/ResertPassword", component: <ResertPassword /> },
   { path: "/detailproduct/:productId", component: <DetailProduct /> },
 ];
 
@@ -60,5 +62,4 @@ export const adminRoute = [
   { path: "/admin/listOrders", component: <Orders /> },
   { path: "/admin/đơn-đã-gửi", component: <OrdersSent /> },
   { path: "/admin/discount", component: <Discounts /> },
-
 ];

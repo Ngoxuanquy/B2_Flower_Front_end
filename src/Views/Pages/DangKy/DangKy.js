@@ -31,24 +31,27 @@ function DangKy() {
         content: "Vui lòng không để trống các trường!!!",
       });
       return;
-    }
-
-    if (!validateEmail(email)) {
+    } else if (!validateEmail(email)) {
       messageApi.open({
         type: "warning",
         content: "Email không đúng định dạng!!!",
       });
       return;
-    }
-
-    if (pass !== re_Pass) {
+    } else if (pass !== re_Pass) {
       messageApi.open({
         type: "warning",
         content: "Mật khẩu không khớp!!!",
       });
       return;
+    } else if (pass.length <= 6) {
+      // Corrected condition
+      messageApi.open({
+        type: "warning",
+        content: "Mật khẩu phải dài hơn 6 kí tự",
+      });
+      return;
     }
-
+    setIsLoad(true);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -66,11 +69,16 @@ function DangKy() {
       .then((data) => data.json())
       .then((data) => {
         console.log(data);
-        if (data.metadata.msg === "Error: Shop already registered") {
+        setIsLoad(false);
+
+        if (
+          data.metadata.msg === "Email đã được đăng ký!!" ||
+          data.metadata.msg === "Email không tồn tại!!"
+        ) {
           // window.location = '/login';
           messageApi.open({
             type: "warning",
-            content: "Tài khoản đã đăng ký!!!",
+            content: data.metadata.msg,
           });
         } else {
           setShowModal(true);
@@ -130,9 +138,13 @@ function DangKy() {
           style={{
             fontSize: "20px",
             marginBottom: "40px",
+            textAlign: "center", // Căn giữa nội dung văn bản
+            fontFamily: "Arial, sans-serif", // Lựa chọn font chữ
+            fontWeight: "bold", // Đậm văn bản
+            color: "#333", // Màu chữ
           }}
         >
-          Vui lòng check mail để nhập mã code
+          Vui lòng kiểm tra email để nhập mã code
         </div>
 
         <OtpInput
@@ -148,7 +160,7 @@ function DangKy() {
           }}
           containerStyle={{
             width: "100%",
-            height: "100%",
+            height: "150px",
             alignItems: "center",
             display: "flex",
             justifyContent: "center",
@@ -190,7 +202,10 @@ function DangKy() {
           <div className={cx("all")}>
             <div className={cx("left")}>
               <div className={cx("login")}>Đăng Ký</div>
-              <div className={cx("titer")}>By logging in you agree to the ridiculously long terms that you didn't bother to read</div>
+              <div className={cx("titer")}>
+                By logging in you agree to the ridiculously long terms that you
+                didn't bother to read
+              </div>
               <div className={cx("taikhoan")}>
                 Bạn Chưa Có Tài Khoản?
                 <Link to={"/login"}>
@@ -202,28 +217,42 @@ function DangKy() {
               <div>
                 <div className={cx("email")}>Email</div>
                 <div>
-                  <input className={cx("input")} onChange={(e) => setEmail(e.target.value)} />
+                  <input
+                    className={cx("input")}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
               </div>
 
               <div>
                 <div className={cx("matkhau")}>Mật Khẩu</div>
                 <div>
-                  <input type="password" className={cx("input")} onChange={(e) => setPass(e.target.value)} />
+                  <input
+                    type="password"
+                    className={cx("input")}
+                    onChange={(e) => setPass(e.target.value)}
+                  />
                 </div>
               </div>
 
               <div>
                 <div className={cx("matkhau")}>Nhập Lại Mật Khẩu</div>
                 <div>
-                  <input type="password" className={cx("input")} onChange={(e) => setRe_Passs(e.target.value)} />
+                  <input
+                    type="password"
+                    className={cx("input")}
+                    onChange={(e) => setRe_Passs(e.target.value)}
+                  />
                 </div>
               </div>
 
               <div>
                 <div className={cx("matkhau")}>Số Điện Thoại</div>
                 <div>
-                  <input className={cx("input")} onChange={(e) => setNumber(e.target.value)} />
+                  <input
+                    className={cx("input")}
+                    onChange={(e) => setNumber(e.target.value)}
+                  />
                 </div>
               </div>
 

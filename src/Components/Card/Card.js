@@ -19,7 +19,11 @@ function Card({ list }) {
       <div className="container_">
         <div className={cx("box")}>
           <div className="">
-            <Image className={cx("img_card")} src={list.product_thumb} data-testid="product-image" />
+            <Image
+              className={cx("img_card")}
+              src={list.product_thumb}
+              data-testid="product-image"
+            />
             <div className={cx("button")}>
               <button>Mới</button>
             </div>
@@ -43,7 +47,7 @@ function Card({ list }) {
             }}
           >
             <div>{list.product_name}</div>
-            <div>${list.product_price}</div>
+            <div>đ{list.product_price}</div>
           </div>
         </Link>
       </div>

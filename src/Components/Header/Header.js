@@ -14,7 +14,20 @@ import {
   QuestionOutlined,
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
-import { Tabs, Dropdown, Button, Drawer, Menu, Avatar, Badge, Switch, Space, Popconfirm, notification, Input } from "antd";
+import {
+  Tabs,
+  Dropdown,
+  Button,
+  Drawer,
+  Menu,
+  Avatar,
+  Badge,
+  Switch,
+  Space,
+  Popconfirm,
+  notification,
+  Input,
+} from "antd";
 import Cookies from "js-cookie";
 import ThemeConText from "../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
@@ -38,7 +51,9 @@ function Header({ colorHeader }) {
   const [api, contextHolder] = notification.useNotification();
 
   const close = () => {
-    console.log("Notification was closed. Either the close button was clicked or duration time elapsed.");
+    console.log(
+      "Notification was closed. Either the close button was clicked or duration time elapsed."
+    );
   };
 
   useEffect(() => {
@@ -64,7 +79,8 @@ function Header({ colorHeader }) {
 
     api.open({
       message: "Notification Title",
-      description: 'A function will be called after the notification is closed (automatically after the "duration" time or manually).',
+      description:
+        'A function will be called after the notification is closed (automatically after the "duration" time or manually).',
       btn,
       key,
       onClose: close,
@@ -77,9 +93,17 @@ function Header({ colorHeader }) {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
     if (cleanedJwtString) {
-      Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart")
+      Call_Post_Api(
+        { userId: cleanId },
+        cleanedJwtString,
+        cleanId,
+        "/cart/getlistCart"
+      )
         .then((data) => {
-          EventRegister.emit("chaneLength", data.metadata?.cart_products?.length);
+          EventRegister.emit(
+            "chaneLength",
+            data.metadata?.cart_products?.length
+          );
           setCount(data.metadata?.cart_products?.length);
         })
         .catch((err) => console.log({ err }));
@@ -93,10 +117,16 @@ function Header({ colorHeader }) {
       if (currentScroll == 0) {
         setIsLoad(true);
         setScrollDirection("scroll-up");
-      } else if (currentScroll > lastScroll && scrollDirection !== "scroll-down") {
+      } else if (
+        currentScroll > lastScroll &&
+        scrollDirection !== "scroll-down"
+      ) {
         setIsLoad(false);
         setScrollDirection("scroll-down");
-      } else if (currentScroll < lastScroll && scrollDirection !== "scroll-up") {
+      } else if (
+        currentScroll < lastScroll &&
+        scrollDirection !== "scroll-up"
+      ) {
         setIsLoad(true);
         setScrollDirection("scroll-up");
       }
@@ -118,7 +148,12 @@ function Header({ colorHeader }) {
     getApi();
   }, [ordersLength]);
 
-  const bodyClass = scrollDirection === "scroll-down" ? "scroll-down" : scrollDirection === "scroll-up" ? "scroll-up" : "";
+  const bodyClass =
+    scrollDirection === "scroll-down"
+      ? "scroll-down"
+      : scrollDirection === "scroll-up"
+      ? "scroll-up"
+      : "";
 
   const handeTab = (e) => {
     setDefau(e);
@@ -135,11 +170,7 @@ function Header({ colorHeader }) {
     },
     {
       key: "2",
-      label: (
-        <a target="_blank" rel="noopener noreferrer">
-          Đổi mật khẩu
-        </a>
-      ),
+      label: <a onClick={() => handleResertPassword()}>Đổi mật khẩu</a>,
     },
     {
       key: "3",
@@ -173,13 +204,18 @@ function Header({ colorHeader }) {
     navigate("/information");
   };
 
+  const handleResertPassword = () => {
+    navigate("/ResertPassword");
+  };
+
   const onSearch = (value) => {
     Call_Post_Api(null, null, null, "/product/search/" + value).then((data) => {
       setSearchResults(data.metadata);
     });
   };
 
-  const text = searchResults.length === 0 ? "Chưa có sản phẩm 🎉🎉🎉" : "Sản phẩm 👀✔👀";
+  const text =
+    searchResults.length === 0 ? "Chưa có sản phẩm 🎉🎉🎉" : "Sản phẩm 👀✔👀";
   const description = () => (
     <div
       style={{
@@ -193,7 +229,16 @@ function Header({ colorHeader }) {
       }}
     >
       {searchResults.length === 0 ? (
-        <div style={{ color: "#333", fontSize: "0.9em", textAlign: "center", padding: "10px" }}>Vui lòng nhập tên sản phẩm</div>
+        <div
+          style={{
+            color: "#333",
+            fontSize: "0.9em",
+            textAlign: "center",
+            padding: "10px",
+          }}
+        >
+          Vui lòng nhập tên sản phẩm
+        </div>
       ) : (
         <div
           style={{
@@ -204,9 +249,33 @@ function Header({ colorHeader }) {
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <div style={{ backgroundColor: "#ff6666", color: "white", display: "flex" }}>
-            <div style={{ padding: "8px", textAlign: "center", fontSize: "12px", flex: 1 }}>Tên Sản Phẩm</div>
-            <div style={{ padding: "8px", textAlign: "center", fontSize: "12px", flex: 1 }}>Số Lượng</div>
+          <div
+            style={{
+              backgroundColor: "#ff6666",
+              color: "white",
+              display: "flex",
+            }}
+          >
+            <div
+              style={{
+                padding: "8px",
+                textAlign: "center",
+                fontSize: "12px",
+                flex: 1,
+              }}
+            >
+              Tên Sản Phẩm
+            </div>
+            <div
+              style={{
+                padding: "8px",
+                textAlign: "center",
+                fontSize: "12px",
+                flex: 1,
+              }}
+            >
+              Số Lượng
+            </div>
           </div>
           {searchResults.map((search, index) => (
             <div
@@ -253,7 +322,13 @@ function Header({ colorHeader }) {
       }}
     >
       {contextHolder}
-      <Drawer title="Menu" placement="right" onClose={onClose} open={open} width="70%">
+      <Drawer
+        title="Menu"
+        placement="right"
+        onClose={onClose}
+        open={open}
+        width="70%"
+      >
         <Tabs
           defaultActiveKey={defau}
           centered
@@ -324,11 +399,23 @@ function Header({ colorHeader }) {
         <div className={`scroll-indicator ${scrollDirection}`}>
           <div className="container_">
             <div className={cx("header")}>
-              <div onClick={() => (window.location.href = "/")} style={{ cursor: "pointer" }}>
-                <img src={logo} className={cx("img_logo")} style={{ borderRadius: "300px", marginRight: "-10px" }} />
+              <div
+                onClick={() => (window.location.href = "/")}
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src={logo}
+                  className={cx("img_logo")}
+                  style={{ borderRadius: "300px", marginRight: "-10px" }}
+                />
               </div>
               <div className={cx("header_center")}>
-                <Tabs defaultActiveKey={defau} centered onChange={(e) => handeTab(e)} tabBarStyle={{ color: "pink" }}>
+                <Tabs
+                  defaultActiveKey={defau}
+                  centered
+                  onChange={(e) => handeTab(e)}
+                  tabBarStyle={{ color: "pink" }}
+                >
                   <Tabs.TabPane
                     tab={
                       <Link style={{ color: "#292929" }} to="/">
@@ -381,8 +468,18 @@ function Header({ colorHeader }) {
               </div>
 
               <div className={cx("header_right")}>
-                <Link to="/cart" style={{ color: "black", listStyle: "none", textDecoration: "none" }}>
-                  <Space size="large" style={{ fontSize: "25px", marginLeft: "-50px" }}>
+                <Link
+                  to="/cart"
+                  style={{
+                    color: "black",
+                    listStyle: "none",
+                    textDecoration: "none",
+                  }}
+                >
+                  <Space
+                    size="large"
+                    style={{ fontSize: "25px", marginLeft: "-50px" }}
+                  >
                     <Badge count={ordersLength}>
                       <ShoppingCartOutlined style={{ fontSize: "25px" }} />
                     </Badge>
@@ -396,10 +493,17 @@ function Header({ colorHeader }) {
                   cancelText="No"
                   style={{ width: "500px" }}
                 >
-                  <Search placeholder="Nhập sản phẩm .... " onSearch={onSearch} style={{ width: 400, marginTop: "5px" }} />
+                  <Search
+                    placeholder="Nhập sản phẩm .... "
+                    onSearch={onSearch}
+                    style={{ width: 400, marginTop: "5px" }}
+                  />
                 </Popconfirm>
                 {name === undefined ? (
-                  <button style={{ padding: "5px" }} onClick={() => (window.location.href = "/login")}>
+                  <button
+                    style={{ padding: "5px" }}
+                    onClick={() => (window.location.href = "/login")}
+                  >
                     Đăng nhập
                   </button>
                 ) : (
@@ -407,25 +511,51 @@ function Header({ colorHeader }) {
                     {img === "" || img === undefined ? (
                       <img
                         src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-avatar-trang-chat-ngau-cute-400x400.jpg"
-                        style={{ width: "40px", height: "40px", borderRadius: "100px", marginLeft: "10px" }}
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "100px",
+                          marginLeft: "10px",
+                        }}
                       />
                     ) : (
                       <div>
-                        <img src={img} style={{ width: "40px", height: "40px", borderRadius: "100px" }} />
+                        <img
+                          src={img}
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "100px",
+                          }}
+                        />
                       </div>
                     )}
                   </Dropdown>
                 )}
               </div>
               <div className={cx("menu")}>
-                <Link to="/cart" style={{ color: "black", listStyle: "none", textDecoration: "none", marginRight: "20px" }}>
-                  <Space size="large" style={{ fontSize: "25px", marginLeft: "-40px" }}>
+                <Link
+                  to="/cart"
+                  style={{
+                    color: "black",
+                    listStyle: "none",
+                    textDecoration: "none",
+                    marginRight: "20px",
+                  }}
+                >
+                  <Space
+                    size="large"
+                    style={{ fontSize: "25px", marginLeft: "-40px" }}
+                  >
                     <Badge count={ordersLength}>
                       <ShoppingCartOutlined style={{ fontSize: "25px" }} />
                     </Badge>
                   </Space>
                 </Link>
-                <MenuOutlined style={{ fontSize: "25px" }} onClick={showDrawer} />
+                <MenuOutlined
+                  style={{ fontSize: "25px" }}
+                  onClick={showDrawer}
+                />
               </div>
             </div>
           </div>
