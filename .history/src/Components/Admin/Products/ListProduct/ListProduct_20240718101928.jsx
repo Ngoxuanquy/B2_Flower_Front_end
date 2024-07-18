@@ -500,8 +500,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
             label="Tên sản phẩm"
             type="text"
             fullWidth
-            error={!!errorMessages.name}
-            helperText={errorMessages.name}
             value={updateProductData.name}
             onChange={handleChangeUpdateProductData}
           />

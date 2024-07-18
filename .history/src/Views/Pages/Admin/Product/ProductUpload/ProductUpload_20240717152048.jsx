@@ -644,7 +644,7 @@ const ProductUpload = () => {
                 color="primary"
                 style={{ marginLeft: 10 }}
               >
-                Upload
+                Submit
               </Button>
             </div>
           </form>

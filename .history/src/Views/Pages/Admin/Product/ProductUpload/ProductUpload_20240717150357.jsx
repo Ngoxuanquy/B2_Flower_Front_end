@@ -35,10 +35,6 @@ const ProductUpload = () => {
   const [quantity, setQuantity] = useState("");
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [priceError, setPriceError] = useState("");
-  const [quantityError, setQuantityError] = useState("");
-  const nameInputRef = useRef(null);
   const priceInputRef = useRef(null);
   const quantityInputRef = useRef(null);
   const [apiProducts, setApiProduct] = useState([]);
@@ -101,41 +97,26 @@ const ProductUpload = () => {
         console.error("Error fetching products:", error);
       });
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let valid = true;
 
     const isDuplicateName = apiProducts.some(
       (product) => product.product_name.toLowerCase() === name.toLowerCase()
     );
     if (isDuplicateName) {
-      setNameError("*Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác!");
-      valid = false;
-      nameInputRef.current.focus();
-    } else {
-      setNameError("");
+      alert("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác!");
+      return;
     }
     if (Number(price) < 0) {
-      setPriceError(
-        "*Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
-      );
+      alert("Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
       priceInputRef.current.focus();
-      valid = false;
-    } else {
-      setPriceError("");
+      return;
     }
     if (Number(quantity) < 0) {
-      setQuantityError(
-        "*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
-      );
+      alert("Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
       quantityInputRef.current.focus();
-      valid = false;
-    } else {
-      setQuantityError("");
+      return;
     }
-
-    if (!valid) return;
 
     const images = await uploadImage();
     try {
@@ -176,7 +157,6 @@ const ProductUpload = () => {
       setIsLoading(false);
     }
   };
-
   const resetForm = () => {
     setName("");
     setPrice("");
@@ -186,11 +166,7 @@ const ProductUpload = () => {
     setColor("");
     setSize("");
     setUploadedImage(null);
-    setNameError("");
-    setPriceError("");
-    setQuantityError("");
   };
-
   const handleButtonClick = () => {
     document.getElementById("fileInput").click();
   };
@@ -228,7 +204,6 @@ const ProductUpload = () => {
                   <span>Tên sản phẩm:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      ref={nameInputRef}
                       value={name}
                       required
                       type="text"
@@ -262,9 +237,6 @@ const ProductUpload = () => {
                         e
                       </span>
                     </label>
-                    {nameError && (
-                      <div className={cx("error")}>{nameError}</div>
-                    )}
                   </div>
                 </div>
                 <div>
@@ -311,22 +283,17 @@ const ProductUpload = () => {
                         e
                       </span>
                     </label>
-                    {priceError && (
-                      <div className={cx("error")}>{priceError}</div>
-                    )}
                   </div>
                 </div>
-              </Col>
-              <Col span={12} className={cx("col")}>
                 <div>
-                  <span>Mô tả:</span>
+                  <span>Màu sắc:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      value={description}
+                      value={color}
                       required
                       type="text"
                       className={cx("input")}
-                      onChange={(e) => setDescription(e.target.value)}
+                      onChange={(e) => setColor(e.target.value)}
                     />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
@@ -334,25 +301,25 @@ const ProductUpload = () => {
                         className={cx("label-char")}
                         style={{ "--index": 0 }}
                       >
-                        D
+                        C
                       </span>
                       <span
                         className={cx("label-char")}
                         style={{ "--index": 1 }}
                       >
-                        e
+                        o
                       </span>
                       <span
                         className={cx("label-char")}
                         style={{ "--index": 2 }}
                       >
-                        s
+                        l
                       </span>
                       <span
                         className={cx("label-char")}
                         style={{ "--index": 3 }}
                       >
-                        c
+                        o
                       </span>
                       <span
                         className={cx("label-char")}
@@ -360,54 +327,59 @@ const ProductUpload = () => {
                       >
                         r
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 5 }}
-                      >
-                        i
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 6 }}
-                      >
-                        p
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 7 }}
-                      >
-                        t
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 8 }}
-                      >
-                        i
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 9 }}
-                      >
-                        o
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 10 }}
-                      >
-                        n
-                      </span>
                     </label>
                   </div>
                 </div>
                 <div>
-                  <span>Loại:</span>
+                  <span>Hình ảnh:</span>
+                  <br />
+                  <div
+                    style={{
+                      display: "flex",
+                      height: "80px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      component="label"
+                      role={undefined}
+                      variant="contained"
+                      tabIndex={-1}
+                      startIcon={<CloudUploadIcon />}
+                      onClick={handleButtonClick}
+                    >
+                      Upload file
+                    </Button>
+                    <VisuallyHiddenInput
+                      id="fileInput"
+                      type="file"
+                      onChange={handleFileChange}
+                    />
+                    {uploadedImage && (
+                      <img
+                        src={URL.createObjectURL(uploadedImage)}
+                        alt="Uploaded"
+                        style={{
+                          width: 80,
+                          height: 80,
+                          opacity: 0.9,
+                          marginLeft: 20,
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              </Col>
+              <Col span={12} className={cx("col")}>
+                <div>
+                  <span>Size:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      value={type}
+                      value={size}
                       required
                       type="text"
                       className={cx("input")}
-                      onChange={(e) => setType(e.target.value)}
+                      onChange={(e) => setSize(e.target.value)}
                     />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
@@ -415,19 +387,19 @@ const ProductUpload = () => {
                         className={cx("label-char")}
                         style={{ "--index": 0 }}
                       >
-                        T
+                        S
                       </span>
                       <span
                         className={cx("label-char")}
                         style={{ "--index": 1 }}
                       >
-                        y
+                        i
                       </span>
                       <span
                         className={cx("label-char")}
                         style={{ "--index": 2 }}
                       >
-                        p
+                        z
                       </span>
                       <span
                         className={cx("label-char")}
@@ -438,8 +410,6 @@ const ProductUpload = () => {
                     </label>
                   </div>
                 </div>
-              </Col>
-              <Col span={12} className={cx("col")}>
                 <div>
                   <span>Số lượng:</span>
                   <div className={cx("wave-group")}>
@@ -502,20 +472,17 @@ const ProductUpload = () => {
                         y
                       </span>
                     </label>
-                    {quantityError && (
-                      <div className={cx("error")}>{quantityError}</div>
-                    )}
                   </div>
                 </div>
                 <div>
-                  <span>Màu:</span>
+                  <span>Type:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      value={color}
                       required
                       type="text"
+                      value={type}
                       className={cx("input")}
-                      onChange={(e) => setColor(e.target.value)}
+                      onChange={(e) => setType(e.target.value)}
                     />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
@@ -523,66 +490,19 @@ const ProductUpload = () => {
                         className={cx("label-char")}
                         style={{ "--index": 0 }}
                       >
-                        C
+                        T
                       </span>
                       <span
                         className={cx("label-char")}
                         style={{ "--index": 1 }}
                       >
-                        o
+                        y
                       </span>
                       <span
                         className={cx("label-char")}
                         style={{ "--index": 2 }}
                       >
-                        l
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 3 }}
-                      >
-                        o
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 4 }}
-                      >
-                        r
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              </Col>
-              <Col span={12} className={cx("col")}>
-                <div>
-                  <span>Kích thước:</span>
-                  <div className={cx("wave-group")}>
-                    <input
-                      value={size}
-                      required
-                      type="text"
-                      className={cx("input")}
-                      onChange={(e) => setSize(e.target.value)}
-                    />
-                    <span className={cx("bar")}></span>
-                    <label className={cx("label")}>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 0 }}
-                      >
-                        S
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 1 }}
-                      >
-                        i
-                      </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 2 }}
-                      >
-                        z
+                        p
                       </span>
                       <span
                         className={cx("label-char")}
@@ -594,55 +514,32 @@ const ProductUpload = () => {
                   </div>
                 </div>
                 <div>
-                  <span>Hình ảnh:</span>
-                  <br />
-                  <div
-                    style={{
-                      display: "flex",
-                      height: "80px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Button
-                      component="label"
-                      role={undefined}
-                      variant="contained"
-                      tabIndex={-1}
-                      startIcon={<CloudUploadIcon />}
-                      onClick={handleButtonClick}
-                    >
-                      Upload file
-                    </Button>
-                    <VisuallyHiddenInput
-                      id="fileInput"
-                      type="file"
-                      onChange={handleFileChange}
+                  <span>Mô tả:</span>
+                  <div style={{ width: "100%" }}>
+                    <textarea
+                      required
+                      type="text"
+                      style={{
+                        width: "100%",
+                        height: "150px",
+                        padding: "10px",
+                        marginTop: "5px",
+                      }}
+                      onChange={(e) => setDescription(e.target.value)}
+                      value={description}
                     />
-                    {uploadedImage && (
-                      <img
-                        src={URL.createObjectURL(uploadedImage)}
-                        alt="Uploaded"
-                        style={{
-                          width: 80,
-                          height: 80,
-                          opacity: 0.9,
-                          marginLeft: 20,
-                        }}
-                      />
-                    )}
                   </div>
                 </div>
               </Col>
             </Row>
-            <div className={cx("button")}>
-              <Button onClick={resetForm} variant="contained" color="secondary">
+            <div style={{ marginTop: "20px" }}>
+              <Button variant="outlined" onClick={resetForm}>
                 Reset
               </Button>
               <Button
-                type="submit"
                 variant="contained"
-                color="primary"
-                style={{ marginLeft: 10 }}
+                type="submit"
+                style={{ marginLeft: "10px" }}
               >
                 Upload
               </Button>
