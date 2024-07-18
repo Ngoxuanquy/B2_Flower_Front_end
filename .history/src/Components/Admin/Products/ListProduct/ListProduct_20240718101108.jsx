@@ -136,7 +136,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
     }
   };
   const [errorMessages, setErrorMessages] = useState({
-    name: "",
     price: "",
     quantity: "",
   });
@@ -164,16 +163,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
 
     // Kiểm tra giá và số lượng có hợp lệ không
     if (confirm && selectedProductId) {
-      if (
-        isProductNameDuplicate(updateProductData.name) ||
-        updateProductData.price < 0 ||
-        updateProductData.quantity < 0
-      ) {
+      if (updateProductData.price < 0 || updateProductData.quantity < 0) {
         setErrorMessages((prevErrors) => ({
           ...prevErrors,
-          name: isProductNameDuplicate(updateProductData.name)
-            ? "Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác."
-            : "",
           price:
             updateProductData.price < 0
               ? "Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
@@ -185,9 +177,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
         }));
 
         // Focus vào trường dữ liệu sai
-        if (isProductNameDuplicate(updateProductData.name)) {
-          nameInputRef.current.focus();
-        } else if (updateProductData.price < 0) {
+        if (updateProductData.price < 0) {
           priceInputRef.current.focus();
         } else if (updateProductData.quantity < 0) {
           quantityInputRef.current.focus();
@@ -195,7 +185,14 @@ const ListProduct = ({ apis, fetchProducts }) => {
 
         return;
       }
-
+      if (isProductNameDuplicate(updateProductData.name)) {
+        console.error("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.");
+        setErrorMessages((prevErrors) => ({
+          ...prevErrors,
+          name: "Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.",
+        }));
+        return;
+      }
       const result = await handleUpdateProduct(selectedProductId);
       if (result) {
         // Đóng dialog sau khi cập nhật thành công
@@ -493,15 +490,12 @@ const ListProduct = ({ apis, fetchProducts }) => {
           </DialogContentText>
           <TextField
             autoFocus
-            inputRef={nameInputRef}
             required
             margin="dense"
             id="name"
             label="Tên sản phẩm"
             type="text"
             fullWidth
-            error={!!errorMessages.name}
-            helperText={errorMessages.name}
             value={updateProductData.name}
             onChange={handleChangeUpdateProductData}
           />
