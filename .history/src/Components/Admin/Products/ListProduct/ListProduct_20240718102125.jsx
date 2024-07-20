@@ -425,7 +425,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td style={{ color: "red" }}>10%</td>
                     <td>
                       <div className={cx("actions")}>
-                        {(roles.includes("EDIT") ||
+                        {(roles.includes("UPDATE") ||
                           roles.includes("ADMIN")) && (
                           <Button
                             className={cx("success")}

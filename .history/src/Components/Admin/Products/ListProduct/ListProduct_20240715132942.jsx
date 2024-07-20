@@ -48,7 +48,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
   const [openUpdateProduct, setOpenUpdateProduct] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
-  const nameInputRef = useRef(null);
   const priceInputRef = useRef(null);
   const quantityInputRef = useRef(null);
 
@@ -136,17 +135,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
     }
   };
   const [errorMessages, setErrorMessages] = useState({
-    name: "",
     price: "",
     quantity: "",
   });
-  const isProductNameDuplicate = (name) => {
-    return api.some(
-      (item) =>
-        item.product_name.toLowerCase() === name.toLowerCase() &&
-        item._id !== selectedProductId
-    );
-  };
   const handleOpenUpdate = async (confirm) => {
     // Kiểm tra các trường dữ liệu không được để trống
     if (
@@ -164,16 +155,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
 
     // Kiểm tra giá và số lượng có hợp lệ không
     if (confirm && selectedProductId) {
-      if (
-        isProductNameDuplicate(updateProductData.name) ||
-        updateProductData.price < 0 ||
-        updateProductData.quantity < 0
-      ) {
+      if (updateProductData.price < 0 || updateProductData.quantity < 0) {
         setErrorMessages((prevErrors) => ({
           ...prevErrors,
-          name: isProductNameDuplicate(updateProductData.name)
-            ? "Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác."
-            : "",
           price:
             updateProductData.price < 0
               ? "Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
@@ -185,9 +169,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
         }));
 
         // Focus vào trường dữ liệu sai
-        if (isProductNameDuplicate(updateProductData.name)) {
-          nameInputRef.current.focus();
-        } else if (updateProductData.price < 0) {
+        if (updateProductData.price < 0) {
           priceInputRef.current.focus();
         } else if (updateProductData.quantity < 0) {
           quantityInputRef.current.focus();
@@ -421,11 +403,10 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     </td>
                     <td>{item.product_attributes.size}</td>
                     <td>{item.product_attributes.color}</td>
-                    <td>{item.product_type}</td>
                     <td style={{ color: "red" }}>10%</td>
                     <td>
                       <div className={cx("actions")}>
-                        {(roles.includes("EDIT") ||
+                        {(roles.includes("UPDATE") ||
                           roles.includes("ADMIN")) && (
                           <Button
                             className={cx("success")}
@@ -493,15 +474,12 @@ const ListProduct = ({ apis, fetchProducts }) => {
           </DialogContentText>
           <TextField
             autoFocus
-            inputRef={nameInputRef}
             required
             margin="dense"
             id="name"
             label="Tên sản phẩm"
             type="text"
             fullWidth
-            error={!!errorMessages.name}
-            helperText={errorMessages.name}
             value={updateProductData.name}
             onChange={handleChangeUpdateProductData}
           />

@@ -425,7 +425,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td style={{ color: "red" }}>10%</td>
                     <td>
                       <div className={cx("actions")}>
-                        {(roles.includes("EDIT") ||
+                        {(roles.includes("UPDATE") ||
                           roles.includes("ADMIN")) && (
                           <Button
                             className={cx("success")}
@@ -501,7 +501,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
             type="text"
             fullWidth
             error={!!errorMessages.name}
-            helperText={errorMessages.name}
             value={updateProductData.name}
             onChange={handleChangeUpdateProductData}
           />

@@ -38,7 +38,6 @@ const ProductUpload = () => {
   const [nameError, setNameError] = useState("");
   const [priceError, setPriceError] = useState("");
   const [quantityError, setQuantityError] = useState("");
-  const nameInputRef = useRef(null);
   const priceInputRef = useRef(null);
   const quantityInputRef = useRef(null);
   const [apiProducts, setApiProduct] = useState([]);
@@ -110,16 +109,13 @@ const ProductUpload = () => {
       (product) => product.product_name.toLowerCase() === name.toLowerCase()
     );
     if (isDuplicateName) {
-      setNameError("*Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác!");
+      setNameError("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác!");
       valid = false;
-      nameInputRef.current.focus();
     } else {
       setNameError("");
     }
     if (Number(price) < 0) {
-      setPriceError(
-        "*Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
-      );
+      setPriceError("Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
       priceInputRef.current.focus();
       valid = false;
     } else {
@@ -127,7 +123,7 @@ const ProductUpload = () => {
     }
     if (Number(quantity) < 0) {
       setQuantityError(
-        "*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
+        "Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
       );
       quantityInputRef.current.focus();
       valid = false;
@@ -228,7 +224,6 @@ const ProductUpload = () => {
                   <span>Tên sản phẩm:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      ref={nameInputRef}
                       value={name}
                       required
                       type="text"
@@ -595,56 +590,31 @@ const ProductUpload = () => {
                 </div>
                 <div>
                   <span>Hình ảnh:</span>
-                  <br />
-                  <div
-                    style={{
-                      display: "flex",
-                      height: "80px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Button
-                      component="label"
-                      role={undefined}
-                      variant="contained"
-                      tabIndex={-1}
-                      startIcon={<CloudUploadIcon />}
-                      onClick={handleButtonClick}
-                    >
-                      Upload file
-                    </Button>
-                    <VisuallyHiddenInput
+                  <div className={cx("wave-group")}>
+                    <input
                       id="fileInput"
                       type="file"
+                      style={{ display: "none" }}
                       onChange={handleFileChange}
                     />
-                    {uploadedImage && (
-                      <img
-                        src={URL.createObjectURL(uploadedImage)}
-                        alt="Uploaded"
-                        style={{
-                          width: 80,
-                          height: 80,
-                          opacity: 0.9,
-                          marginLeft: 20,
-                        }}
-                      />
-                    )}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleButtonClick}
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Upload Image
+                    </Button>
                   </div>
                 </div>
               </Col>
             </Row>
             <div className={cx("button")}>
+              <Button type="submit" variant="contained" color="primary">
+                Submit
+              </Button>
               <Button onClick={resetForm} variant="contained" color="secondary">
                 Reset
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{ marginLeft: 10 }}
-              >
-                Upload
               </Button>
             </div>
           </form>

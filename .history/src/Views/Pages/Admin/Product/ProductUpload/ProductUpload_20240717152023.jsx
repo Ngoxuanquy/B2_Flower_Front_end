@@ -38,7 +38,7 @@ const ProductUpload = () => {
   const [nameError, setNameError] = useState("");
   const [priceError, setPriceError] = useState("");
   const [quantityError, setQuantityError] = useState("");
-  const nameInputRef = useRef(null);
+  nameInputRef = useRef(null);
   const priceInputRef = useRef(null);
   const quantityInputRef = useRef(null);
   const [apiProducts, setApiProduct] = useState([]);
@@ -228,7 +228,6 @@ const ProductUpload = () => {
                   <span>Tên sản phẩm:</span>
                   <div className={cx("wave-group")}>
                     <input
-                      ref={nameInputRef}
                       value={name}
                       required
                       type="text"
@@ -644,7 +643,7 @@ const ProductUpload = () => {
                 color="primary"
                 style={{ marginLeft: 10 }}
               >
-                Upload
+                Submit
               </Button>
             </div>
           </form>
