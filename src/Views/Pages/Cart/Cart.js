@@ -483,7 +483,7 @@ const Cart = () => {
           amount:
             valueDiscount === 0
               ? Number(tong + Number(phiShip))
-              : Number(isDiscounted).toFixed(3),
+              : parseFloat(isDiscounted.replace(/\./g, "")),
           email: name,
           MaDonHang: MaDonHang,
         },
@@ -518,7 +518,7 @@ const Cart = () => {
           total_amounts:
             valueDiscount === 0
               ? Number(tong + Number(phiShip))
-              : Number(isDiscounted).toFixed(3),
+              : parseFloat(isDiscounted.replace(/\./g, "")),
         },
         cleanedJwtString,
         cleanId,
@@ -530,18 +530,6 @@ const Cart = () => {
           cleanId,
           "/cart/updateTransaciton"
         ).then(() => {
-          setIsLoad(false);
-          getApi();
-
-          setCurrent(2);
-          setIsLoad(false);
-          EventRegister.emit("chaneLength", orders.length);
-          updateQuantity();
-
-          messageApi.open({
-            type: "success",
-            content: "Đặt hàng thành công!!!",
-          });
           const token = Cookies.get("accessToken");
           const id = Cookies.get("id");
           const cleanedJwtString = token?.replace(/"/g, "");
@@ -551,7 +539,7 @@ const Cart = () => {
               userId: cleanId,
               moneys: -(valueDiscount === 0
                 ? Number(tong + Number(phiShip))
-                : Number(isDiscounted).toFixed(3)),
+                : parseFloat(isDiscounted.replace(/\./g, ""))),
             },
             cleanedJwtString,
             cleanId,
@@ -564,6 +552,18 @@ const Cart = () => {
               return;
             })
             .catch((err) => console.log({ err }));
+          setIsLoad(false);
+          getApi();
+
+          setCurrent(2);
+          setIsLoad(false);
+          EventRegister.emit("chaneLength", orders.length);
+          updateQuantity();
+
+          messageApi.open({
+            type: "success",
+            content: "Đặt hàng thành công!!!",
+          });
         });
       });
     }
@@ -1134,7 +1134,7 @@ const Cart = () => {
               >
                 Ví 2Be Flower
               </div>
-              <div>{Number(moneys) / 1000} đ</div>
+              <div>{moneys.toLocaleString()} đ</div>
             </div>
             <div className={cx("tamtinh")}>
               <div>Tạm tính</div>

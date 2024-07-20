@@ -31,19 +31,38 @@ const ResertPassword = () => {
     const name = Cookies.get("name");
     const cleanedName = name?.replace(/"/g, "");
 
+    if (!cleanedName || !currentPassword || !newPassword || !confirmPassword) {
+      messageApi.open({
+        type: "error",
+        content: "All fields are required.",
+      });
+      return;
+    }
+
     if (newPassword.length < 6) {
       messageApi.open({
         type: "error",
         content: "New password must be at least 6 characters long.",
       });
       return;
-    } else if (newPassword === confirmPassword) {
+    }
+
+    if (newPassword === currentPassword) {
       messageApi.open({
         type: "error",
         content: "New password must be different from the current password.",
       });
       return;
     }
+
+    if (newPassword !== confirmPassword) {
+      messageApi.open({
+        type: "error",
+        content: "New password and confirm password do not match.",
+      });
+      return;
+    }
+
     Call_Post_Api(
       {
         email: cleanedName,

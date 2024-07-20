@@ -16,7 +16,14 @@ function ForgotPassword(props) {
     setInputEmail(event.target.value);
   };
 
-  const handelSubmitEmail = () => {
+  const handleSubmitEmail = () => {
+    if (inputEmail === null || inputEmail.trim() === "") {
+      return messageApi.open({
+        type: "warning",
+        content: "Vui lòng nhập email",
+      });
+    }
+
     Call_Post_Api(
       {
         email: inputEmail,
@@ -24,20 +31,28 @@ function ForgotPassword(props) {
       null,
       null,
       "/shop/forgot_password"
-    ).then((data) => {
-      console.log(data);
-      if (data.metadata.msg === "Gmail không tồn tại!!") {
+    )
+      .then((data) => {
+        console.log(data);
+        if (data.metadata.msg === "Gmail không tồn tại!!") {
+          messageApi.open({
+            type: "warning",
+            content: data.metadata.msg,
+          });
+        } else {
+          messageApi.open({
+            type: "success",
+            content: "Check email để lấy lại mật khẩu",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
         messageApi.open({
-          type: "warning",
-          content: data.metadata.msg,
+          type: "error",
+          content: "Đã xảy ra lỗi khi gửi yêu cầu. Vui lòng thử lại sau.",
         });
-      } else {
-        messageApi.open({
-          type: "success",
-          content: "Check email để lấy lại mật khẩu",
-        });
-      }
-    });
+      });
   };
 
   return (
@@ -79,7 +94,10 @@ function ForgotPassword(props) {
             <div className={cx("all")}>
               <div className={cx("left")}>
                 <div className={cx("login")}>Quên mật khẩu</div>
-                <div className={cx("titer")}>By logging in you agree to the ridiculously long terms that you didn't bother to read</div>
+                <div className={cx("titer")}>
+                  By logging in you agree to the ridiculously long terms that
+                  you didn't bother to read
+                </div>
                 <div className={cx("taikhoan")}>
                   Đột nhiên nhớ mật khẩu ?
                   <Link to={"/login"}>
@@ -103,7 +121,7 @@ function ForgotPassword(props) {
                     marginTop: "20px",
                   }}
                 >
-                  <Button onClick={handelSubmitEmail}>Gửi</Button>
+                  <Button onClick={handleSubmitEmail}>Gửi</Button>
                 </div>
               </div>
             </div>
