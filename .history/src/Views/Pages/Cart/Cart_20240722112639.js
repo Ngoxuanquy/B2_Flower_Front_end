@@ -986,11 +986,7 @@ const Cart = () => {
 
   useEffect(() => {
     const total = checkedList.reduce(
-      (acc, current) =>
-        acc +
-        current.product_price *
-          (1 - current.product_discount / 100) *
-          current.quantity,
+      (acc, current) => acc + current.product_price * current.quantity,
       0
     );
     setTong(total);

@@ -28,7 +28,6 @@ const ProductList = () => {
   const fetchProducts = () => {
     Call_Post_Api(null, null, null, "/product/getAll")
       .then((data) => {
-        const products = data.metadata;
         setApiProduct(data.metadata);
         setTotalProducts(data.metadata.length);
         const uniqueCategories = new Set(

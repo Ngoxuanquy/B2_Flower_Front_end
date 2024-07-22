@@ -84,8 +84,27 @@
               font-weight: 500;
               margin-bottom: 0px;
             }
+            p {
+              font-size: 13px;
+              line-height: 18px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              margin-bottom: 0;
+              color: #5e5d72;
+            }
           }
         }
+        // .role {
+        //   display: flex;
+        //   align-items: center;
+        //   justify-content: center;
+        //   gap: 4px;
+        //   svg {
+        //     font-size: 20px;
+        //     color: #be0ee1;
+        //   }
+        // }
         .status {
           background: #bdf5d3;
           color: #187d44;

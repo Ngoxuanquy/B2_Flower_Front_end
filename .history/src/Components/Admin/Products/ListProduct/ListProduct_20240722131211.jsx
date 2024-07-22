@@ -351,10 +351,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
     (currentPage - 1) * selectShow,
     currentPage * selectShow
   );
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN");
-  };
+
   return (
     <div className={cx("container")}>
       <h4 className={cx("titleRegistered")}>Products List</h4>
@@ -431,9 +428,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                             className="w-100"
                           />
                         </div>
-                        <div className={cx("info")}>
-                          <h6>{item.product_name}</h6>
-                        </div>
+                        <p>{item.product_name}</p>
                       </div>
                     </td>
 
@@ -458,7 +453,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td style={{ color: "red" }}>
                       {item.product_discount ?? 0}%
                     </td>
-                    <td>{formatDate(item.createdAt)}</td>
+                    <td>{item.createdAt}</td>
                     <td>
                       <div className={cx("actions")}>
                         {(roles.includes("EDIT") ||
@@ -576,7 +571,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             type="text"
             fullWidth
             disabled
-            hidden
+            // hidden
             value={uploadedImage || ""}
           />
           <div
@@ -636,7 +631,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
           <TextField
             margin="dense"
             id="discount"
-            label="Giảm giá(%)"
+            label="Giảm giá"
             type="number"
             fullWidth
             value={updateProductData.discount}

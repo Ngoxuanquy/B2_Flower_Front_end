@@ -351,10 +351,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
     (currentPage - 1) * selectShow,
     currentPage * selectShow
   );
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN");
-  };
+
   return (
     <div className={cx("container")}>
       <h4 className={cx("titleRegistered")}>Products List</h4>
@@ -406,13 +403,13 @@ const ListProduct = ({ apis, fetchProducts }) => {
             <tr>
               <th>UID</th>
               <th>NAME</th>
+              <th>Create At</th>
               <th>PRICE</th>
               <th>STOCK</th>
               <th>SIZE</th>
               <th>COLOR</th>
               <th>CATEGORY</th>
               <th>DISCOUNT</th>
-              <th>Create At</th>
               <th>ACTION</th>
             </tr>
           </thead>
@@ -431,12 +428,10 @@ const ListProduct = ({ apis, fetchProducts }) => {
                             className="w-100"
                           />
                         </div>
-                        <div className={cx("info")}>
-                          <h6>{item.product_name}</h6>
-                        </div>
+                        <p>{item.product_name}</p>
                       </div>
                     </td>
-
+                    <td>{item.product_ratingsAverage}</td>
                     <td>
                       {item.product_discount > 0 && (
                         <del className={cx("old")}>
@@ -458,7 +453,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td style={{ color: "red" }}>
                       {item.product_discount ?? 0}%
                     </td>
-                    <td>{formatDate(item.createdAt)}</td>
                     <td>
                       <div className={cx("actions")}>
                         {(roles.includes("EDIT") ||
@@ -576,7 +570,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             type="text"
             fullWidth
             disabled
-            hidden
+            // hidden
             value={uploadedImage || ""}
           />
           <div
@@ -636,7 +630,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
           <TextField
             margin="dense"
             id="discount"
-            label="Giảm giá(%)"
+            label="Giảm giá"
             type="number"
             fullWidth
             value={updateProductData.discount}

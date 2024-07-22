@@ -353,7 +353,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
   );
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN");
+    return date.toLocaleDateString("vi-VN"); // Định dạng ngày theo chuẩn VN (dd/mm/yyyy)
   };
   return (
     <div className={cx("container")}>
@@ -432,7 +432,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
                           />
                         </div>
                         <div className={cx("info")}>
-                          <h6>{item.product_name}</h6>
+                          <h6p>{item.product_name}</h6p>
                         </div>
                       </div>
                     </td>
@@ -576,7 +576,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             type="text"
             fullWidth
             disabled
-            hidden
+            // hidden
             value={uploadedImage || ""}
           />
           <div
@@ -636,7 +636,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
           <TextField
             margin="dense"
             id="discount"
-            label="Giảm giá(%)"
+            label="Giảm giá"
             type="number"
             fullWidth
             value={updateProductData.discount}

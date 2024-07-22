@@ -353,7 +353,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
   );
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN");
+    return date.toLocaleDateString("vi-VN"); // Định dạng ngày theo chuẩn VN (dd/mm/yyyy)
   };
   return (
     <div className={cx("container")}>
@@ -576,7 +576,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             type="text"
             fullWidth
             disabled
-            hidden
+            // hidden
             value={uploadedImage || ""}
           />
           <div
