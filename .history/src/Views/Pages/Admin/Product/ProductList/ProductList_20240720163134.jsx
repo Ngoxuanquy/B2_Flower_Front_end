@@ -31,7 +31,6 @@ const ProductList = () => {
         const products = data.metadata;
         setApiProduct(data.metadata);
         setTotalProducts(data.metadata.length);
-
         const uniqueCategories = new Set(
           products.map((product) => product.product_type)
         );

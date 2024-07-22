@@ -132,12 +132,7 @@
         }
       }
     }
-    .loading-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 200px; /* Adjust height as needed */
-    }
+
     .page {
       display: flex;
       justify-content: center;
@@ -151,4 +146,10 @@
       }
     }
   }
+}
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust height as needed */
 }

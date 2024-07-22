@@ -31,7 +31,6 @@ const ProductList = () => {
         const products = data.metadata;
         setApiProduct(data.metadata);
         setTotalProducts(data.metadata.length);
-
         const uniqueCategories = new Set(
           products.map((product) => product.product_type)
         );
@@ -60,7 +59,7 @@ const ProductList = () => {
           />
           <FloatCard
             number={totalCategories}
-            text="Total_categories"
+            text="Total Categories"
             backgroundColor="linear-gradient(#4eda89, #1a9f53)"
             icon={<AiFillProduct />}
             iconColor="#89ecb3"

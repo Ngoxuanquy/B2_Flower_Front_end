@@ -23,19 +23,12 @@ const ProductList = () => {
 
   const [apiproducts, setApiProduct] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0);
-  const [totalCategories, setTotalCategories] = useState(0);
 
   const fetchProducts = () => {
     Call_Post_Api(null, null, null, "/product/getAll")
       .then((data) => {
-        const products = data.metadata;
         setApiProduct(data.metadata);
         setTotalProducts(data.metadata.length);
-
-        const uniqueCategories = new Set(
-          products.map((product) => product.product_type)
-        );
-        setTotalCategories(uniqueCategories.size);
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
@@ -59,7 +52,7 @@ const ProductList = () => {
             iconColor="#96cefa"
           />
           <FloatCard
-            number={totalCategories}
+            number="605"
             text="Total_categories"
             backgroundColor="linear-gradient(#4eda89, #1a9f53)"
             icon={<AiFillProduct />}
