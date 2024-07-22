@@ -31,7 +31,6 @@ const Sidebar = () => {
     navigate();
   };
 
-  
   const handleDiscount = (primary) => {
     setActiveItem("Discount");
     navigate("/admin/discount");
@@ -55,7 +54,13 @@ const Sidebar = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/shop/get_roles/${cleanId}`, "GET")
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/shop/get_roles/${cleanId}`,
+      "GET"
+    )
       .then((data) => {
         setRoles(data.metadata);
         console.log(data);
@@ -92,7 +97,7 @@ const Sidebar = () => {
           icon={<AiFillProduct />}
           primary="Products"
           subItems={
-            (roles.includes("CREATE") || roles.includes("ADMIN"))
+            roles.includes("CREATE") || roles.includes("ADMIN")
               ? ["Product List", "Product Upload"]
               : ["Product List"]
           }
@@ -114,7 +119,7 @@ const Sidebar = () => {
         />
       )}
 
-      {roles.includes("ADMIN") && (
+      {(roles.includes("ADMIN") || roles.includes("DISCOUNT")) && (
         <SideBarItem
           icon={<FaCircleUser />}
           primary="User"
@@ -147,7 +152,12 @@ const Sidebar = () => {
       )}
 
       {roles.includes("ADMIN") && (
-        <SideBarItem icon={<FaBell />} primary="Notification" onItemClick={handleItemClick} isOpen={openItem === "Notification"} />
+        <SideBarItem
+          icon={<FaBell />}
+          primary="Notification"
+          onItemClick={handleItemClick}
+          isOpen={openItem === "Notification"}
+        />
       )}
 
       {roles.includes("ADMIN") && (
@@ -169,7 +179,8 @@ const Sidebar = () => {
               cookies.forEach((cookie) => {
                 const eqPos = cookie.indexOf("=");
                 const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie =
+                  name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
               });
               navigate("/login");
             }}

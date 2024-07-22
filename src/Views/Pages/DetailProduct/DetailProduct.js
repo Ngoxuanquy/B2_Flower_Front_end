@@ -36,10 +36,12 @@ function DetailProduct() {
   const [valueRate, setValueRate] = useState(3);
 
   useEffect(() => {
-    Call_Post_Api(null, null, null, `/product/byId/${productId}`).then((data) => {
-      setProduct(data.metadata);
-      setIsLoad(false);
-    });
+    Call_Post_Api(null, null, null, `/product/byId/${productId}`).then(
+      (data) => {
+        setProduct(data.metadata);
+        setIsLoad(false);
+      }
+    );
   }, []);
 
   const settings = {
@@ -64,9 +66,12 @@ function DetailProduct() {
             fontSize: "17px",
           }}
         >
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-          enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat.'
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat.'
           <div
             style={{
               marginLeft: "20px",
@@ -79,8 +84,9 @@ function DetailProduct() {
             <li>Inventory Management with Backordered items</li>
           </div>
           <div>
-            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat.
+            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat.
           </div>
         </div>
       ),
@@ -90,9 +96,12 @@ function DetailProduct() {
       label: "Bình luận",
       children: (
         <div>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-          enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat.'
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat.'
           <div>
             <Input />
             <Button>Gửi</Button>
@@ -109,7 +118,14 @@ function DetailProduct() {
   ];
 
   const [value, setValue] = useState(1);
-  const handerCong = () => {
+  const handerCong = (product_quantity) => {
+    if (value >= product_quantity) {
+      return messageApi.open({
+        type: "warning",
+        content: "Sản phẩm đã lớn hơn hàng tồn kho!!!",
+      });
+    }
+
     setValue(value + 1);
   };
 
@@ -200,7 +216,12 @@ function DetailProduct() {
                 <i className={cx("name-product")}>{products.product_name}</i>
                 <div className={cx("star")}>
                   <Flex gap="middle" vertical>
-                    <Rate tooltips={desc} onChange={setValueRate} value={valueRate} style={{ fontSize: "24px" }} />
+                    <Rate
+                      tooltips={desc}
+                      onChange={setValueRate}
+                      value={valueRate}
+                      style={{ fontSize: "24px" }}
+                    />
                     {/* {value ? <span>{desc[valueRate - 1]}</span> : null} */}
                   </Flex>
                   <span>Be the first to review this product</span>
@@ -210,11 +231,15 @@ function DetailProduct() {
                     opacity: 0.4,
                   }}
                 />
-                <div className={cx("price-product")}>${products.product_price}</div>
+                <div className={cx("price-product")}>
+                  ${products.product_price}
+                </div>
                 <div className={cx("des-product")}>
-                  Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam,
-                  feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi
-                  vitae est. Mauris placerat eleifend leo
+                  Pellentesque habitant morbi tristique senectus et netus et
+                  malesuada fames ac turpis egestas. Vestibulum tortor quam,
+                  feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu
+                  libero sit amet quam egestas semper. Aenean ultricies mi vitae
+                  est. Mauris placerat eleifend leo
                 </div>
                 <div className={cx("AVAILABILITY")}>
                   AVAILABILITY:
@@ -222,6 +247,9 @@ function DetailProduct() {
                 </div>
                 <div className={cx("SKU")}>
                   SKU <span>AS555557</span>
+                </div>
+                <div className={cx("SKU")}>
+                  Số lượng : <span>{products.product_quantity}</span>
                 </div>
                 <hr
                   style={{
@@ -234,13 +262,21 @@ function DetailProduct() {
                   <div className={cx("Soluong")}>
                     <Button onClick={handerTru}>-</Button>
                     <Input value={value} />
-                    <Button onClick={handerCong}>+</Button>
+                    <Button
+                      onClick={() => handerCong(products.product_quantity)}
+                    >
+                      +
+                    </Button>
                   </div>
                   <button
                     className={cx("addtocart")}
                     onClick={() => handlerAddCart(products)}
                     disabled={products.product_quantity <= 0}
-                    title={products.product_quantity <= 0 ? "Product is out of stock" : "Add to cart"}
+                    title={
+                      products.product_quantity <= 0
+                        ? "Product is out of stock"
+                        : "Add to cart"
+                    }
                   >
                     {" "}
                     Add To Cart

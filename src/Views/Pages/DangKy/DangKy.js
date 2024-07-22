@@ -24,8 +24,13 @@ function DangKy() {
     return re.test(email);
   }
 
+  function isValidVietnamPhoneNumber(phoneNumber) {
+    const vietnamPhoneRegex = /^0\d{9,10}$/;
+    return vietnamPhoneRegex.test(phoneNumber);
+  }
+
   function handerSubmit() {
-    if (!email || !pass || !re_Pass) {
+    if (!email || !pass || !re_Pass || !number) {
       messageApi.open({
         type: "warning",
         content: "Vui lòng không để trống các trường!!!",
@@ -44,13 +49,19 @@ function DangKy() {
       });
       return;
     } else if (pass.length <= 6) {
-      // Corrected condition
       messageApi.open({
         type: "warning",
         content: "Mật khẩu phải dài hơn 6 kí tự",
       });
       return;
+    } else if (!isValidVietnamPhoneNumber(number)) {
+      messageApi.open({
+        type: "warning",
+        content: "Sai định dạng số điện thoại",
+      });
+      return;
     }
+
     setIsLoad(true);
     const requestOptions = {
       method: "POST",
@@ -64,7 +75,6 @@ function DangKy() {
       }),
     };
 
-    // Lấy dữ liệu của khách hàng
     fetch(URL + "/shop/signup", requestOptions)
       .then((data) => data.json())
       .then((data) => {
@@ -75,20 +85,18 @@ function DangKy() {
           data.metadata.msg === "Email đã được đăng ký!!" ||
           data.metadata.msg === "Email không tồn tại!!"
         ) {
-          // window.location = '/login';
           messageApi.open({
             type: "warning",
             content: data.metadata.msg,
           });
         } else {
           setShowModal(true);
-          return;
         }
       });
   }
 
   const handleOkButtonClick = () => {
-    if (otp.length === 6) {
+    if (otp && otp.length === 6) {
       const requestOptions = {
         method: "POST",
         headers: {
@@ -102,7 +110,6 @@ function DangKy() {
         }),
       };
 
-      // Lấy dữ liệu của khách hàng
       fetch(URL + "/shop/verifile", requestOptions)
         .then((data) => data.json())
         .then((data) => {
@@ -112,10 +119,18 @@ function DangKy() {
               content: "Đăng ký thành công!!!",
             });
             window.location = "/login";
+          } else {
+            messageApi.open({
+              type: "error",
+              content: "Xác thực thất bại. Vui lòng thử lại.",
+            });
           }
         });
     } else {
-      console.log("Mã OTP không hợp lệ");
+      messageApi.open({
+        type: "error",
+        content: "Mã OTP không hợp lệ",
+      });
     }
   };
 

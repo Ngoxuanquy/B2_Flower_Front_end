@@ -21,7 +21,7 @@ const RegisteredUsers = ({ apis }) => {
   const [users, setUsers] = useState([]);
   const [name, setName] = useState("");
   const [detailApi, setDetailApi] = useState(null);
-  const [api, setApi] = useState(apis);
+  const [api, setApi] = useState(apis || []);
 
   const [email, setEmail] = useState("");
   const [roles, setRoles] = useState([]);
@@ -52,9 +52,10 @@ const RegisteredUsers = ({ apis }) => {
     { value: "READ", label: "READ" },
     { value: "EDIT", label: "EDIT" },
     { value: "DELETE", label: "DELETE" },
+    { value: "DISCOUNT", label: "DISCOUNT" },
   ];
 
-  const optionUser = api.map((user) => ({
+  const optionUser = api?.map((user) => ({
     label: user.email,
     value: user.email,
   }));

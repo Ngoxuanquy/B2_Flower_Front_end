@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { Backgroug } from "../../../Components";
 import classNames from "classnames/bind";
 import styles from "./ForgotPassword.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 function ForgotPassword(props) {
   const cx = classNames.bind(styles);
   const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
 
   const [inputEmail, setInputEmail] = useState("");
   const [isLoad, setIsLoad] = useState(false);
@@ -17,10 +18,19 @@ function ForgotPassword(props) {
   };
 
   const handleSubmitEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (inputEmail === null || inputEmail.trim() === "") {
       return messageApi.open({
         type: "warning",
         content: "Vui lòng nhập email",
+      });
+    }
+
+    if (!emailRegex.test(inputEmail)) {
+      return messageApi.open({
+        type: "warning",
+        content: "Email không đúng định dạng",
       });
     }
 
@@ -34,7 +44,10 @@ function ForgotPassword(props) {
     )
       .then((data) => {
         console.log(data);
-        if (data.metadata.msg === "Gmail không tồn tại!!") {
+        if (
+          data.metadata.msg === "Gmail không tồn tại!!" ||
+          data.metadata.msg === "Gmail chưa được đăng ký!!"
+        ) {
           messageApi.open({
             type: "warning",
             content: data.metadata.msg,
@@ -44,6 +57,7 @@ function ForgotPassword(props) {
             type: "success",
             content: "Check email để lấy lại mật khẩu",
           });
+          navigate("/information");
         }
       })
       .catch((error) => {

@@ -717,6 +717,9 @@ const Information = () => {
                                 <h2 style={{ fontSize: "1.5rem", margin: "0" }}>
                                   Đơn hàng {index + 1}
                                 </h2>
+                                <h6>
+                                  {order.total_amounts.toLocaleString()} đ
+                                </h6>
                                 {order.notifications === "Đã thanh toán" ||
                                 order.notifications ===
                                   "Thanh toán qua Ví 2Be Flower" ? (
