@@ -40,7 +40,7 @@ const VisuallyHiddenInput = styled("input")({
 });
 const ListProduct = ({ apis, fetchProducts }) => {
   const [api, setApi] = useState([]);
-  const [selectShow, setSelectShow] = useState(10);
+  const [selectShow, setSelectShow] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,21 +48,14 @@ const ListProduct = ({ apis, fetchProducts }) => {
   const [openUpdateProduct, setOpenUpdateProduct] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [categories, setCategories] = useState([]);
   const nameInputRef = useRef(null);
   const priceInputRef = useRef(null);
   const quantityInputRef = useRef(null);
 
-  const totalPages = Math.ceil(api.length / selectShow);
-  console.log(apis);
   useEffect(() => {
     if (apis && Array.isArray(apis)) {
       setApi(apis);
       setLoading(false);
-      const allCategories = apis.map((product) => product.product_type);
-      const uniqueCategories = [...new Set(allCategories)];
-      setCategories(uniqueCategories);
     }
   }, [apis]);
   useEffect(() => {
@@ -224,11 +217,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
   }, [errorMessages]);
   const handleChangeSelectShow = (event) => {
     setSelectShow(event.target.value);
-    setCurrentPage(1);
   };
   const handleChangeSelectCategory = (event) => {
     setSelectCategory(event.target.value);
-    setCurrentPage(1);
   };
 
   const [updateProductData, setUpdateProductData] = useState({
@@ -344,17 +335,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
   const handleButtonClick = () => {
     document.getElementById("fileInput").click();
   };
-  const filteredProducts = api.filter((product) =>
-    selectCategory ? product.product_type === selectCategory : true
-  );
-  const productsToDisplay = filteredProducts.slice(
-    (currentPage - 1) * selectShow,
-    currentPage * selectShow
-  );
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN");
-  };
+
   return (
     <div className={cx("container")}>
       <h4 className={cx("titleRegistered")}>Products List</h4>
@@ -391,11 +372,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {categories.map((category, index) => (
-                <MenuItem key={index} value={category}>
-                  {category}
-                </MenuItem>
-              ))}
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -406,19 +385,19 @@ const ListProduct = ({ apis, fetchProducts }) => {
             <tr>
               <th>UID</th>
               <th>NAME</th>
+              <th>RATING</th>
               <th>PRICE</th>
               <th>STOCK</th>
               <th>SIZE</th>
               <th>COLOR</th>
               <th>CATEGORY</th>
               <th>DISCOUNT</th>
-              <th>Create At</th>
               <th>ACTION</th>
             </tr>
           </thead>
           {!loading && (
             <tbody>
-              {productsToDisplay?.map((item, index) => (
+              {api?.map((item, index) => (
                 <React.Fragment key={item._id}>
                   <tr>
                     <td>#{index + 1}</td>
@@ -431,12 +410,10 @@ const ListProduct = ({ apis, fetchProducts }) => {
                             className="w-100"
                           />
                         </div>
-                        <div className={cx("info")}>
-                          <h6>{item.product_name}</h6>
-                        </div>
+                        <p>{item.product_name}</p>
                       </div>
                     </td>
-
+                    <td>{item.product_ratingsAverage}</td>
                     <td>
                       {item.product_discount > 0 && (
                         <del className={cx("old")}>
@@ -449,6 +426,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
                         )}
                       </span>
                     </td>
+                    <td style={{ color: "red" }}>
+                      {item.product_discount || 0}%
+                    </td>
                     <td>
                       <span>{item.product_quantity}</span>
                     </td>
@@ -458,7 +438,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td style={{ color: "red" }}>
                       {item.product_discount ?? 0}%
                     </td>
-                    <td>{formatDate(item.createdAt)}</td>
                     <td>
                       <div className={cx("actions")}>
                         {(roles.includes("EDIT") ||
@@ -502,11 +481,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
           </div>
         )}
         <div className={cx("page")}>
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={(event, value) => setCurrentPage(value)}
-          />
+          <Pagination count={10} />
         </div>
       </div>
       <Dialog open={openDelete} onClose={() => handleClose(false)}>
@@ -576,7 +551,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
             type="text"
             fullWidth
             disabled
-            hidden
+            // hidden
             value={uploadedImage || ""}
           />
           <div
@@ -636,7 +611,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
           <TextField
             margin="dense"
             id="discount"
-            label="Giảm giá(%)"
+            label="Giảm giá"
             type="number"
             fullWidth
             value={updateProductData.discount}

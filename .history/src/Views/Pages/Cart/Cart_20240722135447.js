@@ -988,8 +988,7 @@ const Cart = () => {
     const total = checkedList.reduce(
       (acc, current) =>
         acc +
-        current.product_price *
-          (1 - current.product_discount / 100) *
+        current.product_price(1 - current.product_discount / 100) *
           current.quantity,
       0
     );
