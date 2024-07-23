@@ -53,6 +53,7 @@ const RegisteredUsers = ({ apis }) => {
     { value: "EDIT", label: "EDIT" },
     { value: "DELETE", label: "DELETE" },
     { value: "DISCOUNT", label: "DISCOUNT" },
+    { value: "DESTROYFLOWERS", label: "Destroy Flowers" },
   ];
 
   const optionUser = api?.map((user) => ({
@@ -68,11 +69,7 @@ const RegisteredUsers = ({ apis }) => {
         setUsers([]);
       } else {
         // Nếu chưa chọn tất cả, chọn tất cả
-        setUsers(
-          optionUser
-            .map((option) => option.value)
-            .filter((value) => value !== "select_all")
-        );
+        setUsers(optionUser.map((option) => option.value).filter((value) => value !== "select_all"));
       }
     } else {
       // Cập nhật roles mà không bao gồm "Select All"
@@ -80,9 +77,7 @@ const RegisteredUsers = ({ apis }) => {
     }
   };
 
-  const filteredOptions = optionUser.filter(
-    (option) => option.value !== "select_all"
-  );
+  const filteredOptions = optionUser.filter((option) => option.value !== "select_all");
 
   useEffect(() => {
     setApi(apis);
@@ -233,8 +228,7 @@ const RegisteredUsers = ({ apis }) => {
   };
 
   function getRandomString(length) {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let result = "";
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
@@ -278,11 +272,7 @@ const RegisteredUsers = ({ apis }) => {
           </div>
         </div>
       </Modal>
-      <Modal
-        open={isModalOpenDiscount}
-        onOk={handleDiscountOk}
-        onCancel={handleDiscountCancel}
-      >
+      <Modal open={isModalOpenDiscount} onOk={handleDiscountOk} onCancel={handleDiscountCancel}>
         <div>
           <h4>Mã khuyến mãi</h4>
           <div
@@ -380,10 +370,7 @@ const RegisteredUsers = ({ apis }) => {
       >
         <div className={cx("select_by")}>
           <div className="col-md-3">
-            <FormControl
-              sx={{ m: 1, minWidth: 120, width: "100%" }}
-              size="small"
-            >
+            <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
               <InputLabel id="demo-select-small-label">Show by</InputLabel>
               <Select
                 labelId="demo-select-small-label"
@@ -402,10 +389,7 @@ const RegisteredUsers = ({ apis }) => {
             </FormControl>
           </div>
           <div className="col-md-3 " style={{ marginLeft: "10px" }}>
-            <FormControl
-              sx={{ m: 1, minWidth: 120, width: "100%" }}
-              size="small"
-            >
+            <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
               <InputLabel id="demo-select-small-label">Category by</InputLabel>
               <Select
                 labelId="demo-select-small-label"
@@ -449,10 +433,7 @@ const RegisteredUsers = ({ apis }) => {
                   <td>#{index + 1}</td>
                   <td>
                     <div className={cx("info-user")}>
-                      <img
-                        src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg"
-                        alt="avatar of user"
-                      />
+                      <img src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg" alt="avatar of user" />
                       <p>{api.name}</p>
                     </div>
                   </td>

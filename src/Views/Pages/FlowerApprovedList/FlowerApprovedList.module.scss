@@ -1,0 +1,70 @@
+// FlowerCancellationList.module.scss
+
+.container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 100px;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  thead {
+    background-color: #f3f3f3 !important;
+    color: #fff;
+    font-size: 16px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    font-size: 14px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  th {
+    font-weight: 600;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  tbody tr:hover {
+    background-color: #ddd;
+  }
+
+  img {
+    max-width: 100px;
+    max-height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+}
+
+.status.approved {
+  color: rgb(85, 151, 54);
+}

@@ -13,6 +13,7 @@ import {
   SelectProduct,
   Information,
   ForgotPassword,
+  CancelProduct,
 } from "../Views";
 import Admin from "../Views/Pages/Admin/Admin";
 import Chats from "../Views/Pages/Admin/Chats";
@@ -27,6 +28,8 @@ import OrdersSent from "../Views/Pages/Admin/OrdersSent/OrdersSent";
 import ShopIntroduce from "../Views/Pages/ShopIntroduce/ShopIntroduce";
 import Discounts from "../Views/Pages/Discounts/Discounts";
 import ResertPassword from "../Views/Pages/ResertPassword/ResertPassword";
+import FlowerCancellationList from "../Views/Pages/FlowerCancellationList/FlowerCancellationList";
+import FlowerApprovedList from "../Views/Pages/FlowerApprovedList/FlowerApprovedList";
 
 export const publicRoute = [
   { path: "/", component: <HomePage /> },
@@ -62,4 +65,7 @@ export const adminRoute = [
   { path: "/admin/listOrders", component: <Orders /> },
   { path: "/admin/đơn-đã-gửi", component: <OrdersSent /> },
   { path: "/admin/discount", component: <Discounts /> },
+  { path: "/admin/cancelProduct", component: <CancelProduct /> },
+  { path: "/admin/danh-sách-hủy-hoa", component: <FlowerCancellationList /> },
+  { path: "/admin/danh-danh-đã-duyệt", component: <FlowerApprovedList /> },
 ];

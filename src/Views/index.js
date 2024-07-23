@@ -13,3 +13,4 @@ export { default as ListKhachHang } from "./Pages/Seller/ListKhachHang/index";
 export { default as SelectProduct } from "./Pages/Seller/SelectProduct/index";
 export { default as Information } from "./Pages/Information/Information";
 export { default as ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
+export { default as CancelProduct } from "./Pages/CancelProduct/CancelProduct";

@@ -21,12 +21,7 @@ import { ClimbingBoxLoader } from "react-spinners";
 import { ModuleRegistry } from "@ag-grid-community/core";
 import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 // Register the required feature modules with the Grid
-ModuleRegistry.registerModules([
-  ClientSideRowModelModule,
-  RangeSelectionModule,
-  RowGroupingModule,
-  RichSelectModule,
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RangeSelectionModule, RowGroupingModule, RichSelectModule]);
 
 const cx = classNames.bind(styles);
 
@@ -129,13 +124,7 @@ function Index() {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/shop/get_roles/${cleanId}`,
-      "GET"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/shop/get_roles/${cleanId}`, "GET")
       .then((data) => {
         setRoles(data.metadata);
         console.log(data);
@@ -183,12 +172,10 @@ function Index() {
     };
 
     // Lấy dữ liệu của khách hàng
-    fetch(URL + "/product/publish/" + productId, requestOptions).then(
-      (data) => {
-        alert("Public thành công!!");
-        window.location.reload();
-      }
-    );
+    fetch(URL + "/product/publish/" + productId, requestOptions).then((data) => {
+      alert("Public thành công!!");
+      window.location.reload();
+    });
   };
 
   const handerUnPublic = (productId) => {
@@ -208,12 +195,10 @@ function Index() {
     };
 
     // Lấy dữ liệu của khách hàng
-    fetch(URL + "/product/unpublish/" + productId, requestOptions).then(
-      (data) => {
-        alert("Public thành công!!");
-        window.location.reload();
-      }
-    );
+    fetch(URL + "/product/unpublish/" + productId, requestOptions).then((data) => {
+      alert("Public thành công!!");
+      window.location.reload();
+    });
   };
 
   //Khai báo modal
@@ -276,11 +261,7 @@ function Index() {
       {
         field: "isPublished",
         enableRowGroup: true,
-        cellRendererParams: (params) => (
-          <button onClick={() => addToUnPublic(params.rowIndex)}>
-            Add to UnPublic
-          </button>
-        ),
+        cellRendererParams: (params) => <button onClick={() => addToUnPublic(params.rowIndex)}>Add to UnPublic</button>,
       },
     ],
     []
@@ -587,9 +568,6 @@ function Index() {
       const cleanedJwtString = token.replace(/^"|"$/g, "");
       const cleanId = id.replace(/^"|"$/g, "");
 
-      console.log(process.env.REACT_APP_API_KEY);
-      console.log(cleanedJwtString);
-      console.log(cleanId);
       // console.log(imgages)
 
       const requestOptions = {
@@ -615,10 +593,7 @@ function Index() {
         }),
       };
 
-      const response = await fetch(
-        URL + "/product/" + productId,
-        requestOptions
-      );
+      const response = await fetch(URL + "/product/" + productId, requestOptions);
 
       console.log(requestOptions);
 
@@ -728,36 +703,19 @@ function Index() {
                             onChange={(e) => setName(e.target.value)}
                         /> */}
                       <div className={cx("wave-group")}>
-                        <input
-                          required
-                          type="text"
-                          className={cx("input")}
-                          onChange={(e) => setName(e.target.value)}
-                        />
+                        <input required type="text" className={cx("input")} onChange={(e) => setName(e.target.value)} />
                         <span className={cx("bar")}></span>
                         <label className={cx("label")}>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 0 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 0 }}>
                             N
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 1 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 1 }}>
                             a
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             m
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 3 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 3 }}>
                             e
                           </span>
                         </label>
@@ -784,30 +742,16 @@ function Index() {
                     </div>
 
                     <div className={cx("wave-group")}>
-                      <input
-                        required
-                        type="text"
-                        className={cx("input")}
-                        onChange={(e) => setPrice(e.target.value)}
-                      />
+                      <input required type="text" className={cx("input")} onChange={(e) => setPrice(e.target.value)} />
                       <span className={cx("bar")}></span>
                       <label className={cx("label")}>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 0 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 0 }}>
                           G
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 1 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 1 }}>
                           i
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           á
                         </span>
                       </label>
@@ -853,16 +797,8 @@ function Index() {
                     </div> */}
 
                     <div className={cx("image-input")}>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        id="imageInput"
-                        onChange={handleFileChange}
-                      />
-                      <label
-                        htmlFor="imageInput"
-                        className={cx("image-button")}
-                      >
+                      <input type="file" accept="image/*" id="imageInput" onChange={handleFileChange} />
+                      <label htmlFor="imageInput" className={cx("image-button")}>
                         <i className="far fa-image"></i> Choose image
                       </label>
 
@@ -914,36 +850,19 @@ function Index() {
                       Ghi Chú
                     </div>
                     <div className={cx("wave-group")}>
-                      <input
-                        required
-                        type="text"
-                        className={cx("input")}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
+                      <input required type="text" className={cx("input")} onChange={(e) => setDescription(e.target.value)} />
                       <span className={cx("bar")}></span>
                       <label className={cx("label")}>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 0 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 0 }}>
                           N
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 1 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 1 }}>
                           o
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           t
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           e
                         </span>
                       </label>
@@ -1002,36 +921,19 @@ function Index() {
                       Size
                     </div>
                     <div className={cx("wave-group")}>
-                      <input
-                        required
-                        type="text"
-                        className={cx("input")}
-                        onChange={(e) => setSize(e.target.value)}
-                      />
+                      <input required type="text" className={cx("input")} onChange={(e) => setSize(e.target.value)} />
                       <span className={cx("bar")}></span>
                       <label className={cx("label")}>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 0 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 0 }}>
                           S
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 1 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 1 }}>
                           i
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           z
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           e
                         </span>
                       </label>
@@ -1058,30 +960,16 @@ function Index() {
                     </div>
 
                     <div className={cx("wave-group")}>
-                      <input
-                        required
-                        type="text"
-                        className={cx("input")}
-                        onChange={(e) => setColor(e.target.value)}
-                      />
+                      <input required type="text" className={cx("input")} onChange={(e) => setColor(e.target.value)} />
                       <span className={cx("bar")}></span>
                       <label className={cx("label")}>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 0 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 0 }}>
                           M
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 1 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 1 }}>
                           à
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           u
                         </span>
                       </label>
@@ -1105,60 +993,31 @@ function Index() {
                     </div>
 
                     <div className={cx("wave-group")}>
-                      <input
-                        required
-                        type="text"
-                        className={cx("input")}
-                        onChange={(e) => setQuantity(e.target.value)}
-                      />
+                      <input required type="text" className={cx("input")} onChange={(e) => setQuantity(e.target.value)} />
                       <span className={cx("bar")}></span>
                       <label className={cx("label")}>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 0 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 0 }}>
                           S
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 1 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 1 }}>
                           ố
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           -
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           l
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           ư
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           ợ
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           n
                         </span>
-                        <span
-                          className={cx("label-char")}
-                          style={{ "--index": 2 }}
-                        >
+                        <span className={cx("label-char")} style={{ "--index": 2 }}>
                           g
                         </span>
                       </label>
@@ -1171,10 +1030,7 @@ function Index() {
                     }}
                   >
                     <div>
-                      <button
-                        className={cx("learn-more")}
-                        onClick={() => handerSubmit()}
-                      >
+                      <button className={cx("learn-more")} onClick={() => handerSubmit()}>
                         {" "}
                         Xác Nhận
                       </button>
@@ -1341,22 +1197,13 @@ function Index() {
                         />
                         <span className={cx("bar")}></span>
                         <label className={cx("label")}>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 0 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 0 }}>
                             G
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 1 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 1 }}>
                             i
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             á
                           </span>
                         </label>
@@ -1402,16 +1249,8 @@ function Index() {
                     </div> */}
 
                       <div className={cx("image-input")}>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          id="imageInput"
-                          onChange={handleFileChange}
-                        />
-                        <label
-                          htmlFor="imageInput"
-                          className={cx("image-button")}
-                        >
+                        <input type="file" accept="image/*" id="imageInput" onChange={handleFileChange} />
+                        <label htmlFor="imageInput" className={cx("image-button")}>
                           <i className="far fa-image"></i> Choose image
                         </label>
 
@@ -1467,35 +1306,21 @@ function Index() {
                           required
                           type="text"
                           className={cx("input")}
-                          onChange={(e) =>
-                            setDescription_detail(e.target.value)
-                          }
+                          onChange={(e) => setDescription_detail(e.target.value)}
                           value={description_detail}
                         />
                         <span className={cx("bar")}></span>
                         <label className={cx("label")}>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 0 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 0 }}>
                             N
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 1 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 1 }}>
                             o
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             t
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             e
                           </span>
                         </label>
@@ -1563,28 +1388,16 @@ function Index() {
                         />
                         <span className={cx("bar")}></span>
                         <label className={cx("label")}>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 0 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 0 }}>
                             S
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 1 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 1 }}>
                             i
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             z
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             e
                           </span>
                         </label>
@@ -1620,22 +1433,13 @@ function Index() {
                         />
                         <span className={cx("bar")}></span>
                         <label className={cx("label")}>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 0 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 0 }}>
                             M
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 1 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 1 }}>
                             à
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             u
                           </span>
                         </label>
@@ -1668,52 +1472,28 @@ function Index() {
                         />
                         <span className={cx("bar")}></span>
                         <label className={cx("label")}>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 0 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 0 }}>
                             S
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 1 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 1 }}>
                             ố
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             -
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             l
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             ư
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             ợ
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             n
                           </span>
-                          <span
-                            className={cx("label-char")}
-                            style={{ "--index": 2 }}
-                          >
+                          <span className={cx("label-char")} style={{ "--index": 2 }}>
                             g
                           </span>
                         </label>
@@ -1747,8 +1527,7 @@ function Index() {
                           </button>
                         )}
 
-                        {(roles.includes("DELETE") ||
-                          roles.includes("ADMIN")) && (
+                        {(roles.includes("DELETE") || roles.includes("ADMIN")) && (
                           <button
                             className={cx("learn-more")}
                             style={{
@@ -1815,12 +1594,8 @@ function Index() {
                   <th scope="col">Hình Ảnh</th>
                   <th scope="col">Size</th>
                   <th scope="col">Màu</th>
-                  {(roles.includes("EDIT") || roles.includes("ADMIN")) && (
-                    <th scope="col"> Sửa</th>
-                  )}
-                  {(roles.includes("DELETE") || roles.includes("ADMIN")) && (
-                    <th scope="col">Xóa</th>
-                  )}
+                  {(roles.includes("EDIT") || roles.includes("ADMIN")) && <th scope="col"> Sửa</th>}
+                  {(roles.includes("DELETE") || roles.includes("ADMIN")) && <th scope="col">Xóa</th>}
                 </tr>
               </thead>
               {apiproducts &&
@@ -1872,16 +1647,13 @@ function Index() {
                         </td>
                       )}
 
-                      {(roles.includes("DELETE") ||
-                        roles.includes("ADMIN")) && (
+                      {(roles.includes("DELETE") || roles.includes("ADMIN")) && (
                         <td
                           style={{
                             fontSize: "17px",
                           }}
                         >
-                          <button onClick={() => handerDelete(api._id)}>
-                            Xóa
-                          </button>
+                          <button onClick={() => handerDelete(api._id)}>Xóa</button>
                         </td>
                       )}
                     </tr>

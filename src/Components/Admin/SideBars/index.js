@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MdContactMail, MdDashboard } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
-import { FaBell, FaCircleUser } from "react-icons/fa6";
+import { FaBell, FaBoltLightning, FaCircleUser } from "react-icons/fa6";
 import { BsCartCheckFill } from "react-icons/bs";
 import SideBarItem from "../SideBarItem/SideBarItem";
 import { IoSettings } from "react-icons/io5";
@@ -36,6 +36,11 @@ const Sidebar = () => {
     navigate("/admin/discount");
   };
 
+  const handleCancelProducts = (primary) => {
+    setActiveItem("Yêu cầu hủy sản phẩm");
+    navigate("/admin/cancelProduct");
+  };
+
   const handleOpenDashBroad = (primary) => {
     setOpenItem(primary);
     setActiveItem(primary); // Set active item
@@ -54,13 +59,7 @@ const Sidebar = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/shop/get_roles/${cleanId}`,
-      "GET"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/shop/get_roles/${cleanId}`, "GET")
       .then((data) => {
         setRoles(data.metadata);
         console.log(data);
@@ -96,11 +95,7 @@ const Sidebar = () => {
         <SideBarItem
           icon={<AiFillProduct />}
           primary="Products"
-          subItems={
-            roles.includes("CREATE") || roles.includes("ADMIN")
-              ? ["Product List", "Product Upload"]
-              : ["Product List"]
-          }
+          subItems={roles.includes("CREATE") || roles.includes("ADMIN") ? ["Product List", "Product Upload"] : ["Product List"]}
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Products"}
@@ -141,6 +136,18 @@ const Sidebar = () => {
         />
       )}
 
+      {(roles.includes("DESTROYFLOWERS") || roles.includes("ADMIN")) && (
+        <SideBarItem
+          icon={<FaBoltLightning />}
+          primary="Yêu cầu hủy sản phẩm"
+          subItems={roles.includes("ADMIN") ? ["Danh sách hủy hoa", "Danh danh đã duyệt"] : null}
+          onItemClick={handleCancelProducts}
+          onSubItemClick={handleSubItemClick}
+          isOpen={openItem === "Yêu cầu hủy sản phẩm"}
+          isActive={activeItem === "Yêu cầu hủy sản phẩm"} // Set active state
+        />
+      )}
+
       {roles.includes("ADMIN") && (
         <SideBarItem
           icon={<FaBell />}
@@ -152,12 +159,7 @@ const Sidebar = () => {
       )}
 
       {roles.includes("ADMIN") && (
-        <SideBarItem
-          icon={<FaBell />}
-          primary="Notification"
-          onItemClick={handleItemClick}
-          isOpen={openItem === "Notification"}
-        />
+        <SideBarItem icon={<FaBell />} primary="Notification" onItemClick={handleItemClick} isOpen={openItem === "Notification"} />
       )}
 
       {roles.includes("ADMIN") && (
@@ -179,8 +181,7 @@ const Sidebar = () => {
               cookies.forEach((cookie) => {
                 const eqPos = cookie.indexOf("=");
                 const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie =
-                  name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
               });
               navigate("/login");
             }}
