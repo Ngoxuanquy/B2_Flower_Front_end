@@ -641,19 +641,6 @@ const Information = () => {
                         </div>
                       </div>
                     ))}
-                    <div>
-                      <button
-                        style={{
-                          marginTop: "20px",
-                          borderRadius: "10px",
-                          padding: "10px",
-                          backgroundColor: theme.button,
-                          color: theme.color,
-                        }}
-                      >
-                        Địa chỉ lấy hàng
-                      </button>
-                    </div>
                   </div>
 
                   <div

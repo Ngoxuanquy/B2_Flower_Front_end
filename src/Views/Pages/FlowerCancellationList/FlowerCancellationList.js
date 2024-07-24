@@ -16,7 +16,13 @@ const FlowerCancellationList = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api({ status: "Yêu cầu" }, cleanedJwtString, cleanId, "/brokenFlowers/getBrokenFlowers", "Post")
+    Call_Post_Api(
+      { status: "Yêu cầu" },
+      cleanedJwtString,
+      cleanId,
+      "/brokenFlowers/getBrokenFlowers",
+      "Post"
+    )
       .then((data) => {
         setApi(data.metadata.reverse() || []); // Ensure you set an empty array if metadata is undefined
       })
@@ -44,14 +50,20 @@ const FlowerCancellationList = () => {
     }
   };
 
-  const handelDuyet = (brokenFlowerid, quantity, productId) => {
+  const handelDuyet = (brokenFlowerid, status, quantity, productId) => {
     console.log("acccc");
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api({ id: brokenFlowerid, quantity, productId }, cleanedJwtString, cleanId, "/brokenFlowers/updateBrokenFlowers", "Post")
+    Call_Post_Api(
+      { id: brokenFlowerid, quantity, status: status, productId },
+      cleanedJwtString,
+      cleanId,
+      "/brokenFlowers/updateBrokenFlowers",
+      "Post"
+    )
       .then((data) => {
         getApi();
       })
@@ -73,6 +85,7 @@ const FlowerCancellationList = () => {
             <th>Trạng thái</th>
             <th>Ngày kiểm hàng</th>
             <th>#</th>
+            <th>#</th>
           </tr>
         </thead>
         <tbody>
@@ -84,10 +97,37 @@ const FlowerCancellationList = () => {
               <td>
                 <Image src={flower.img} />
               </td>
-              <td className={cx("status", getStatusClass(flower.status))}>{flower.status}</td>
+              <td className={cx("status", getStatusClass(flower.status))}>
+                {flower.status}
+              </td>
               <td>{new Date(flower.date).toLocaleDateString()}</td>
               <td>
-                <Button onClick={() => handelDuyet(flower._id, flower.quantity, flower?.productId)}>Duyệt</Button>
+                <Button
+                  onClick={() =>
+                    handelDuyet(
+                      flower._id,
+                      "Đã duyệt",
+                      flower.quantity,
+                      flower?.productId
+                    )
+                  }
+                >
+                  Duyệt
+                </Button>
+              </td>
+              <td>
+                <Button
+                  onClick={() =>
+                    handelDuyet(
+                      flower._id,
+                      "Không duyệt",
+                      flower.quantity,
+                      flower?.productId
+                    )
+                  }
+                >
+                  Không duyệt
+                </Button>
               </td>
             </tr>
           ))}

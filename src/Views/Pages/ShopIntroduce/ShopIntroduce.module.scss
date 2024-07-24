@@ -3,7 +3,6 @@
 }
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -16,7 +15,6 @@ body {
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -39,19 +37,33 @@ body {
   margin-bottom: 20px;
 }
 
-.shop-contact, .shop-services, .shop-reviews, .shop-contact-form {
+.shop-contact,
+.shop-services,
+.shop-reviews,
+.shop-contact-form {
   margin-bottom: 40px;
 }
 
-.shop-contact h2, .shop-services h2, .shop-reviews h2, .shop-contact-form h2 {
+.shop-contact h2,
+.shop-services h2,
+.shop-reviews h2,
+.shop-contact-form h2 {
   font-size: 1.8em;
   color: #333;
   margin-bottom: 20px;
 }
 
-.shop-contact p, .shop-services ul, .shop-reviews p, .shop-contact-form label {
+.shop-contact p,
+.shop-services ul,
+.shop-reviews p,
+.shop-contact-form label {
   font-size: 1.2em;
   color: #666;
+}
+
+.shop-image {
+  width: 100px;
+  height: 100px;
 }
 
 .shop-services ul {
@@ -79,7 +91,8 @@ body {
   margin-bottom: 5px;
 }
 
-.shop-contact-form input, .shop-contact-form textarea {
+.shop-contact-form input,
+.shop-contact-form textarea {
   width: 100%;
   max-width: 500px;
   padding: 10px;

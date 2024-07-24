@@ -24,8 +24,9 @@ function Card({ list }) {
               src={list.product_thumb}
               data-testid="product-image"
             />
-            <div className={cx("button")}>
-              <button>Mới</button>
+
+            <div className={cx("button_discount")}>
+              <button>{list?.product_discount}%</button>
             </div>
           </div>
         </div>
@@ -41,13 +42,37 @@ function Card({ list }) {
             style={{
               color: theme.color,
               display: "flex",
-              justifyContent: "space-around",
+              justifyContent: "space-between",
               width: "300px",
               marginTop: "-10px",
             }}
           >
-            <div>{list.product_name}</div>
-            <div>đ{list.product_price}</div>
+            <div
+              style={{
+                width: "130px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {list.product_name}
+            </div>
+            {list.product_discount ? (
+              <>
+                <div>đ{list.product_price * (100 - list.product_discount)}</div>
+                <div
+                  style={{
+                    textDecoration: "line-through",
+                    fontSize: "12px",
+                    marginTop: "6px",
+                  }}
+                >
+                  đ{list.product_price}
+                </div>
+              </>
+            ) : (
+              <div>đ{list.product_price}</div>
+            )}
           </div>
         </Link>
       </div>

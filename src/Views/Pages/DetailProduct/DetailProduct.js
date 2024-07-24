@@ -170,7 +170,7 @@ function DetailProduct() {
 
         messageApi.open({
           type: "success",
-          content: "Đặt hàng thành công!!!",
+          content: "Thêm vào giỏ hàng thành công!!!",
         });
       });
     }
@@ -231,9 +231,41 @@ function DetailProduct() {
                     opacity: 0.4,
                   }}
                 />
-                <div className={cx("price-product")}>
-                  ${products.product_price}
-                </div>
+                {products.product_discount ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "20px",
+                      gap: "10px", // space between discounted and original price
+                      color: theme.discountColor, // customize color if needed
+                    }}
+                  >
+                    <div>
+                      đ
+                      {products.product_price *
+                        (1 - products.product_discount / 100)}
+                    </div>
+                    <div
+                      style={{
+                        textDecoration: "line-through",
+                        color: theme.originalPriceColor,
+                      }}
+                    >
+                      đ{products.product_price}
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      fontSize: "20px",
+                      color: theme.priceColor, // customize color if needed
+                    }}
+                  >
+                    đ{products.product_price}
+                  </div>
+                )}
+
                 <div className={cx("des-product")}>
                   Pellentesque habitant morbi tristique senectus et netus et
                   malesuada fames ac turpis egestas. Vestibulum tortor quam,

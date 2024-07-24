@@ -31,6 +31,8 @@ const ProductRequestForm = () => {
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [productId, setProductId] = useState("");
+  const [productQuantity, setProductQuantity] = useState(0);
+
   const [messageApi, contextHolder] = message.useMessage();
   const [isLoad, setIsLoad] = useState(false);
 
@@ -58,6 +60,7 @@ const ProductRequestForm = () => {
         value: product.product_name,
         label: product.product_name,
         image_url: product.product_thumb, // Lưu trữ URL ảnh
+        product_quantity: product.product_quantity,
       }));
       setProducts(result);
       setIsLoad(false);
@@ -104,6 +107,8 @@ const ProductRequestForm = () => {
     // Cập nhật ảnh sản phẩm khi chọn tên sản phẩm
     setProductName(option.value);
     setProductId(option._id);
+    setProductQuantity(option.product_quantity);
+
     setSelectedProductImage(option.image_url || "");
   };
 
@@ -153,9 +158,22 @@ const ProductRequestForm = () => {
       `/brokenFlowers/create`
     ).then((data) => {
       setIsLoad(false);
-
-      navigate("/admin/danh-sách-hủy-hoa");
+      messageApi.open({
+        type: "succse",
+        content: "Gửi yêu cầu thành công",
+      });
     });
+  };
+
+  const handelQuantity = (e) => {
+    if (e.target.value >= productQuantity) {
+      messageApi.open({
+        type: "error",
+        content: "Số lượng hỏng lớn hơn số lượng tồn kho?",
+      });
+      return setQuantity(productQuantity);
+    }
+    setQuantity(e.target.value);
   };
 
   const handlePreview = async (file) => {
@@ -194,15 +212,33 @@ const ProductRequestForm = () => {
       <h2>Product Request Form</h2>
       <div>
         <div className={cx("form-group")}>
-          <label htmlFor="productName">Product Name:</label>
-          <Select
-            showSearch
-            placeholder="Select a product"
-            optionFilterProp="label"
-            onChange={onChange}
-            onSearch={onSearch}
-            options={products}
-          />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              {" "}
+              <label htmlFor="productName">Product Name:</label>
+              <Select
+                showSearch
+                placeholder="Select a product"
+                optionFilterProp="label"
+                onChange={onChange}
+                onSearch={onSearch}
+                options={products}
+              />
+            </div>
+            <div
+              style={{
+                marginLeft: "-50px",
+              }}
+            >
+              <label>Số lượng tồn kho: {productQuantity}</label>
+            </div>
+          </div>
           {selectedProductImage && (
             <div className={cx("product-image")}>
               <Image src={selectedProductImage} alt="Selected Product" />
@@ -211,7 +247,16 @@ const ProductRequestForm = () => {
         </div>
         <div className={cx("form-group")}>
           <label htmlFor="quantity">Quantity:</label>
-          <input type="number" id="quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} min="1" required />
+          <input
+            type="number"
+            id="quantity"
+            value={quantity}
+            onChange={(e) => {
+              handelQuantity(e);
+            }}
+            min="1"
+            required
+          />
         </div>
         <div className={cx("form-group")}>
           <label htmlFor="file">Upload Image:</label>
@@ -225,7 +270,11 @@ const ProductRequestForm = () => {
           >
             Upload file
           </Button>
-          <VisuallyHiddenInput id="fileInput" type="file" onChange={handleFileChange} />
+          <VisuallyHiddenInput
+            id="fileInput"
+            type="file"
+            onChange={handleFileChange}
+          />
           {uploadedImage && (
             <Image
               src={URL.createObjectURL(uploadedImage)}
@@ -239,7 +288,11 @@ const ProductRequestForm = () => {
             />
           )}
         </div>
-        <button type="submit" className={cx("submit-button")} onClick={handleSubmit}>
+        <button
+          type="submit"
+          className={cx("submit-button")}
+          onClick={handleSubmit}
+        >
           Submit Request
         </button>
       </div>
