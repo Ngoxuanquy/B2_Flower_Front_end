@@ -158,8 +158,11 @@ const ProductRequestForm = () => {
       `/brokenFlowers/create`
     ).then((data) => {
       setIsLoad(false);
+      setProductName(null);
+      setUploadedImage(null);
+      setProductQuantity(0);
       messageApi.open({
-        type: "succse",
+        type: "success",
         content: "Gửi yêu cầu thành công",
       });
     });
