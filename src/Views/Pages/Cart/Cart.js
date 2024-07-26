@@ -55,6 +55,7 @@ const Cart = () => {
   const [isDiscounts, setIsDiscount] = useState([]);
   const [isDiscounted, setIsDiscounted] = useState(0);
   const [valueDiscount, setValueDiscount] = useState(0);
+  const [idDiscount, setIdDiscount] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -91,7 +92,7 @@ const Cart = () => {
   }, []);
 
   const handelDiscount = () => {
-    console.log("abcbcb");
+    getDiscount();
     setIsModalOpen(!isModalOpen);
   };
 
@@ -419,7 +420,6 @@ const Cart = () => {
         content: "Giá trị không được trống.",
       });
       setIsLoad(false);
-
       return;
     }
 
@@ -566,6 +566,20 @@ const Cart = () => {
           });
         });
       });
+    }
+
+    if (valueDiscount != 0) {
+      const name = Cookies.get("name")?.replace(/"/g, "");
+      const token = Cookies.get("accessToken");
+      const id = Cookies.get("id");
+      const cleanedJwtString = token?.replace(/"/g, "");
+      const cleanId = id?.replace(/"/g, "");
+      Call_Post_Api(
+        { codeId: idDiscount, email: name },
+        cleanedJwtString,
+        cleanId,
+        "/discount/deleteUserToDiscount"
+      ).then(() => {});
     }
   };
 
@@ -946,6 +960,8 @@ const Cart = () => {
 
   const setSelectedDiscount = (id, value) => {
     setValueDiscount(value);
+    console.log(id);
+    setIdDiscount(id);
     // setIsDiscounted(
     //   (tong + Number(phiShip) * (1 - value / 100))
     //     .toFixed(0)
@@ -1029,30 +1045,54 @@ const Cart = () => {
         <div>
           <h1>Mã giảm giá</h1>
           <div className={cx("discount-option")}>
-            {isDiscounts?.map((isDiscount) => (
-              <div key={isDiscount.id} className={cx("discount-container")}>
-                <input
-                  type="radio"
-                  name="discount"
-                  value={isDiscount.id}
-                  onChange={() =>
-                    setSelectedDiscount(
-                      isDiscount.id,
-                      isDiscount.discount_value
-                    )
-                  }
-                  className="discount-radio"
-                />
-                <div className={cx("discount-details")}>
-                  <div className={cx("discount-name")}>
-                    Tên mã giảm giá: {isDiscount.discount_name}
+            {isDiscounts?.map((isDiscount) => {
+              const isValid =
+                new Date(isDiscount.discount_start_date) > new Date();
+              return (
+                <div key={isDiscount.id} className={cx("discount-container")}>
+                  <div style={{ display: "flex" }}>
+                    <input
+                      type="radio"
+                      name="discount"
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        marginTop: "10px",
+                        marginRight: "10px",
+                      }}
+                      value={isDiscount.id}
+                      onChange={() =>
+                        setSelectedDiscount(
+                          isDiscount._id,
+                          isDiscount.discount_value
+                        )
+                      }
+                      className="discount-radio"
+                      disabled={!isValid}
+                    />
+                    <div className={cx("discount-details")}>
+                      <div className={cx("discount-name")}>
+                        <span style={{ fontWeight: "bold" }}>
+                          Tên mã giảm giá:
+                        </span>{" "}
+                        {isDiscount.discount_code}
+                      </div>
+                      <div className={cx("discount-value")}>
+                        <span style={{ fontWeight: "bold" }}>Value:</span>{" "}
+                        {isDiscount.discount_value}%
+                      </div>
+                    </div>
                   </div>
-                  <div className={cx("discount-value")}>
-                    Value: {isDiscount.discount_value}
+                  <div>
+                    {isValid ? (
+                      <div style={{ color: "green" }}>Còn hạn</div>
+                    ) : (
+                      <div style={{ color: "red" }}>Hết hạn</div>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </Modal>

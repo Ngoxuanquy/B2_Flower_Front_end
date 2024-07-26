@@ -57,7 +57,6 @@ function ForgotPassword(props) {
             type: "success",
             content: "Check email để lấy lại mật khẩu",
           });
-          navigate("/information");
         }
       })
       .catch((error) => {

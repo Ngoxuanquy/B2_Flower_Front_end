@@ -10,7 +10,14 @@ import Select from "@mui/material/Select";
 import styles from "./RegisteredUsers.module.scss";
 import classNames from "classnames/bind";
 import Cookies from "js-cookie";
-import { Input, Modal, Select as AntSelect, Collapse, DatePicker } from "antd";
+import {
+  Input,
+  Modal,
+  Select as AntSelect,
+  Collapse,
+  DatePicker,
+  message,
+} from "antd";
 
 const cx = classNames.bind(styles);
 const RegisteredUsers = ({ apis }) => {
@@ -22,6 +29,7 @@ const RegisteredUsers = ({ apis }) => {
   const [name, setName] = useState("");
   const [detailApi, setDetailApi] = useState(null);
   const [api, setApi] = useState(apis || []);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [email, setEmail] = useState("");
   const [roles, setRoles] = useState([]);
@@ -69,7 +77,11 @@ const RegisteredUsers = ({ apis }) => {
         setUsers([]);
       } else {
         // Nếu chưa chọn tất cả, chọn tất cả
-        setUsers(optionUser.map((option) => option.value).filter((value) => value !== "select_all"));
+        setUsers(
+          optionUser
+            .map((option) => option.value)
+            .filter((value) => value !== "select_all")
+        );
       }
     } else {
       // Cập nhật roles mà không bao gồm "Select All"
@@ -77,7 +89,9 @@ const RegisteredUsers = ({ apis }) => {
     }
   };
 
-  const filteredOptions = optionUser.filter((option) => option.value !== "select_all");
+  const filteredOptions = optionUser.filter(
+    (option) => option.value !== "select_all"
+  );
 
   useEffect(() => {
     setApi(apis);
@@ -98,12 +112,68 @@ const RegisteredUsers = ({ apis }) => {
     setStatus(api.status);
     setIsModalOpen(true);
   };
-
   const handleDiscountOk = () => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/^"|"$/g, "");
     const cleanId = id?.replace(/^"|"$/g, "");
+
+    // Validation checks
+    if (!cleanedJwtString) {
+      messageApi.open({
+        type: "error",
+        content: "Token không được để trống",
+      });
+      return;
+    }
+
+    if (!cleanId) {
+      messageApi.open({
+        type: "error",
+        content: "ID không được để trống",
+      });
+      return;
+    }
+
+    if (!textRadom) {
+      messageApi.open({
+        type: "error",
+        content: "Mã giảm giá không được để trống",
+      });
+      return;
+    }
+
+    if (!users || users.length === 0) {
+      messageApi.open({
+        type: "error",
+        content: "Người dùng không được để trống",
+      });
+      return;
+    }
+
+    if (!startDate) {
+      messageApi.open({
+        type: "error",
+        content: "Ngày bắt đầu không được để trống",
+      });
+      return;
+    }
+
+    if (!endDate) {
+      messageApi.open({
+        type: "error",
+        content: "Ngày kết thúc không được để trống",
+      });
+      return;
+    }
+
+    if (!value) {
+      messageApi.open({
+        type: "error",
+        content: "Giá trị không được để trống",
+      });
+      return;
+    }
 
     const requestOptions = {
       method: "POST",
@@ -124,10 +194,29 @@ const RegisteredUsers = ({ apis }) => {
     };
 
     fetch(URL + "/discount", requestOptions)
-      .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-        // getApi();
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        setEndDate(null);
+        setStartDate(null);
+        setTextRadom(0);
+        setUsers([]);
+        setIsModalOpenDiscount(false);
+        messageApi.open({
+          type: "success",
+          content: "Đặt hàng thành công!!!",
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        messageApi.open({
+          type: "error",
+          content: "Đặt hàng thất bại, vui lòng thử lại!",
+        });
       });
   };
 
@@ -228,7 +317,8 @@ const RegisteredUsers = ({ apis }) => {
   };
 
   function getRandomString(length) {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let result = "";
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
@@ -244,6 +334,7 @@ const RegisteredUsers = ({ apis }) => {
 
   return (
     <div className={cx("container")}>
+      {contextHolder}
       <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <div className={cx("model-header")}>
           <h2>Thông tin cá nhân</h2>
@@ -272,7 +363,11 @@ const RegisteredUsers = ({ apis }) => {
           </div>
         </div>
       </Modal>
-      <Modal open={isModalOpenDiscount} onOk={handleDiscountOk} onCancel={handleDiscountCancel}>
+      <Modal
+        open={isModalOpenDiscount}
+        onOk={handleDiscountOk}
+        onCancel={handleDiscountCancel}
+      >
         <div>
           <h4>Mã khuyến mãi</h4>
           <div
@@ -370,7 +465,10 @@ const RegisteredUsers = ({ apis }) => {
       >
         <div className={cx("select_by")}>
           <div className="col-md-3">
-            <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
+            <FormControl
+              sx={{ m: 1, minWidth: 120, width: "100%" }}
+              size="small"
+            >
               <InputLabel id="demo-select-small-label">Show by</InputLabel>
               <Select
                 labelId="demo-select-small-label"
@@ -389,7 +487,10 @@ const RegisteredUsers = ({ apis }) => {
             </FormControl>
           </div>
           <div className="col-md-3 " style={{ marginLeft: "10px" }}>
-            <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
+            <FormControl
+              sx={{ m: 1, minWidth: 120, width: "100%" }}
+              size="small"
+            >
               <InputLabel id="demo-select-small-label">Category by</InputLabel>
               <Select
                 labelId="demo-select-small-label"
@@ -433,7 +534,10 @@ const RegisteredUsers = ({ apis }) => {
                   <td>#{index + 1}</td>
                   <td>
                     <div className={cx("info-user")}>
-                      <img src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg" alt="avatar of user" />
+                      <img
+                        src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg"
+                        alt="avatar of user"
+                      />
                       <p>{api.name}</p>
                     </div>
                   </td>

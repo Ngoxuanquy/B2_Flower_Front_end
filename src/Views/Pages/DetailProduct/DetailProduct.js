@@ -14,7 +14,7 @@ import {
   InstagramOutlined,
 } from "@ant-design/icons";
 import { Tabs } from "antd";
-import { Sliders } from "../../../Components";
+// import { Sliders } from "../../../Components";
 
 import { useParams } from "react-router-dom";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
@@ -406,7 +406,7 @@ function DetailProduct() {
           <div className={cx("sanphamtuongtu")}>
             <div>WE FOUND OTHER PRODUCTS YOU MIGHT LIKE!</div>
           </div>
-          <div
+          {/* <div
             style={{
               width: "80%",
               alignItems: "center",
@@ -416,7 +416,7 @@ function DetailProduct() {
             }}
           >
             <Sliders />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -1,97 +1,109 @@
 {
-    "name": "my_app",
-    "version": "0.1.0",
-    "private": true,
-    "dependencies": {
-        "@ag-grid-community/client-side-row-model": "^30.2.0",
-        "@ag-grid-community/react": "^30.2.0",
-        "@ag-grid-enterprise/range-selection": "^30.2.0",
-        "@ag-grid-enterprise/rich-select": "^30.2.0",
-        "@ag-grid-enterprise/row-grouping": "^30.2.0",
-        "@ant-design/happy-work-theme": "^1.0.0",
-        "@ant-design/icons": "^5.3.7",
-        "@coreui/coreui": "^4.3.2",
-        "@emotion/react": "^11.11.4",
-        "@emotion/styled": "^11.11.5",
-        "@fortawesome/fontawesome-svg-core": "^6.2.0",
-        "@fortawesome/free-brands-svg-icons": "^6.2.0",
-        "@fortawesome/free-solid-svg-icons": "^6.2.0",
-        "@fortawesome/react-fontawesome": "^0.2.0",
-        "@mui/icons-material": "^5.15.18",
-        "@mui/material": "^5.15.18",
-        "@mui/styled-engine-sc": "^6.0.0-alpha.18",
-        "ag-grid-community": "^30.2.0",
-        "ag-grid-enterprise": "^30.2.0",
-        "antd": "^5.10.2",
-        "aos": "^2.3.4",
-        "axios": "^1.6.0",
-        "bootstrap": "^5.3.3",
-        "chart.js": "^4.4.3",
-        "chartjs-plugin-zoom": "^2.0.1",
-        "classnames": "^2.3.2",
-        "dotenv": "^16.3.1",
-        "evergreen-ui": "^7.1.9",
-        "firebase": "^9.0.0",
-        "gapi-script": "^1.2.0",
-        "js-cookie": "^3.0.5",
-        "payos-checkout": "^1.0.7",
-        "ra-data-simple-rest": "^4.16.17",
-        "react": "^18.2.0",
-        "react-admin": "^4.16.18",
-        "react-chartjs-2": "^5.2.0",
-        "react-dom": "^18.2.0",
-        "react-dropzone": "^14.2.3",
-        "react-event-listeners": "^1.2.6",
-        "react-facebook": "^9.0.12",
-        "react-icons": "^5.2.1",
-        "react-modal": "^3.16.1",
-        "react-otp-input": "^3.1.1",
-        "react-player": "^2.13.0",
-        "react-router-dom": "^6.23.1",
-        "react-scripts": "5.0.1",
-        "react-slick": "^0.29.0",
-        "react-social-login-buttons": "^3.9.1",
-        "react-spinners": "^0.13.8",
-        "react-tsparticles": "^2.12.2",
-        "reactjs-social-login": "^2.6.3",
-        "sass": "^1.54.9",
-        "scrollreveal": "^4.0.9",
-        "slick-carousel": "^1.8.1",
-        "socket.io-client": "^4.7.5",
-        "styled-components": "^6.1.11",
-        "swiper": "^11.0.3",
-        "tsparticles": "^3.4.0",
-        "tsparticles-preset-fireworks": "^2.12.0",
-        "web-vitals": "^2.1.4"
+  "name": "my_app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ag-grid-community/client-side-row-model": "^30.2.0",
+    "@ag-grid-community/react": "^30.2.0",
+    "@ag-grid-enterprise/range-selection": "^30.2.0",
+    "@ag-grid-enterprise/rich-select": "^30.2.0",
+    "@ag-grid-enterprise/row-grouping": "^30.2.0",
+    "@ant-design/happy-work-theme": "^1.0.0",
+    "@ant-design/icons": "^5.3.7",
+    "@cfaester/enzyme-adapter-react-18": "^0.8.0",
+    "@coreui/coreui": "^4.3.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/free-brands-svg-icons": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/icons-material": "^5.15.18",
+    "@mui/material": "^5.15.18",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@testing-library/dom": "^10.4.0",
+    "ag-grid-community": "^30.2.0",
+    "ag-grid-enterprise": "^30.2.0",
+    "antd": "^5.10.2",
+    "aos": "^2.3.4",
+    "axios": "^1.6.0",
+    "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.3",
+    "chartjs-plugin-zoom": "^2.0.1",
+    "classnames": "^2.3.2",
+    "dotenv": "^16.3.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-15": "^1.4.4",
+    "enzyme-adapter-react-16": "^1.15.8",
+    "evergreen-ui": "^7.1.9",
+    "firebase": "^9.0.0",
+    "gapi-script": "^1.2.0",
+    "js-cookie": "^3.0.5",
+    "payos-checkout": "^1.0.7",
+    "ra-data-simple-rest": "^4.16.17",
+    "react": "^18.2.0",
+    "react-admin": "^4.16.18",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-event-listeners": "^1.2.6",
+    "react-facebook": "^9.0.12",
+    "react-icons": "^5.2.1",
+    "react-modal": "^3.16.1",
+    "react-otp-input": "^3.1.1",
+    "react-player": "^2.13.0",
+    "react-router-dom": "^6.23.1",
+    "react-scripts": "5.0.1",
+    "react-slick": "^0.29.0",
+    "react-social-login-buttons": "^3.9.1",
+    "react-spinners": "^0.13.8",
+    "react-tsparticles": "^2.12.2",
+    "reactjs-social-login": "^2.6.3",
+    "sass": "^1.54.9",
+    "scrollreveal": "^4.0.9",
+    "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.7.5",
+    "styled-components": "^6.1.11",
+    "swiper": "^11.0.3",
+    "tsparticles": "^3.4.0",
+    "tsparticles-preset-fireworks": "^2.12.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.mjs$": "babel-jest"
     },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "devDependencies": {
-        "@testing-library/jest-dom": "^6.4.6",
-        "@testing-library/react": "^16.0.0",
-        "@testing-library/user-event": "^14.5.2",
-        "jest": "^29.7.0"
-    }
+    "transformIgnorePatterns": []
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
+    "jest": "^29.7.0"
+  }
 }

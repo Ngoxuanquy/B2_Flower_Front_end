@@ -12,6 +12,7 @@ import AdminHeader from "../Components/Admin/Header/AdminHeader";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import SideBar from "../Components/Admin/SideBars";
+import { Modal } from "antd";
 
 const App = () => {
   const [mode, setMode] = useState(false);

@@ -24,10 +24,10 @@ function DangKy() {
     return re.test(email);
   }
 
-  function isValidVietnamPhoneNumber(phoneNumber) {
+  const IsValidVietnamPhoneNumber = (phoneNumber) => {
     const vietnamPhoneRegex = /^0\d{9,10}$/;
     return vietnamPhoneRegex.test(phoneNumber);
-  }
+  };
 
   function handerSubmit() {
     if (!email || !pass || !re_Pass || !number) {
@@ -54,7 +54,7 @@ function DangKy() {
         content: "Mật khẩu phải dài hơn 6 kí tự",
       });
       return;
-    } else if (!isValidVietnamPhoneNumber(number)) {
+    } else if (!IsValidVietnamPhoneNumber(number)) {
       messageApi.open({
         type: "warning",
         content: "Sai định dạng số điện thoại",
@@ -285,3 +285,7 @@ function DangKy() {
 }
 
 export default DangKy;
+
+export const Sum = (a, b) => {
+  return a + b;
+};
