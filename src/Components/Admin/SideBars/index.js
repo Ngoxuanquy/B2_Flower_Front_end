@@ -59,7 +59,13 @@ const Sidebar = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/shop/get_roles/${cleanId}`, "GET")
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/shop/get_roles/${cleanId}`,
+      "GET"
+    )
       .then((data) => {
         setRoles(data.metadata);
         console.log(data);
@@ -91,17 +97,28 @@ const Sidebar = () => {
         />
       )}
 
-      {(roles.includes("READ") || roles.includes("ADMIN")) && (
+      {(roles.includes("READ") ||
+        roles.includes("ADMIN") ||
+        roles.includes("CREATE")) && (
         <SideBarItem
           icon={<AiFillProduct />}
           primary="Products"
-          subItems={roles.includes("CREATE") || roles.includes("ADMIN") ? ["Product List", "Product Upload"] : ["Product List"]}
+          subItems={
+            roles.includes("ADMIN")
+              ? ["Product List", "Product Upload"]
+              : roles.includes("CREATE")
+              ? ["Product Upload"]
+              : roles.includes("READ")
+              ? ["Product List"]
+              : []
+          }
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Products"}
           isActive={activeItem === "Products"} // Set active state
         />
       )}
+
       {roles.includes("ADMIN") && (
         <SideBarItem
           icon={<BsCartCheckFill />}
@@ -140,7 +157,11 @@ const Sidebar = () => {
         <SideBarItem
           icon={<FaBoltLightning />}
           primary="Yêu cầu hủy sản phẩm"
-          subItems={roles.includes("ADMIN") ? ["Danh sách hủy hoa", "Danh danh đã duyệt"] : null}
+          subItems={
+            roles.includes("ADMIN")
+              ? ["Danh sách hủy hoa", "Danh danh đã duyệt"]
+              : null
+          }
           onItemClick={handleCancelProducts}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Yêu cầu hủy sản phẩm"}
@@ -159,7 +180,12 @@ const Sidebar = () => {
       )}
 
       {roles.includes("ADMIN") && (
-        <SideBarItem icon={<FaBell />} primary="Notification" onItemClick={handleItemClick} isOpen={openItem === "Notification"} />
+        <SideBarItem
+          icon={<FaBell />}
+          primary="Notification"
+          onItemClick={handleItemClick}
+          isOpen={openItem === "Notification"}
+        />
       )}
 
       {roles.includes("ADMIN") && (
@@ -181,7 +207,8 @@ const Sidebar = () => {
               cookies.forEach((cookie) => {
                 const eqPos = cookie.indexOf("=");
                 const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie =
+                  name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
               });
               navigate("/login");
             }}
