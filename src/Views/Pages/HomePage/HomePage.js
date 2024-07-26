@@ -8,8 +8,8 @@ import AOS from "aos";
 import ButtomNavigation from "../../../Components/ButtomNavigation/ButtomNavigation";
 import ThemeConText from "../../../config/themeConText";
 import Cookies from "js-cookie";
+import Confetti from "react-confetti";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
-
 const cx = classNames.bind(styles);
 
 const HomePage = () => {
@@ -19,6 +19,8 @@ const HomePage = () => {
   const [isModalOpen, setModalOpen] = useState(true);
   const [apis, setApis] = useState(true);
   const [ids, setIds] = useState([]);
+
+  const [isPhaoHoa, setPhaoHoa] = useState(false);
 
   useEffect(() => {
     const colorButtonFromCookie = Cookies.get("buttonColor");
@@ -46,6 +48,9 @@ const HomePage = () => {
         const convertedProducts = data.metadata.map((product) => ({
           id: product._id,
         }));
+        if (data.metadata.length > 0) {
+          setPhaoHoa(true);
+        }
         setIds(convertedProducts);
         setApis(data.metadata);
       })
@@ -79,10 +84,12 @@ const HomePage = () => {
   const handleCancel = () => {
     UpdateNotication();
     setModalOpen(false);
+    setPhaoHoa(false);
   };
   const handleOk = () => {
     UpdateNotication();
     setModalOpen(false);
+    setPhaoHoa(false);
   };
 
   return (
@@ -93,6 +100,8 @@ const HomePage = () => {
         color: theme.color,
       }}
     >
+      {isPhaoHoa && <Confetti />}
+
       {apis.length > 0 ? (
         <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
           <h2>Chúc mừng</h2>
@@ -129,6 +138,7 @@ const HomePage = () => {
           </div>
         </Modal>
       ) : null}
+
       <div className="container_">
         <div className={cx("elementor-widget-container_")}>
           <div className={cx("layout1")}>
