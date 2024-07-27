@@ -59,7 +59,13 @@ function Card({ list }) {
             </div>
             {list.product_discount ? (
               <>
-                <div>đ{list.product_price * (100 - list.product_discount)}</div>
+                <div>
+                  đ
+                  {(
+                    list.product_price *
+                    (1 - list.product_discount / 100)
+                  ).toLocaleString()}
+                </div>
                 <div
                   style={{
                     textDecoration: "line-through",
@@ -67,11 +73,11 @@ function Card({ list }) {
                     marginTop: "6px",
                   }}
                 >
-                  đ{list.product_price}
+                  đ{list.product_price.toLocaleString()}
                 </div>
               </>
             ) : (
-              <div>đ{list.product_price}</div>
+              <div>đ{list.product_price.toLocaleString()}</div>
             )}
           </div>
         </Link>

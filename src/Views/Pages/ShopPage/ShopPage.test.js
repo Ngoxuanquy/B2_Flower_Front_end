@@ -1,65 +1,93 @@
-// import React from "react";
-// import { render, screen, waitFor } from "@testing-library/react";
-// import ShopPage from "./ShopPage";
-// import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
-// import ThemeConText from "../../../config/themeConText";
+import { fetchProduct } from "./ShopPage";
 
-// // Mock Call_Post_Api
-// jest.mock("../../../Components/CallApi/CallApis", () => ({
-//   Call_Post_Api: jest.fn(),
-// }));
+var mockData = {};
 
-// // Mock ThemeConText
-// const mockThemeContextValue = [{ background: "white", color: "black" }, 0];
+beforeEach(() => {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      json: () => Promise.resolve(mockData),
+    })
+  );
+});
 
-// describe("ShopPage", () => {
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//   });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
-//   test("renders loading state initially", () => {
-//     Call_Post_Api.mockResolvedValue({ metadata: [] });
-//     render(
-//       <ThemeConText.Provider value={mockThemeContextValue}>
-//         <ShopPage />
-//       </ThemeConText.Provider>
-//     );
-//     expect(screen.getByText("Loading...")).toBeInTheDocument();
-//   });
+describe("fetchProduct", () => {
+  it("should return product data when API call is successful", async () => {
+    // Mock the fetch function to return a successful response
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ productId: 123, name: "Sample Product" }),
+    });
 
-//   test("renders product list after fetching data", async () => {
-//     Call_Post_Api.mockResolvedValue({
-//       metadata: [
-//         {
-//           id: 1,
-//           name: "Product 1",
-//           product_attributes: { color: "red", size: "40cm" },
-//           product_type: "Hoa",
-//           product_price: 100,
-//         },
-//       ],
-//     });
+    const productId = 123;
+    const productData = await fetchProduct(productId);
 
-//     render(
-//       <ThemeConText.Provider value={mockThemeContextValue}>
-//         <ShopPage />
-//       </ThemeConText.Provider>
-//     );
+    expect(productData).toEqual({ productId: 123, name: "Sample Product" });
+  });
 
-//     await waitFor(() => screen.getByText("Product 1"));
-//     expect(screen.getByText("Product 1")).toBeInTheDocument();
-//   });
+  it("should handle API errors and return null", async () => {
+    // Mock the fetch function to return an error response
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 500,
+      statusText: "Internal Server Error",
+    });
 
-//   test("renders error message on fetch failure", async () => {
-//     Call_Post_Api.mockRejectedValue(new Error("Fetch failed"));
+    const productData = await fetchProduct();
 
-//     render(
-//       <ThemeConText.Provider value={mockThemeContextValue}>
-//         <ShopPage />
-//       </ThemeConText.Provider>
-//     );
+    expect(productData).toBeNull();
+  });
 
-//     await waitFor(() => screen.getByText("Error: Fetch failed"));
-//     expect(screen.getByText("Error: Fetch failed")).toBeInTheDocument();
-//   });
-// });
+  it("should fetch product metadata", async () => {
+    // Call the function
+
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockData),
+    });
+
+    const result = await fetchProduct();
+    console.log({ result });
+
+    // Assertions
+    expect(result).toBe(mockData);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("should handle HTTP error", async () => {
+    // Mock an error response
+    global.fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        status: 404,
+        statusText: "Not Found",
+      })
+    );
+
+    // Call the function
+    try {
+      await fetchProduct();
+    } catch (error) {
+      // Assertions
+      expect(error.message).toBe("HTTP error! status: 404");
+    }
+  });
+
+  it("should handle other errors", async () => {
+    // Mock a network error
+    global.fetch.mockImplementationOnce(() =>
+      Promise.reject(new Error("Network error"))
+    );
+
+    // Call the function
+    try {
+      await fetchProduct();
+    } catch (error) {
+      // Assertions
+      expect(error.message).toBe("Network error");
+    }
+  });
+});

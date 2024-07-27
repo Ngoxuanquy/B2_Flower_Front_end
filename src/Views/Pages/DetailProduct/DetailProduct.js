@@ -25,6 +25,49 @@ import { EventRegister } from "react-event-listeners";
 import ThemeConText from "../../../config/themeConText";
 import { Spin, Flex, Rate } from "antd";
 const cx = classNames.bind(styles);
+const URL = process.env.REACT_APP_URL;
+export const handerCongUnitTest = (value) => {
+  return value + 1;
+};
+
+export const handerTruUnitTest = (value) => {
+  if (value <= 1) {
+    return (value = 1);
+  }
+
+  return value - 1;
+};
+// Assuming you have imported 'fetch' and set up your environment
+
+export const fetchProduct = async (productId) => {
+  try {
+    const requestOptions = {
+      method: "POST", // Ensure method is capitalized correctly
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key":
+          "9c5fc232e6d39008a1757e4e97b576df03b1aac46dbf558344477b3f346bad379a831a6d8f567aed43c67dce6402f0ede2c72dda596c38553a78ae73cddffdae",
+      },
+      // You may need to include a body if the server expects it, e.g., body: JSON.stringify({ someData: "value" })
+    };
+
+    const response = await fetch(
+      `${URL}/product/byId/${productId}`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return null; // Return null or handle error as needed
+  } finally {
+    console.log("done");
+  }
+};
 
 function DetailProduct() {
   const [isLoad, setIsLoad] = useState(true);
@@ -244,7 +287,7 @@ function DetailProduct() {
                     <div>
                       đ
                       {products.product_price *
-                        (1 - products.product_discount / 100)}
+                        (1 - products.product_discount / 100).toLocaleString()}
                     </div>
                     <div
                       style={{
@@ -252,7 +295,7 @@ function DetailProduct() {
                         color: theme.originalPriceColor,
                       }}
                     >
-                      đ{products.product_price}
+                      đ{products.product_price.toLocaleString()}
                     </div>
                   </div>
                 ) : (

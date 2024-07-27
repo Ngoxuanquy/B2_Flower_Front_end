@@ -8,6 +8,16 @@ import OtpInput from "react-otp-input";
 
 const cx = classNames.bind(styles);
 
+export function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+export const IsValidVietnamPhoneNumber = (phoneNumber) => {
+  const vietnamPhoneRegex = /^0\d{9,10}$/;
+  return vietnamPhoneRegex.test(phoneNumber);
+};
+
 function DangKy() {
   const URL = process.env.REACT_APP_URL;
   const [email, setEmail] = useState("");
@@ -18,16 +28,6 @@ function DangKy() {
   const [isLoad, setIsLoad] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-
-  function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
-
-  const IsValidVietnamPhoneNumber = (phoneNumber) => {
-    const vietnamPhoneRegex = /^0\d{9,10}$/;
-    return vietnamPhoneRegex.test(phoneNumber);
-  };
 
   function handerSubmit() {
     if (!email || !pass || !re_Pass || !number) {
@@ -285,7 +285,3 @@ function DangKy() {
 }
 
 export default DangKy;
-
-export const Sum = (a, b) => {
-  return a + b;
-};

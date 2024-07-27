@@ -29,6 +29,52 @@ import axios from "axios";
 
 const cx = classNames.bind(styles);
 
+export const updateQuantity = async (checkedList) => {
+  try {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    const convertedProducts = checkedList.map((product) => ({
+      id: product._id,
+      quantity: -product.quantity,
+    }));
+
+     const requestOptions = {
+       method: "post",
+       headers: {
+         "Content-Type": "application/json",
+         "x-api-key": process.env.REACT_APP_API_KEY,
+         authorization: cleanedJwtString,
+         "x-client-id": cleanId,
+       },
+     };
+     
+    const response = await fetch(
+      "http://localhost:3056/v1/api/product/updateQuantity",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cleanedJwtString}`,
+          "X-User-ID": cleanId,
+        },
+        body: JSON.stringify(convertedProducts),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error("Error updating quantity:", error);
+  }
+};
+
 const Cart = () => {
   const { CheckboxGroup } = Checkbox;
   const [theme, ordersLength] = useContext(ThemeConText);
@@ -64,6 +110,15 @@ const Cart = () => {
   const [distance, setDistance] = useState(null);
   const [moneys, setMoneys] = useState(0);
 
+  useEffect(() => {
+    getDiscount();
+  }, []);
+
+  const handelDiscount = () => {
+    getDiscount();
+    setIsModalOpen(!isModalOpen);
+  };
+
   const getDiscount = () => {
     setIsLoad(true);
     const token = Cookies.get("accessToken");
@@ -85,15 +140,6 @@ const Cart = () => {
       setIsLoad(false);
       setIsDiscount(data.metadata);
     });
-  };
-
-  useEffect(() => {
-    getDiscount();
-  }, []);
-
-  const handelDiscount = () => {
-    getDiscount();
-    setIsModalOpen(!isModalOpen);
   };
 
   const getMoneysUser = () => {

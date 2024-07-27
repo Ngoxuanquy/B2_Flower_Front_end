@@ -4,3 +4,5 @@
 // learn more: https://github.com/testing-library/jest-dom
 // src/setupTests.js
 import "@testing-library/jest-dom/extend-expect";
+import fetchMock from "jest-fetch-mock";
+fetchMock.enableMocks();

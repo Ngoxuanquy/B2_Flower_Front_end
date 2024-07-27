@@ -8,14 +8,48 @@ import AOS from "aos";
 import { Link } from "react-router-dom";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import ButtomNavigation from "../../../Components/ButtomNavigation/ButtomNavigation";
-import { Pagination, Slider } from "antd";
+import { Button, Pagination, Slider } from "antd";
 import { Spin, message } from "antd";
 import { Avatar, Badge, Switch, Space, Drawer } from "antd";
-import { AppstoreOutlined, MailOutlined, SettingOutlined, MenuOutlined, AlignRightOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
+  MenuOutlined,
+  AlignRightOutlined,
+} from "@ant-design/icons";
 import { Menu } from "antd";
 import ThemeConText from "../../../config/themeConText";
+const URL = process.env.REACT_APP_URL;
 
 const cx = classNames.bind(styles);
+
+export const fetchProduct = async () => {
+  try {
+    const requestOptions = {
+      method: "POST", // Ensure method is capitalized correctly
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key":
+          "9c5fc232e6d39008a1757e4e97b576df03b1aac46dbf558344477b3f346bad379a831a6d8f567aed43c67dce6402f0ede2c72dda596c38553a78ae73cddffdae",
+      },
+      // You may need to include a body if the server expects it, e.g., body: JSON.stringify({ someData: "value" })
+    };
+
+    const response = await fetch(`${URL}/product/getAll`, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return null; // Return null or handle error as needed
+  } finally {
+    console.log("done");
+  }
+};
 
 const ShopPage = () => {
   const [count, setCount] = useState(5); // Initialize count with 5
@@ -40,8 +74,8 @@ const ShopPage = () => {
   const [valueSlider, setValueSlider] = useState([]);
 
   //lấy giá trị nhỏ và lớn
-  const [value_min, setValueMin] = useState(20);
-  const [value_max, setValueMax] = useState(50);
+  const [value_min, setValueMin] = useState(200000);
+  const [value_max, setValueMax] = useState(1000000);
 
   const onChange = (checked) => {
     setDisabled(checked);
@@ -93,7 +127,9 @@ const ShopPage = () => {
     setIsLoad(true);
     if (color != "All") {
       const filteredApis = apis.filter((api) => {
-        return api.product_attributes.color.toLowerCase() === color.toLowerCase();
+        return (
+          api.product_attributes.color.toLowerCase() === color.toLowerCase()
+        );
       });
       setApiTT(filteredApis);
       setIsLoad(false);
@@ -139,11 +175,17 @@ const ShopPage = () => {
   //xử lý lấy sử kiện giá trị
   const [locPrice, setLocPrice] = useState("");
   const handerChangeValue = (e) => {
+    console.log(e[0]);
+    console.log(e);
+
     setValueMin(e[0]);
     setValueMax(e[1]);
     setLocPrice(e[1]);
     const filteredProducts = apis.filter((product) => {
-      return product.product_price >= Number(e[0]) && product.product_price <= Number(e[1]);
+      return (
+        product.product_price >= Number(e[0]) &&
+        product.product_price <= Number(e[1])
+      );
     });
     setApiTT(filteredProducts);
   };
@@ -159,9 +201,30 @@ const ShopPage = () => {
 
   const items_menu = [
     getItem("Danh mục", "sub1", <MailOutlined />, [
-      getItem("Hoa", "g1", null, [getItem("Hoa có sẵn", "hoa"), getItem("Hoa tự làm", "hoa")], "group"),
-      getItem("Hộp quà", "Hộp quà", null, [getItem("Hộp quà có sẵn", "Hộp quà"), getItem("Hộp quà tự đóng gói", "Hộp quà")], "group"),
-      getItem("Khác", "Khác", null, [getItem("Gấu bông", "Gấu bông"), getItem("Đồ ăn", "Đồ ăn")], "group"),
+      getItem(
+        "Hoa",
+        "g1",
+        null,
+        [getItem("Hoa có sẵn", "hoa"), getItem("Hoa tự làm", "hoa")],
+        "group"
+      ),
+      getItem(
+        "Hộp quà",
+        "Hộp quà",
+        null,
+        [
+          getItem("Hộp quà có sẵn", "Hộp quà"),
+          getItem("Hộp quà tự đóng gói", "Hộp quà"),
+        ],
+        "group"
+      ),
+      getItem(
+        "Khác",
+        "Khác",
+        null,
+        [getItem("Gấu bông", "Gấu bông"), getItem("Đồ ăn", "Đồ ăn")],
+        "group"
+      ),
     ]),
 
     getItem("Màu sắc", "Màu sắc", <AppstoreOutlined />, [
@@ -242,7 +305,13 @@ const ShopPage = () => {
       getItem("khác", "khác"),
     ]),
 
-    getItem("Group", "grp", null, [getItem("Option 13", "13"), getItem("Option 14", "14")], "group"),
+    getItem(
+      "Group",
+      "grp",
+      null,
+      [getItem("Option 13", "13"), getItem("Option 14", "14")],
+      "group"
+    ),
   ];
 
   const increase = () => {
@@ -274,6 +343,21 @@ const ShopPage = () => {
   const onClose = () => {
     setOpen(false);
   };
+
+  const handleMaxList = () => {
+    const maxPrice = [...apis].sort(
+      (a, b) => b.product_price - a.product_price
+    );
+    setApiTT(maxPrice);
+  };
+
+  const handleMinList = () => {
+    const minPrice = [...apis].sort(
+      (a, b) => a.product_price - b.product_price
+    );
+    setApiTT(minPrice);
+  };
+
   return (
     <div
       className={cx("container_")}
@@ -301,7 +385,13 @@ const ShopPage = () => {
           <Spin />
         </div>
       )}
-      <Drawer title="Menu" placement="right" onClose={onClose} open={open} width="70%">
+      <Drawer
+        title="Menu"
+        placement="right"
+        onClose={onClose}
+        open={open}
+        width="70%"
+      >
         <Menu
           onClick={onClick}
           style={{ width: 256 }}
@@ -355,9 +445,9 @@ const ShopPage = () => {
                     <div>Giá</div>
                     <Slider
                       range
-                      defaultValue={[20, 50]}
-                      min={50}
-                      max={1000}
+                      defaultValue={[200000, 1000000]}
+                      min={200000}
+                      max={1000000}
                       disabled={disabled}
                       dotActiveBorderColor="black"
                       onChange={(e) => {
@@ -370,7 +460,8 @@ const ShopPage = () => {
                     />
                     <br />
                     <div className={cx("valueSlider")}>
-                      Giá tối thiểu: {value_min} - Giá tối đa: {value_max}
+                      Giá tối thiểu: {value_min.toLocaleString()} - Giá tối đa:{" "}
+                      {value_max.toLocaleString()}
                     </div>
                   </div>
                   {/* Màu sắc */}
@@ -379,7 +470,10 @@ const ShopPage = () => {
                     <div className={cx("conten")}>Màu săc</div>
                     <div>
                       {colors?.map((color) => (
-                        <div className={cx("value-corlor")} onClick={() => handelColor(color.title)}>
+                        <div
+                          className={cx("value-corlor")}
+                          onClick={() => handelColor(color.title)}
+                        >
                           <p
                             style={{
                               width: "20px",
@@ -405,8 +499,36 @@ const ShopPage = () => {
                 </div>
               </div>
               {/* right */}
+
               <div className={cx("right")}>
-                {colorLocs != "" || typeLocs != "" || sizess != "" || locPrice != "" ? (
+                <div
+                  style={{
+                    textAlign: "right",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "18px",
+                    }}
+                  >
+                    <Button onClick={handleMaxList}>Lớn nhất</Button>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "18px",
+                    }}
+                  >
+                    <Button onClick={handleMinList}>Bé nhất</Button>
+                  </span>
+                </div>
+                {colorLocs != "" ||
+                typeLocs != "" ||
+                sizess != "" ||
+                locPrice != "" ? (
                   <div className={cx("layout_right")}>
                     {apiLocs?.length != 0 ? (
                       apiLocs.map((list, index) => (
