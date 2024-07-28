@@ -110,7 +110,7 @@ const Sidebar = () => {
         <SideBarItem
           icon={<BsCartCheckFill />}
           primary="Order"
-          subItems={["Orders List", "Orders Sent"]}
+          subItems={["listOrders", "Đơn đã gửi"]}
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Order"}
@@ -163,6 +163,25 @@ const Sidebar = () => {
           onItemClick={handleDiscount}
           isOpen={openItem === "Discount"}
           isActive={activeItem === "Discount"} // Set active state
+        />
+      )}
+
+      {roles.includes("ADMIN") && (
+        <SideBarItem
+          icon={<FaBell />}
+          primary="Notification"
+          onItemClick={handleItemClick}
+          isOpen={openItem === "Notification"}
+        />
+      )}
+
+      {roles.includes("ADMIN") && (
+        <SideBarItem
+          icon={<IoSettings />}
+          primary="Setting"
+          onItemClick={handleItemClick}
+          isOpen={openItem === "Setting"}
+          isActive={activeItem === "Setting"} // Set active state
         />
       )}
 

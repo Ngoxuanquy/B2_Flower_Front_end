@@ -62,10 +62,10 @@ export const adminRoute = [
   { path: "/admin/product-upload", component: <ProductUpload /> },
   { path: "/admin/dash-board", component: <DashBoard /> },
   { path: "/admin/user-list", component: <UserList /> },
-  { path: "/admin/orders-list", component: <Orders /> },
+  { path: "/admin/listOrders", component: <Orders /> },
   { path: "/admin/orders-sent", component: <OrdersSent /> },
   { path: "/admin/discount", component: <Discounts /> },
   { path: "/admin/cancelProduct", component: <CancelProduct /> },
   { path: "/admin/danh-sách-hủy-hoa", component: <FlowerCancellationList /> },
-  { path: "/admin/danh-sách-đã-duyệt", component: <FlowerApprovedList /> },
+  { path: "/admin/danh-danh-đã-duyệt", component: <FlowerApprovedList /> },
 ];

@@ -74,67 +74,65 @@ const FlowerCancellationList = () => {
 
   return (
     <div className={cx("container")}>
-      <div className={cx("contents")}>
-        <h1>Flower Cancellation List</h1>
-        <table className={cx("table")}>
-          <thead>
-            <tr>
-              <th>Người yêu cầu</th>
-              <th>Sản phẩm</th>
-              <th>Số lượng</th>
-              <th>Ảnh</th>
-              <th>Trạng thái</th>
-              <th>Ngày kiểm hàng</th>
-              <th>#</th>
-              <th>#</th>
+      <h1>Flower Cancellation List</h1>
+      <table className={cx("table")}>
+        <thead>
+          <tr>
+            <th>Người yêu cầu</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Ảnh</th>
+            <th>Trạng thái</th>
+            <th>Ngày kiểm hàng</th>
+            <th>#</th>
+            <th>#</th>
+          </tr>
+        </thead>
+        <tbody>
+          {apis.map((flower) => (
+            <tr key={flower._id}>
+              <td>{flower.email}</td>
+              <td>{flower.product_Name}</td>
+              <td>{flower.quantity}</td>
+              <td>
+                <Image src={flower.img} />
+              </td>
+              <td className={cx("status", getStatusClass(flower.status))}>
+                {flower.status}
+              </td>
+              <td>{new Date(flower.date).toLocaleDateString()}</td>
+              <td>
+                <Button
+                  onClick={() =>
+                    handelDuyet(
+                      flower._id,
+                      "Đã duyệt",
+                      flower.quantity,
+                      flower?.productId
+                    )
+                  }
+                >
+                  Duyệt
+                </Button>
+              </td>
+              <td>
+                <Button
+                  onClick={() =>
+                    handelDuyet(
+                      flower._id,
+                      "Không duyệt",
+                      flower.quantity,
+                      flower?.productId
+                    )
+                  }
+                >
+                  Không duyệt
+                </Button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {apis.map((flower) => (
-              <tr key={flower._id}>
-                <td>{flower.email}</td>
-                <td>{flower.product_Name}</td>
-                <td>{flower.quantity}</td>
-                <td>
-                  <Image src={flower.img} />
-                </td>
-                <td className={cx("status", getStatusClass(flower.status))}>
-                  {flower.status}
-                </td>
-                <td>{new Date(flower.date).toLocaleDateString()}</td>
-                <td>
-                  <Button
-                    onClick={() =>
-                      handelDuyet(
-                        flower._id,
-                        "Đã duyệt",
-                        flower.quantity,
-                        flower?.productId
-                      )
-                    }
-                  >
-                    Duyệt
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    onClick={() =>
-                      handelDuyet(
-                        flower._id,
-                        "Không duyệt",
-                        flower.quantity,
-                        flower?.productId
-                      )
-                    }
-                  >
-                    Không duyệt
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
