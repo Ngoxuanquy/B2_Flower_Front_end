@@ -2,14 +2,14 @@
 
 .container {
   font-family: "Open Sans", sans-serif !important;
-  padding: 90px 30px 30px;
+  padding: 80px 30px 30px;
   width: 100%;
   font-size: 16px;
   color: #403e57;
+  border-radius: 10px;
   .contents {
-    border-radius: 10px;
     background: #fff;
-    padding: 20px;
+    padding: 20;
   }
 }
 

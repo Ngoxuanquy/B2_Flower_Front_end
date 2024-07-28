@@ -62,7 +62,7 @@ export const adminRoute = [
   { path: "/admin/product-upload", component: <ProductUpload /> },
   { path: "/admin/dash-board", component: <DashBoard /> },
   { path: "/admin/user-list", component: <UserList /> },
-  { path: "/admin/orders-list", component: <Orders /> },
+  { path: "/admin/listOrders", component: <Orders /> },
   { path: "/admin/orders-sent", component: <OrdersSent /> },
   { path: "/admin/discount", component: <Discounts /> },
   { path: "/admin/cancelProduct", component: <CancelProduct /> },
