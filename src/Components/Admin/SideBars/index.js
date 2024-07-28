@@ -159,7 +159,7 @@ const Sidebar = () => {
           primary="Yêu cầu hủy sản phẩm"
           subItems={
             roles.includes("ADMIN")
-              ? ["Danh sách hủy hoa", "Danh danh đã duyệt"]
+              ? ["Danh sách hủy hoa", "Danh sách đã duyệt"]
               : null
           }
           onItemClick={handleCancelProducts}

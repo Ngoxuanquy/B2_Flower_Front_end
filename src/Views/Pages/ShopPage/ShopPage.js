@@ -120,6 +120,7 @@ const ShopPage = () => {
   const [apiLocs, setApiTT] = useState([]);
   const [colorLocs, setColor] = useState("");
   const [typeLocs, setType] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
   //xử lý chọn màu
   const handelColor = (color) => {
@@ -345,9 +346,12 @@ const ShopPage = () => {
   };
 
   const handleMaxList = () => {
+    console.log("abcbcbcbc");
+    console.log(apis);
     const maxPrice = [...apis].sort(
       (a, b) => b.product_price - a.product_price
     );
+    console.log(maxPrice);
     setApiTT(maxPrice);
   };
 
@@ -528,6 +532,7 @@ const ShopPage = () => {
                 {colorLocs != "" ||
                 typeLocs != "" ||
                 sizess != "" ||
+                apiLocs != "" ||
                 locPrice != "" ? (
                   <div className={cx("layout_right")}>
                     {apiLocs?.length != 0 ? (

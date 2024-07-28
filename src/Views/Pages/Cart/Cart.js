@@ -41,16 +41,16 @@ export const updateQuantity = async (checkedList) => {
       quantity: -product.quantity,
     }));
 
-     const requestOptions = {
-       method: "post",
-       headers: {
-         "Content-Type": "application/json",
-         "x-api-key": process.env.REACT_APP_API_KEY,
-         authorization: cleanedJwtString,
-         "x-client-id": cleanId,
-       },
-     };
-     
+    const requestOptions = {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+        authorization: cleanedJwtString,
+        "x-client-id": cleanId,
+      },
+    };
+
     const response = await fetch(
       "http://localhost:3056/v1/api/product/updateQuantity",
       {
@@ -710,7 +710,37 @@ const Cart = () => {
                     </div>
                     <div className={cx("table-cell")}>{order.quantity}</div>
                     <div className={cx("table-cell")}>
-                      {order.quantity * order.product_price}
+                      {order.product_discount ? (
+                        <>
+                          <div>
+                            đ
+                            {(
+                              order.quantity *
+                              (order.product_price *
+                                (1 - order.product_discount / 100))
+                            ).toLocaleString()}
+                          </div>
+                          <div
+                            style={{
+                              textDecoration: "line-through",
+                              fontSize: "12px",
+                              marginTop: "6px",
+                            }}
+                          >
+                            đ
+                            {(
+                              order.quantity * order.product_price
+                            ).toLocaleString()}
+                          </div>
+                        </>
+                      ) : (
+                        <div>
+                          đ
+                          {(
+                            order.quantity * order.product_price
+                          ).toLocaleString()}
+                        </div>
+                      )}
                     </div>
                     <div className={cx("table-cell")}>
                       <DeleteOutlined
