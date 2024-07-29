@@ -67,5 +67,5 @@ export const adminRoute = [
   { path: "/admin/discount", component: <Discounts /> },
   { path: "/admin/cancelProduct", component: <CancelProduct /> },
   { path: "/admin/danh-sách-hủy-hoa", component: <FlowerCancellationList /> },
-  { path: "/admin/danh-sách-đã-duyệt", component: <FlowerApprovedList /> },
+  { path: "/admin/danh-danh-đã-duyệt", component: <FlowerApprovedList /> },
 ];

@@ -1,16 +1,11 @@
 // FlowerCancellationList.module.scss
 
 .container {
-  font-family: "Open Sans", sans-serif !important;
-  padding: 90px 30px 30px;
-  width: 100%;
-  font-size: 16px;
-  color: #403e57;
-  .contents {
-    border-radius: 10px;
-    background: #fff;
-    padding: 20px;
-  }
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 100px;
 }
 
 h1 {
@@ -70,10 +65,6 @@ h1 {
   }
 }
 
-.status.approved {
-  color: rgb(85, 151, 54);
-}
-
-.status.NoProgress {
+.status.pending {
   color: red;
 }

@@ -74,7 +74,7 @@ const FlowerCancellationList = () => {
 
   return (
     <div className={cx("container")}>
-      <div className={cx("contents")}>
+      <div>
         <h1>Flower Cancellation List</h1>
         <table className={cx("table")}>
           <thead>

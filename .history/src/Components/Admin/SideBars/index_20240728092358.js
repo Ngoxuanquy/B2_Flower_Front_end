@@ -110,7 +110,7 @@ const Sidebar = () => {
         <SideBarItem
           icon={<BsCartCheckFill />}
           primary="Order"
-          subItems={["Orders List", "Orders Sent"]}
+          subItems={["listOrders", "Đơn đã gửi"]}
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Order"}

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames/bind";
-import styles from "./FlowerCancellationList.module.scss";
+import styles from "./FlowerApprovedList.module.scss";
 import Cookies from "js-cookie";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import { Button, Image } from "antd";
 
 const cx = classNames.bind(styles);
 
-const FlowerCancellationList = () => {
+const FlowerApprovedList = () => {
   const [apis, setApi] = useState([]);
 
   const getApi = () => {
@@ -17,7 +17,7 @@ const FlowerCancellationList = () => {
     const cleanId = id?.replace(/"/g, "");
 
     Call_Post_Api(
-      { status: "Yêu cầu" },
+      { status: "Đã duyệt", status2: "Không duyệt" },
       cleanedJwtString,
       cleanId,
       "/brokenFlowers/getBrokenFlowers",
@@ -39,42 +39,20 @@ const FlowerCancellationList = () => {
     switch (status) {
       case "Yêu cầu":
         return "pending";
-      case "Approved":
+      case "Đã duyệt":
         return "approved";
       case "Rejected":
-        return "rejected";
-      case "In Progress":
-        return "in-progress";
+        return "Không duyệt";
+      case "Không duyệt":
+        return "NoProgress";
       default:
         return "";
     }
   };
 
-  const handelDuyet = (brokenFlowerid, status, quantity, productId) => {
-    console.log("acccc");
-    const token = Cookies.get("accessToken");
-    const id = Cookies.get("id");
-    const cleanedJwtString = token?.replace(/"/g, "");
-    const cleanId = id?.replace(/"/g, "");
-
-    Call_Post_Api(
-      { id: brokenFlowerid, quantity, status: status, productId },
-      cleanedJwtString,
-      cleanId,
-      "/brokenFlowers/updateBrokenFlowers",
-      "Post"
-    )
-      .then((data) => {
-        getApi();
-      })
-      .catch((err) => {
-        console.log({ err });
-      });
-  };
-
   return (
     <div className={cx("container")}>
-      <div className={cx("contents")}>
+      <div>
         <h1>Flower Cancellation List</h1>
         <table className={cx("table")}>
           <thead>
@@ -85,13 +63,11 @@ const FlowerCancellationList = () => {
               <th>Ảnh</th>
               <th>Trạng thái</th>
               <th>Ngày kiểm hàng</th>
-              <th>#</th>
-              <th>#</th>
             </tr>
           </thead>
           <tbody>
             {apis.map((flower) => (
-              <tr key={flower._id}>
+              <tr key={flower.id}>
                 <td>{flower.email}</td>
                 <td>{flower.product_Name}</td>
                 <td>{flower.quantity}</td>
@@ -102,34 +78,6 @@ const FlowerCancellationList = () => {
                   {flower.status}
                 </td>
                 <td>{new Date(flower.date).toLocaleDateString()}</td>
-                <td>
-                  <Button
-                    onClick={() =>
-                      handelDuyet(
-                        flower._id,
-                        "Đã duyệt",
-                        flower.quantity,
-                        flower?.productId
-                      )
-                    }
-                  >
-                    Duyệt
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    onClick={() =>
-                      handelDuyet(
-                        flower._id,
-                        "Không duyệt",
-                        flower.quantity,
-                        flower?.productId
-                      )
-                    }
-                  >
-                    Không duyệt
-                  </Button>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -139,4 +87,4 @@ const FlowerCancellationList = () => {
   );
 };
 
-export default FlowerCancellationList;
+export default FlowerApprovedList;
