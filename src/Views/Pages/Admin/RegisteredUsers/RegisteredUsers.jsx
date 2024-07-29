@@ -208,14 +208,14 @@ const RegisteredUsers = ({ apis }) => {
         setIsModalOpenDiscount(false);
         messageApi.open({
           type: "success",
-          content: "Đặt hàng thành công!!!",
+          content: "Tạo khuyến mại thành công!!!",
         });
       })
       .catch((error) => {
         console.error("Error:", error);
         messageApi.open({
           type: "error",
-          content: "Đặt hàng thất bại, vui lòng thử lại!",
+          content: "Tạo khuyến mại thất bại, vui lòng thử lại!",
         });
       });
   };
@@ -400,7 +400,7 @@ const RegisteredUsers = ({ apis }) => {
             >
               % khuyến mãi
               <input
-                type="text"
+                type="number"
                 style={{
                   marginLeft: "10px",
                 }}

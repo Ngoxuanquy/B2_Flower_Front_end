@@ -120,6 +120,7 @@ const Information = () => {
   };
 
   useEffect(() => {
+    getApi();
     getDonnet();
   }, []);
 

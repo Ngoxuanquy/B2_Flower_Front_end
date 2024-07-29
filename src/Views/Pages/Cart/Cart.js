@@ -1123,7 +1123,7 @@ const Cart = () => {
           <div className={cx("discount-option")}>
             {isDiscounts?.map((isDiscount) => {
               const isValid =
-                new Date(isDiscount.discount_start_date) > new Date();
+                new Date(isDiscount.discount_end_date) > new Date();
               return (
                 <div key={isDiscount.id} className={cx("discount-container")}>
                   <div style={{ display: "flex" }}>
