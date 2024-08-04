@@ -10,6 +10,9 @@ const cx = classNames.bind(styles);
 
 function OrdersSent() {
   const [orders, setOrder] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
+  const [totalSold, setTotalSold] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
   const [theme, ordersLength] = useContext(ThemeConText);
 
   const getApiTransactionOrder = () => {
@@ -27,9 +30,49 @@ function OrdersSent() {
     )
       .then((data) => {
         setOrder(data.metadata);
+        calculateTopProducts(data.metadata);
         return;
       })
       .catch((err) => console.log({ err }));
+  };
+
+  const calculateTopProducts = (orders) => {
+    const productMap = new Map();
+
+    orders.forEach((order) => {
+      order.transaction_products.forEach((product) => {
+        if (productMap.has(product.product_id)) {
+          const existingProduct = productMap.get(product.product_id);
+          existingProduct.sold_quantity += product.quantity;
+          existingProduct.total_price +=
+            product.quantity * product.product_price;
+        } else {
+          productMap.set(product.product_id, {
+            ...product,
+            sold_quantity: product.quantity,
+            total_price: product.quantity * product.product_price,
+          });
+        }
+      });
+    });
+
+    const productList = Array.from(productMap.values());
+    productList.sort((a, b) => b.sold_quantity - a.sold_quantity);
+
+    const topProductsList = productList.slice(0, 5);
+    setTopProducts(topProductsList);
+
+    const totalSoldQuantity = productList.reduce(
+      (total, product) => total + product.sold_quantity,
+      0
+    );
+    const totalRevenueAmount = productList.reduce(
+      (total, product) => total + product.total_price,
+      0
+    );
+
+    setTotalSold(totalSoldQuantity);
+    setTotalRevenue(totalRevenueAmount);
   };
 
   useEffect(() => {
@@ -238,6 +281,61 @@ function OrdersSent() {
               Chưa có đơn hàng
             </p>
           )}
+        </div>
+
+        <div className={cx("top-products-container")}>
+          <h2 style={{ textAlign: "center", marginTop: "20px" }}>
+            Top 5 Sản Phẩm Bán Chạy Nhất
+          </h2>
+          <div>
+            {topProducts.length > 0 ? (
+              topProducts.map((product, index) => (
+                <div
+                  key={product.product_id}
+                  style={{
+                    marginBottom: "20px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    padding: "20px",
+                  }}
+                >
+                  <h3>
+                    {index + 1}. {product.product_name}
+                  </h3>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <Image
+                      src={product.product_thumb}
+                      style={{
+                        width: "80px",
+                        height: "80px",
+                        marginLeft: "20px",
+                      }}
+                    />
+                  </div>
+                  <p>Giá: {product.product_price}</p>
+                  <p>Số lượng đã bán: {product.sold_quantity}</p>
+                  <p>Tổng tiền: {product.total_price}</p>
+                </div>
+              ))
+            ) : (
+              <p
+                style={{
+                  fontStyle: "italic",
+                  textAlign: "center",
+                  marginTop: "20px",
+                }}
+              >
+                Chưa có dữ liệu sản phẩm bán chạy
+              </p>
+            )}
+          </div>
+          <div className={cx("totals-container")}>
+            <h2 style={{ textAlign: "center", marginTop: "20px" }}>
+              Tổng Số Lượng Và Tổng Tiền Bán Được
+            </h2>
+            <p>Tổng số lượng đã bán: {totalSold}</p>
+            <p>Tổng tiền bán được: {totalRevenue}</p>
+          </div>
         </div>
       </div>
     </div>

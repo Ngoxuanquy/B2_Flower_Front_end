@@ -84,7 +84,7 @@ const DashBoard = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [numTopProducts, setNumTopProducts] = useState(5);
   const [topProducts, setTopProducts] = useState([]);
-  useEffect(() => {
+  const fetchProducts = () => {
     Call_Post_Api(null, null, null, "/product/getAll")
       .then((data) => {
         setTotalProducts(data.metadata.length);
@@ -92,7 +92,7 @@ const DashBoard = () => {
       .catch((error) => {
         console.error("Error fetching products:", error);
       });
-  });
+  };
   const getApiTransactionOrder = () => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
@@ -183,7 +183,7 @@ const DashBoard = () => {
           <div className="col-md-8">
             <div className={cx("dashboardBoxWrapper")}>
               <DashBoardBox
-                title="Tổng người dùng"
+                title="Total Users"
                 color={["#1da256", "#48d483"]}
                 icon={<FaCircleUser />}
                 grow={true}
@@ -194,8 +194,7 @@ const DashBoard = () => {
                 icon={<MdShoppingCart />}
               />
               <DashBoardBox
-                title="Tổng Sản Phẩm"
-                number={totalProducts}
+                title="Total Products"
                 color={["#2c78e5", "#60aff5"]}
                 icon={<FaBagShopping />}
               />

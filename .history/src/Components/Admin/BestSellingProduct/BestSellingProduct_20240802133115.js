@@ -77,7 +77,7 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
 
   return (
     <div className={cx("bestSelling")}>
-      <div className={cx("selling")}>
+      <div>
         <h3 className={cx("titleSelling")}>Sản phẩm bán chạy nhất</h3>
         <Button onClick={exportToExcel} className={cx("export-button")}>
           Export to Excel

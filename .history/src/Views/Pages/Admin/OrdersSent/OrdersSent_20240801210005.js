@@ -34,7 +34,8 @@ function OrdersSent() {
 
   useEffect(() => {
     getApiTransactionOrder();
-  }, []);
+    console.log(orders);
+  }, [orders]);
 
   const handelGuiDon = (transactionId) => {
     const token = Cookies.get("accessToken");

@@ -27,6 +27,7 @@ function OrdersSent() {
     )
       .then((data) => {
         setOrder(data.metadata);
+        console.log(orders);
         return;
       })
       .catch((err) => console.log({ err }));

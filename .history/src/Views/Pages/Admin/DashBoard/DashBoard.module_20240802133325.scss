@@ -176,23 +176,20 @@
       text-align: left;
       .selling {
         display: flex;
-        justify-content: space-between;
-
+        justify-content: center;
         .titleSelling {
           font-size: 18px;
           font-weight: 700;
           margin-bottom: 8px;
         }
-
+        .select_by {
+          display: flex;
+          .input {
+            color: #224abe;
+          }
+        }
         .export-button {
           background: #035102 !important;
-          color: #fff;
-        }
-      }
-      .select_by {
-        display: flex;
-        .input {
-          color: #224abe;
         }
       }
       .table-responsive {

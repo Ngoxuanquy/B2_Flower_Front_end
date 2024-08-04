@@ -177,7 +177,7 @@
       .selling {
         display: flex;
         justify-content: space-between;
-
+        color: #000;
         .titleSelling {
           font-size: 18px;
           font-weight: 700;
@@ -186,7 +186,6 @@
 
         .export-button {
           background: #035102 !important;
-          color: #fff;
         }
       }
       .select_by {
