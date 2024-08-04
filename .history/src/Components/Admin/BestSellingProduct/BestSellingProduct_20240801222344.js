@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import styles from "../../../Views/Pages/Admin/DashBoard/DashBoard.module.scss";
 import classNames from "classnames/bind";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 
 const cx = classNames.bind(styles);
 
@@ -26,7 +24,7 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
       setCategories(uniqueCategories);
     }
   }, [data]);
-  console.log(apis);
+
   useEffect(() => {
     if (onNumTopProductsChange) {
       onNumTopProductsChange(selectShow);
@@ -45,44 +43,9 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
     ? apis.filter((item) => item.product_type === selectCategory)
     : apis;
 
-  // Function to export data to Excel
-  const exportToExcel = () => {
-    const topProducts = filteredProducts.slice(0, selectShow);
-
-    // Thêm số thứ tự (STT) vào từng sản phẩm
-    const dataWithIndex = topProducts.map((item, index) => ({
-      STT: index + 1, // Số thứ tự bắt đầu từ 1
-      "Sản Phẩm": item.product_name,
-      Loại: item.product_type,
-      Giá: `${item.product_price} đ`,
-      Kho: item.product_quantity,
-      "Đã bán": item.quantity,
-      "Tổng tiền": `${item.product_price * item.quantity} đ`,
-    }));
-
-    // Chuyển đổi dữ liệu thành bảng tính
-    const ws = XLSX.utils.json_to_sheet(dataWithIndex);
-
-    // Tạo workbook mới và thêm sheet vào đó
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "BestSellingProducts");
-
-    // Ghi workbook vào file Excel
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const blob = new Blob([wbout], { type: "application/octet-stream" });
-
-    // Tải xuống file Excel
-    saveAs(blob, "BestSellingProducts.xlsx");
-  };
-
   return (
     <div className={cx("bestSelling")}>
-      <div className={cx("selling")}>
-        <h3 className={cx("titleSelling")}>Sản phẩm bán chạy nhất</h3>
-        <Button onClick={exportToExcel} className={cx("export-button")}>
-          Export to Excel
-        </Button>
-      </div>
+      <h3 className={cx("titleSelling")}>Best Selling Products</h3>
       <div className={cx("select_by")}>
         <div className="col-md-3">
           <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
@@ -124,7 +87,7 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
         <table className={cx("table", "table-bordered")}>
           <thead className={cx("thead-dark")}>
             <tr>
-              <td>STT</td>
+              <td>UID</td>
               <td>Sản Phẩm</td>
               <td>Loại</td>
               <td>Giá</td>

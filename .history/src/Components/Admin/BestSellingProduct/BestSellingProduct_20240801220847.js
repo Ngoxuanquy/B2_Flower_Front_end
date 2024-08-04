@@ -1,37 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Button, MenuItem } from "@mui/material";
+import { FaEye, FaPencil } from "react-icons/fa6";
+import { MdDelete } from "react-icons/md";
+import { Button, MenuItem, Pagination } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import styles from "../../../Views/Pages/Admin/DashBoard/DashBoard.module.scss";
 import classNames from "classnames/bind";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 
 const cx = classNames.bind(styles);
 
-const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
+const BestSellingProduct = ({ datas }) => {
   const [apis, setApis] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectShow, setSelectShow] = useState(5);
+  const [selectShow, setSelectShow] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
 
   useEffect(() => {
-    if (data && Array.isArray(data)) {
-      setApis(data);
+    if (datas && Array.isArray(datas)) {
+      setApis(datas);
 
       // Compute categories
-      const allCategories = data.map((product) => product.product_type);
+      const allCategories = datas.map((product) => product.product_type);
       const uniqueCategories = [...new Set(allCategories)];
       setCategories(uniqueCategories);
     }
-  }, [data]);
-  console.log(apis);
-  useEffect(() => {
-    if (onNumTopProductsChange) {
-      onNumTopProductsChange(selectShow);
-    }
-  }, [selectShow]);
+  }, [datas]);
 
   const handleChangeSelectShow = (event) => {
     setSelectShow(event.target.value);
@@ -41,48 +35,9 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
     setSelectCategory(event.target.value);
   };
 
-  const filteredProducts = selectCategory
-    ? apis.filter((item) => item.product_type === selectCategory)
-    : apis;
-
-  // Function to export data to Excel
-  const exportToExcel = () => {
-    const topProducts = filteredProducts.slice(0, selectShow);
-
-    // Thêm số thứ tự (STT) vào từng sản phẩm
-    const dataWithIndex = topProducts.map((item, index) => ({
-      STT: index + 1, // Số thứ tự bắt đầu từ 1
-      "Sản Phẩm": item.product_name,
-      Loại: item.product_type,
-      Giá: `${item.product_price} đ`,
-      Kho: item.product_quantity,
-      "Đã bán": item.quantity,
-      "Tổng tiền": `${item.product_price * item.quantity} đ`,
-    }));
-
-    // Chuyển đổi dữ liệu thành bảng tính
-    const ws = XLSX.utils.json_to_sheet(dataWithIndex);
-
-    // Tạo workbook mới và thêm sheet vào đó
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "BestSellingProducts");
-
-    // Ghi workbook vào file Excel
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const blob = new Blob([wbout], { type: "application/octet-stream" });
-
-    // Tải xuống file Excel
-    saveAs(blob, "BestSellingProducts.xlsx");
-  };
-
   return (
     <div className={cx("bestSelling")}>
-      <div className={cx("selling")}>
-        <h3 className={cx("titleSelling")}>Sản phẩm bán chạy nhất</h3>
-        <Button onClick={exportToExcel} className={cx("export-button")}>
-          Export to Excel
-        </Button>
-      </div>
+      <h3 className={cx("titleSelling")}>Best Selling Products</h3>
       <div className={cx("select_by")}>
         <div className="col-md-3">
           <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
@@ -93,9 +48,12 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
               value={selectShow}
               onChange={handleChangeSelectShow}
             >
-              <MenuItem value={5}>Top 5</MenuItem>
-              <MenuItem value={10}>Top 10</MenuItem>
-              <MenuItem value={15}>Top 15</MenuItem>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>10 rows</MenuItem>
+              <MenuItem value={20}>20 rows</MenuItem>
+              <MenuItem value={30}>30 rows</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -124,17 +82,17 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
         <table className={cx("table", "table-bordered")}>
           <thead className={cx("thead-dark")}>
             <tr>
-              <td>STT</td>
-              <td>Sản Phẩm</td>
-              <td>Loại</td>
-              <td>Giá</td>
-              <td>Kho</td>
-              <td>Đã bán</td>
-              <td>Tổng tiền</td>
+              <td>UID</td>
+              <td>PRODUCT</td>
+              <td>CATEGORY</td>
+              <td>PRICE</td>
+              <td>STOCK</td>
+              <td>ORDER</td>
+              <td>SALES</td>
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.slice(0, selectShow).map((item, index) => (
+            {apis?.map((item, index) => (
               <tr key={item.product_id}>
                 <td>#{index + 1}</td>
                 <td className={cx("info-products")}>
@@ -150,22 +108,29 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
                     </div>
                     <div className={cx("info")}>
                       <h6>{item.product_name}</h6>
-                      <p>{item.product_description}</p>
+                      <p>
+                        Lorem ipsum dolor sit amet consectetur, adipisicing
+                        elit.
+                      </p>
                     </div>
                   </div>
                 </td>
                 <td>{item.product_type}</td>
                 <td>
                   <del className={cx("old")}>${item.old_price}</del>
-                  <span className={cx("new")}>{item.product_price} đ</span>
+                  <span className={cx("new")}>${item.product_price}</span>
                 </td>
                 <td>{item.product_quantity}</td>
                 <td>{item.quantity}</td>
-                <td>{item.product_price * item.quantity} đ</td>
+                <td>${item.product_quantity * item.quantity}</td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        <div className={cx("page")}>
+          <Pagination count={Math.ceil(apis.length / (selectShow || 10))} />
+        </div>
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ const DashBoardBox = (props) => {
     handleClose();
   };
   return (
-    <div
+    <dv
       className={cx("dashboardBox")}
       style={{
         backgroundImage: `linear-gradient(to right,${props.color?.[0]},${props.color?.[1]})`,
@@ -98,7 +98,7 @@ const DashBoardBox = (props) => {
           </Menu>
         </div>
       </div>
-    </div>
+    </dv>
   );
 };
 

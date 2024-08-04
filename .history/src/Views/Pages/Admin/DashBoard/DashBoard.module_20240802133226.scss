@@ -175,24 +175,19 @@
       line-height: 24px;
       text-align: left;
       .selling {
-        display: flex;
-        justify-content: space-between;
-
         .titleSelling {
           font-size: 18px;
           font-weight: 700;
           margin-bottom: 8px;
         }
-
-        .export-button {
-          background: #035102 !important;
-          color: #fff;
+        .select_by {
+          display: flex;
+          .input {
+            color: #224abe;
+          }
         }
-      }
-      .select_by {
-        display: flex;
-        .input {
-          color: #224abe;
+        .export-button {
+          background: #1866ee !important;
         }
       }
       .table-responsive {

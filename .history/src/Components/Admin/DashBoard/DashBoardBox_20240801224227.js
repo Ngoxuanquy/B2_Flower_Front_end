@@ -8,28 +8,35 @@ import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { GiBackwardTime } from "react-icons/gi";
+
 const ranges = {
   lastDay: "Last Day",
   lastWeek: "Last Week",
   lastMonth: "Last Month",
   lastYear: "Last Year",
 };
+
 const cx = classNames.bind(styles);
 const ITEM_HEIGHT = 48;
+
 const DashBoardBox = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedRange, setSelectedRange] = useState("lastMonth");
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleMenuItemClick = (rangeKey) => {
     setSelectedRange(rangeKey);
     handleClose();
   };
+
   return (
     <div
       className={cx("dashboardBox")}
@@ -38,9 +45,9 @@ const DashBoardBox = (props) => {
       }}
     >
       {props.grow === true ? (
-        <sapn className={cx("chart")}>
+        <span className={cx("chart")}>
           <TrendingUpIcon />
-        </sapn>
+        </span>
       ) : (
         <span className={cx("chart")}>
           <TrendingDownIcon />
@@ -52,11 +59,7 @@ const DashBoardBox = (props) => {
           <span>{props.number}</span>
         </div>
         <div className={cx("divIcon")}>
-          {props.icon ? (
-            <span className={cx("icon")}>{props.icon ? props.icon : ""}</span>
-          ) : (
-            ""
-          )}
+          {props.icon ? <span className={cx("icon")}>{props.icon}</span> : ""}
         </div>
       </div>
       <div className={cx("bottomEle")}>

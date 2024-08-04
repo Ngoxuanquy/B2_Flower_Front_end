@@ -10,6 +10,7 @@ const cx = classNames.bind(styles);
 
 function OrdersSent() {
   const [orders, setOrder] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
   const [theme, ordersLength] = useContext(ThemeConText);
 
   const getApiTransactionOrder = () => {
@@ -32,8 +33,29 @@ function OrdersSent() {
       .catch((err) => console.log({ err }));
   };
 
+  const getTopProducts = () => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/product/getTopProducts`,
+      "Get"
+    )
+      .then((data) => {
+        setTopProducts(data.metadata);
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
+
   useEffect(() => {
     getApiTransactionOrder();
+    getTopProducts();
   }, []);
 
   const handelGuiDon = (transactionId) => {
@@ -238,6 +260,55 @@ function OrdersSent() {
               Chưa có đơn hàng
             </p>
           )}
+        </div>
+
+        <div
+          className={cx("top-products-container")}
+          style={{ marginTop: "40px" }}
+        >
+          <h2>Sản phẩm bán chạy nhất</h2>
+          <div className={cx("top-products-list")}>
+            {topProducts?.length > 0 ? (
+              topProducts.map((product, index) => (
+                <div
+                  key={product._id}
+                  className={cx("top-product-item")}
+                  style={{
+                    marginBottom: "20px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    padding: "20px",
+                  }}
+                >
+                  <div className={cx("top-product-header")}>
+                    <h3 style={{ fontSize: "1.5rem", margin: "0" }}>
+                      {index + 1}. {product.product_name}
+                    </h3>
+                    <Image
+                      src={product.product_thumb}
+                      style={{
+                        width: "80px",
+                        height: "80px",
+                        marginLeft: "20px",
+                      }}
+                    />
+                  </div>
+                  <p>Giá: {product.product_price}</p>
+                  <p>Số lượng đã bán: {product.sold_quantity}</p>
+                </div>
+              ))
+            ) : (
+              <p
+                style={{
+                  fontStyle: "italic",
+                  textAlign: "center",
+                  marginTop: "20px",
+                }}
+              >
+                Chưa có dữ liệu sản phẩm bán chạy
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

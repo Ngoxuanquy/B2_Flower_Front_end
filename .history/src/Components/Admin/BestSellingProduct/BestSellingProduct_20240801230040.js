@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -77,12 +77,7 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
 
   return (
     <div className={cx("bestSelling")}>
-      <div className={cx("selling")}>
-        <h3 className={cx("titleSelling")}>Sản phẩm bán chạy nhất</h3>
-        <Button onClick={exportToExcel} className={cx("export-button")}>
-          Export to Excel
-        </Button>
-      </div>
+      <h3 className={cx("titleSelling")}>Sản phẩm bán chạy nhất</h3>
       <div className={cx("select_by")}>
         <div className="col-md-3">
           <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
@@ -119,6 +114,9 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
             </Select>
           </FormControl>
         </div>
+        <button onClick={exportToExcel} className={cx("export-button")}>
+          Export to Excel
+        </button>
       </div>
       <div className={cx("table-responsive")}>
         <table className={cx("table", "table-bordered")}>

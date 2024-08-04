@@ -183,7 +183,7 @@ const DashBoard = () => {
           <div className="col-md-8">
             <div className={cx("dashboardBoxWrapper")}>
               <DashBoardBox
-                title="Tổng người dùng"
+                title="Total Users"
                 color={["#1da256", "#48d483"]}
                 icon={<FaCircleUser />}
                 grow={true}

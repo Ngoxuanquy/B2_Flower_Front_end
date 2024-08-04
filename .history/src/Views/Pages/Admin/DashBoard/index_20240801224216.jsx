@@ -82,17 +82,22 @@ const ITEM_HEIGHT = 48;
 
 const DashBoard = () => {
   const [totalProducts, setTotalProducts] = useState(0);
+  const [prevTotalProducts, setPrevTotalProducts] = useState(0); // State to store previous total products
   const [numTopProducts, setNumTopProducts] = useState(5);
   const [topProducts, setTopProducts] = useState([]);
+
+  // Fetch total products and store previous total
   useEffect(() => {
     Call_Post_Api(null, null, null, "/product/getAll")
       .then((data) => {
+        setPrevTotalProducts(totalProducts); // Store previous total products
         setTotalProducts(data.metadata.length);
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
       });
-  });
+  }, [totalProducts]);
+
   const getApiTransactionOrder = () => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
@@ -135,9 +140,11 @@ const DashBoard = () => {
 
     setTopProducts(sortedProducts.slice(0, numTopProducts));
   };
+
   useEffect(() => {
     getApiTransactionOrder();
   }, [numTopProducts]);
+
   const pageTitleProps = {
     title: "Dashboard",
     items: [
@@ -145,22 +152,28 @@ const DashBoard = () => {
       { text: "Dashboard", link: "/admin/dash-board" },
     ],
   };
+
   useEffect(() => {
     document.title = "Dash Broad";
   }, []);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedRange, setSelectedRange] = useState("lastMonth");
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleMenuItemClick = (rangeKey) => {
     setSelectedRange(rangeKey);
     handleClose();
   };
+
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -170,6 +183,11 @@ const DashBoard = () => {
       chart.destroy();
     };
   }, []);
+
+  // Calculate percentage change
+  const percentageChange = prevTotalProducts
+    ? ((totalProducts - prevTotalProducts) / prevTotalProducts) * 100
+    : 0;
 
   return (
     <div className={cx("container")}>
@@ -250,8 +268,13 @@ const DashBoard = () => {
                   </Menu>
                 </div>
               </div>
-              <h3 className={cx("totalPrice")}>$3,787,681.00</h3>
-              <p>$3,578.90 in {ranges[selectedRange]}</p>
+              <h3 className={cx("totalPrice")}>
+                ${totalProducts.toLocaleString()}
+              </h3>
+              <p>
+                {percentageChange.toFixed(2)}% compared to{" "}
+                {ranges[selectedRange]}
+              </p>
               <div>
                 <Bar ref={chartRef} data={data} options={options} />
               </div>
