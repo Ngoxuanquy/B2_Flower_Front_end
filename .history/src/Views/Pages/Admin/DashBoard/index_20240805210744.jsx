@@ -84,11 +84,6 @@ const DashBoard = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [numTopProducts, setNumTopProducts] = useState(5);
   const [topProducts, setTopProducts] = useState([]);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [totalOrders, setTotalOrders] = useState(0);
-  const [undeliveredOrder, setUndeliveredOrder] = useState(0);
-  const URL = process.env.REACT_APP_URL;
   useEffect(() => {
     Call_Post_Api(null, null, null, "/product/getAll")
       .then((data) => {
@@ -104,36 +99,16 @@ const DashBoard = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    // Make both API calls concurrently
-    Promise.all([
-      Call_Post_Api(
-        null,
-        cleanedJwtString,
-        cleanId,
-        `/transaction/getFullOrder_done`,
-        "Get"
-      ),
-      Call_Post_Api(
-        null,
-        cleanedJwtString,
-        cleanId,
-        `/transaction/getFull`,
-        "Get"
-      ),
-    ])
-      .then(([doneOrdersResponse, fullOrdersResponse]) => {
-        // Combine the metadata from both responses
-        const combinedData = [
-          ...doneOrdersResponse.metadata,
-          ...fullOrdersResponse.metadata,
-        ];
-        setTotalOrders(combinedData.length);
-        setUndeliveredOrder(fullOrdersResponse.metadata.length);
-        // Process the combined data
-        calculateTopProducts(doneOrdersResponse.metadata);
-        calculateTotalPrice(doneOrdersResponse.metadata);
-
-        return combinedData;
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/transaction/getFullOrder_done`,
+      "Get"
+    )
+      .then((data) => {
+        calculateTopProducts(data.metadata);
+        return;
       })
       .catch((err) => console.log({ err }));
   };
@@ -159,13 +134,6 @@ const DashBoard = () => {
     );
 
     setTopProducts(sortedProducts.slice(0, numTopProducts));
-  };
-  const calculateTotalPrice = (orders) => {
-    let total = 0;
-    orders.forEach((order) => {
-      total += order.total_amounts; // Assuming each order has a total_price field
-    });
-    setTotalPrice(total);
   };
   useEffect(() => {
     getApiTransactionOrder();
@@ -202,28 +170,7 @@ const DashBoard = () => {
       chart.destroy();
     };
   }, []);
-  useEffect(() => {
-    const token = Cookies.get("accessToken");
-    const id = Cookies.get("id");
-    const cleanedJwtString = token?.replace(/^"|"$/g, "");
-    const cleanId = id?.replace(/^"|"$/g, "");
-
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_API_KEY,
-        authorization: cleanedJwtString,
-        "x-client-id": cleanId,
-      },
-    };
-
-    fetch(URL + "/users/userId/" + cleanId, requestOptions)
-      .then((res) => res.json())
-      .then((res) => {
-        setTotalUsers(res.metadata.length);
-      });
-  }, [URL]);
+  console.log(topProducts);
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
@@ -237,14 +184,12 @@ const DashBoard = () => {
             <div className={cx("dashboardBoxWrapper")}>
               <DashBoardBox
                 title="Tổng người dùng"
-                number={totalUsers}
                 color={["#1da256", "#48d483"]}
                 icon={<FaCircleUser />}
                 grow={true}
               />
               <DashBoardBox
-                title="Tổng Đơn Hàng"
-                number={totalOrders}
+                title="Total Orders"
                 color={["#c012e2", "#eb64fe"]}
                 icon={<MdShoppingCart />}
               />
@@ -255,8 +200,7 @@ const DashBoard = () => {
                 icon={<FaBagShopping />}
               />
               <DashBoardBox
-                title="Đơn Chưa Giao"
-                number={undeliveredOrder}
+                title="Total Reviews"
                 color={["#e1950e", "#f3cd29"]}
                 grow={true}
                 icon={<GiStarsStack />}
@@ -267,7 +211,7 @@ const DashBoard = () => {
             <div className={cx("boxnew", "graphBox")}>
               <div className={cx("bottomEle")}>
                 <div className={cx("timeline")}>
-                  <h4>Tổng Doanh Thu</h4>
+                  <h4>Total Sales</h4>
                 </div>
                 <div style={{ marginLeft: "auto" }}>
                   <Button className={cx("toggleIcon")} onClick={handleClick}>
@@ -306,7 +250,7 @@ const DashBoard = () => {
                   </Menu>
                 </div>
               </div>
-              <h3 className={cx("totalPrice")}>{totalPrice} vnđ</h3>
+              <h3 className={cx("totalPrice")}>$3,787,681.00</h3>
               <p>$3,578.90 in {ranges[selectedRange]}</p>
               <div>
                 <Bar ref={chartRef} data={data} options={options} />

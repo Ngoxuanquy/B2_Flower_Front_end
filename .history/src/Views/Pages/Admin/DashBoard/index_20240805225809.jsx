@@ -16,79 +16,33 @@ import PageTitle from "../../../../Components/Admin/PageTitle/PageTitle";
 import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import ThemeConText from "../../../../config/themeConText";
 
-// Register the necessary components
 Chart.register(...registerables);
 Chart.register(zoomPlugin);
 
-const data = {
-  labels: ["2021", "2022", "2023", "2024"],
-  datasets: [
-    {
-      label: "Total",
-      data: [30, 120, 130, 90],
-      backgroundColor: "blue",
-      borderColor: "blue",
-      borderWidth: 1,
-    },
-  ],
-};
-
-const options = {
-  scales: {
-    x: {
-      beginAtZero: true,
-      ticks: {
-        color: "white", // Color for X-axis labels
-      },
-    },
-    y: {
-      beginAtZero: true,
-      ticks: {
-        color: "white",
-        callback: function (value) {
-          return `$${value}`; // Add dollar sign before the value
-        },
-      },
-    },
-  },
-  plugins: {
-    legend: {
-      labels: {
-        color: "white", // Color for legend labels
-      },
-    },
-    tooltip: {
-      callbacks: {
-        label: function (tooltipItem) {
-          return `$${tooltipItem.raw}`; // Add dollar sign before the value in tooltips
-        },
-      },
-      bodyColor: "white", // Color for tooltip body text
-      titleColor: "white", // Color for tooltip title
-    },
-    title: {
-      display: false, // Disable the built-in title
-    },
-  },
-};
-const ranges = {
-  lastDay: "Last Day",
-  lastWeek: "Last Week",
-  lastMonth: "Last Month",
-  lastYear: "Last Year",
-};
 const cx = classNames.bind(styles);
 const ITEM_HEIGHT = 48;
 
 const DashBoard = () => {
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "Total",
+        data: [],
+        backgroundColor: "blue",
+        borderColor: "blue",
+        borderWidth: 1,
+      },
+    ],
+  });
+
   const [totalProducts, setTotalProducts] = useState(0);
   const [numTopProducts, setNumTopProducts] = useState(5);
   const [topProducts, setTopProducts] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalOrders, setTotalOrders] = useState(0);
-  const [undeliveredOrder, setUndeliveredOrder] = useState(0);
   const URL = process.env.REACT_APP_URL;
+
   useEffect(() => {
     Call_Post_Api(null, null, null, "/product/getAll")
       .then((data) => {
@@ -97,43 +51,36 @@ const DashBoard = () => {
       .catch((error) => {
         console.error("Error fetching products:", error);
       });
-  });
+  }, []);
+
   const getApiTransactionOrder = () => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    // Make both API calls concurrently
-    Promise.all([
-      Call_Post_Api(
-        null,
-        cleanedJwtString,
-        cleanId,
-        `/transaction/getFullOrder_done`,
-        "Get"
-      ),
-      Call_Post_Api(
-        null,
-        cleanedJwtString,
-        cleanId,
-        `/transaction/getFull`,
-        "Get"
-      ),
-    ])
-      .then(([doneOrdersResponse, fullOrdersResponse]) => {
-        // Combine the metadata from both responses
-        const combinedData = [
-          ...doneOrdersResponse.metadata,
-          ...fullOrdersResponse.metadata,
-        ];
-        setTotalOrders(combinedData.length);
-        setUndeliveredOrder(fullOrdersResponse.metadata.length);
-        // Process the combined data
-        calculateTopProducts(doneOrdersResponse.metadata);
-        calculateTotalPrice(doneOrdersResponse.metadata);
-
-        return combinedData;
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/transaction/getFullOrder_done`,
+      "Get"
+    )
+      .then((data) => {
+        calculateTopProducts(data.metadata);
+        calculateTotalPrice(data.metadata);
+        setChartData({
+          labels: data.metadata.map((order) => order.order_date),
+          datasets: [
+            {
+              label: "Total",
+              data: data.metadata.map((order) => order.total_amounts),
+              backgroundColor: "blue",
+              borderColor: "blue",
+              borderWidth: 1,
+            },
+          ],
+        });
       })
       .catch((err) => console.log({ err }));
   };
@@ -160,16 +107,19 @@ const DashBoard = () => {
 
     setTopProducts(sortedProducts.slice(0, numTopProducts));
   };
+
   const calculateTotalPrice = (orders) => {
     let total = 0;
     orders.forEach((order) => {
-      total += order.total_amounts; // Assuming each order has a total_price field
+      total += order.total_amounts;
     });
     setTotalPrice(total);
   };
+
   useEffect(() => {
     getApiTransactionOrder();
   }, [numTopProducts]);
+
   const pageTitleProps = {
     title: "Dashboard",
     items: [
@@ -177,9 +127,11 @@ const DashBoard = () => {
       { text: "Dashboard", link: "/admin/dash-board" },
     ],
   };
+
   useEffect(() => {
     document.title = "Dash Broad";
   }, []);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedRange, setSelectedRange] = useState("lastMonth");
   const open = Boolean(anchorEl);
@@ -202,6 +154,7 @@ const DashBoard = () => {
       chart.destroy();
     };
   }, []);
+
   useEffect(() => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
@@ -224,6 +177,7 @@ const DashBoard = () => {
         setTotalUsers(res.metadata.length);
       });
   }, [URL]);
+
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
@@ -244,7 +198,6 @@ const DashBoard = () => {
               />
               <DashBoardBox
                 title="Tổng Đơn Hàng"
-                number={totalOrders}
                 color={["#c012e2", "#eb64fe"]}
                 icon={<MdShoppingCart />}
               />
@@ -255,8 +208,7 @@ const DashBoard = () => {
                 icon={<FaBagShopping />}
               />
               <DashBoardBox
-                title="Đơn Chưa Giao"
-                number={undeliveredOrder}
+                title="Total Reviews"
                 color={["#e1950e", "#f3cd29"]}
                 grow={true}
                 icon={<GiStarsStack />}
@@ -309,7 +261,7 @@ const DashBoard = () => {
               <h3 className={cx("totalPrice")}>{totalPrice} vnđ</h3>
               <p>$3,578.90 in {ranges[selectedRange]}</p>
               <div>
-                <Bar ref={chartRef} data={data} options={options} />
+                <Bar ref={chartRef} data={chartData} options={options} />
               </div>
             </div>
           </div>

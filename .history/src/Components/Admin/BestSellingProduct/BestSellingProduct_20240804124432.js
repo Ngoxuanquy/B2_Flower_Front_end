@@ -26,6 +26,7 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
       setCategories(uniqueCategories);
     }
   }, [data]);
+  console.log(apis);
   useEffect(() => {
     if (onNumTopProductsChange) {
       onNumTopProductsChange(selectShow);
@@ -134,7 +135,7 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
           </thead>
           <tbody>
             {filteredProducts.slice(0, selectShow).map((item, index) => (
-              <tr key={item._id}>
+              <tr key={item.product_id}>
                 <td>#{index + 1}</td>
                 <td className={cx("info-products")}>
                   <div className={cx("productBox")}>

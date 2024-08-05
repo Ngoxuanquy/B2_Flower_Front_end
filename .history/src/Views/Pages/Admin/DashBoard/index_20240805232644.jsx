@@ -132,6 +132,7 @@ const DashBoard = () => {
         // Process the combined data
         calculateTopProducts(doneOrdersResponse.metadata);
         calculateTotalPrice(doneOrdersResponse.metadata);
+        console.log("1111", combinedData);
 
         return combinedData;
       })
@@ -166,6 +167,7 @@ const DashBoard = () => {
       total += order.total_amounts; // Assuming each order has a total_price field
     });
     setTotalPrice(total);
+    console.log(total);
   };
   useEffect(() => {
     getApiTransactionOrder();
@@ -221,6 +223,7 @@ const DashBoard = () => {
     fetch(URL + "/users/userId/" + cleanId, requestOptions)
       .then((res) => res.json())
       .then((res) => {
+        console.log(res.metadata);
         setTotalUsers(res.metadata.length);
       });
   }, [URL]);

@@ -15,15 +15,18 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
   const [categories, setCategories] = useState([]);
   const [selectShow, setSelectShow] = useState(5);
   const [selectCategory, setSelectCategory] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (data && Array.isArray(data)) {
+      setIsLoading(true);
       setApis(data);
 
       // Compute categories
       const allCategories = data.map((product) => product.product_type);
       const uniqueCategories = [...new Set(allCategories)];
       setCategories(uniqueCategories);
+      setIsLoading(false);
     }
   }, [data]);
   useEffect(() => {

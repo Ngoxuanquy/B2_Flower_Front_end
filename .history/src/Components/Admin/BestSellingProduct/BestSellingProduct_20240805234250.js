@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, MenuItem } from "@mui/material";
+import { Button, CircularProgress, MenuItem } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -15,15 +15,18 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
   const [categories, setCategories] = useState([]);
   const [selectShow, setSelectShow] = useState(5);
   const [selectCategory, setSelectCategory] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (data && Array.isArray(data)) {
+      setIsLoading(true);
       setApis(data);
 
       // Compute categories
       const allCategories = data.map((product) => product.product_type);
       const uniqueCategories = [...new Set(allCategories)];
       setCategories(uniqueCategories);
+      setIsLoading(false);
     }
   }, [data]);
   useEffect(() => {
@@ -133,36 +136,44 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.slice(0, selectShow).map((item, index) => (
-              <tr key={item._id}>
-                <td>#{index + 1}</td>
-                <td className={cx("info-products")}>
-                  <div className={cx("productBox")}>
-                    <div className={cx("imgWrapper")}>
-                      <div className={cx("img")}>
-                        <img
-                          src={item.product_thumb}
-                          alt="product"
-                          className="w-100"
-                        />
+            {isLoading ? (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center" }}>
+                  <CircularProgress />
+                </td>
+              </tr>
+            ) : (
+              filteredProducts.slice(0, selectShow).map((item, index) => (
+                <tr key={item.product_id}>
+                  <td>#{index + 1}</td>
+                  <td className={cx("info-products")}>
+                    <div className={cx("productBox")}>
+                      <div className={cx("imgWrapper")}>
+                        <div className={cx("img")}>
+                          <img
+                            src={item.product_thumb}
+                            alt="product"
+                            className="w-100"
+                          />
+                        </div>
+                      </div>
+                      <div className={cx("info")}>
+                        <h6>{item.product_name}</h6>
+                        <p>{item.product_description}</p>
                       </div>
                     </div>
-                    <div className={cx("info")}>
-                      <h6>{item.product_name}</h6>
-                      <p>{item.product_description}</p>
-                    </div>
-                  </div>
-                </td>
-                <td>{item.product_type}</td>
-                <td>
-                  <del className={cx("old")}>{item.product_price} đ</del>
-                  <span className={cx("new")}>{item.product_price} đ</span>
-                </td>
-                <td>{item.product_quantity}</td>
-                <td>{item.quantity}</td>
-                <td>{item.product_price * item.quantity} đ</td>
-              </tr>
-            ))}
+                  </td>
+                  <td>{item.product_type}</td>
+                  <td>
+                    <del className={cx("old")}>{item.product_price} đ</del>
+                    <span className={cx("new")}>{item.product_price} đ</span>
+                  </td>
+                  <td>{item.product_quantity}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.product_price * item.quantity} đ</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

@@ -86,8 +86,6 @@ const DashBoard = () => {
   const [topProducts, setTopProducts] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalOrders, setTotalOrders] = useState(0);
-  const [undeliveredOrder, setUndeliveredOrder] = useState(0);
   const URL = process.env.REACT_APP_URL;
   useEffect(() => {
     Call_Post_Api(null, null, null, "/product/getAll")
@@ -127,11 +125,11 @@ const DashBoard = () => {
           ...doneOrdersResponse.metadata,
           ...fullOrdersResponse.metadata,
         ];
-        setTotalOrders(combinedData.length);
-        setUndeliveredOrder(fullOrdersResponse.metadata.length);
+
         // Process the combined data
         calculateTopProducts(doneOrdersResponse.metadata);
         calculateTotalPrice(doneOrdersResponse.metadata);
+        console.log(combinedData);
 
         return combinedData;
       })
@@ -166,6 +164,7 @@ const DashBoard = () => {
       total += order.total_amounts; // Assuming each order has a total_price field
     });
     setTotalPrice(total);
+    console.log(total);
   };
   useEffect(() => {
     getApiTransactionOrder();
@@ -221,6 +220,7 @@ const DashBoard = () => {
     fetch(URL + "/users/userId/" + cleanId, requestOptions)
       .then((res) => res.json())
       .then((res) => {
+        console.log(res.metadata);
         setTotalUsers(res.metadata.length);
       });
   }, [URL]);
@@ -244,7 +244,6 @@ const DashBoard = () => {
               />
               <DashBoardBox
                 title="Tổng Đơn Hàng"
-                number={totalOrders}
                 color={["#c012e2", "#eb64fe"]}
                 icon={<MdShoppingCart />}
               />
@@ -255,8 +254,7 @@ const DashBoard = () => {
                 icon={<FaBagShopping />}
               />
               <DashBoardBox
-                title="Đơn Chưa Giao"
-                number={undeliveredOrder}
+                title="Total Reviews"
                 color={["#e1950e", "#f3cd29"]}
                 grow={true}
                 icon={<GiStarsStack />}
