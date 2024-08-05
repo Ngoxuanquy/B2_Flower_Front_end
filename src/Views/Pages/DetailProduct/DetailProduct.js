@@ -51,10 +51,7 @@ export const fetchProduct = async (productId) => {
       // You may need to include a body if the server expects it, e.g., body: JSON.stringify({ someData: "value" })
     };
 
-    const response = await fetch(
-      `${URL}/product/byId/${productId}`,
-      requestOptions
-    );
+    const response = await fetch(`${URL}/product/byId/${productId}`, requestOptions);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -79,12 +76,10 @@ function DetailProduct() {
   const [valueRate, setValueRate] = useState(3);
 
   useEffect(() => {
-    Call_Post_Api(null, null, null, `/product/byId/${productId}`).then(
-      (data) => {
-        setProduct(data.metadata);
-        setIsLoad(false);
-      }
-    );
+    Call_Post_Api(null, null, null, `/product/byId/${productId}`).then((data) => {
+      setProduct(data.metadata);
+      setIsLoad(false);
+    });
   }, []);
 
   const settings = {
@@ -109,12 +104,9 @@ function DetailProduct() {
             fontSize: "17px",
           }}
         >
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat.'
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+          enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat.'
           <div
             style={{
               marginLeft: "20px",
@@ -127,9 +119,8 @@ function DetailProduct() {
             <li>Inventory Management with Backordered items</li>
           </div>
           <div>
-            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            nisi ut aliquip ex ea commodo consequat.
+            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat.
           </div>
         </div>
       ),
@@ -139,12 +130,9 @@ function DetailProduct() {
       label: "Bình luận",
       children: (
         <div>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat.'
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+          enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat.'
           <div>
             <Input />
             <Button>Gửi</Button>
@@ -237,7 +225,6 @@ function DetailProduct() {
             height: "100vh",
             zIndex: 100,
             top: 0,
-            top: 0,
             left: 0,
             display: "flex",
             alignItems: "center",
@@ -259,12 +246,7 @@ function DetailProduct() {
                 <i className={cx("name-product")}>{products.product_name}</i>
                 <div className={cx("star")}>
                   <Flex gap="middle" vertical>
-                    <Rate
-                      tooltips={desc}
-                      onChange={setValueRate}
-                      value={valueRate}
-                      style={{ fontSize: "24px" }}
-                    />
+                    <Rate tooltips={desc} onChange={setValueRate} value={valueRate} style={{ fontSize: "24px" }} />
                     {/* {value ? <span>{desc[valueRate - 1]}</span> : null} */}
                   </Flex>
                   <span>Be the first to review this product</span>
@@ -284,18 +266,14 @@ function DetailProduct() {
                       color: theme.discountColor, // customize color if needed
                     }}
                   >
-                    <div>
-                      đ
-                      {products.product_price *
-                        (1 - products.product_discount / 100).toLocaleString()}
-                    </div>
+                    <div>đ {(products.product_price * (1 - products.product_discount / 100)).toLocaleString()}</div>
                     <div
                       style={{
                         textDecoration: "line-through",
                         color: theme.originalPriceColor,
                       }}
                     >
-                      đ{products.product_price.toLocaleString()}
+                      đ {products.product_price.toLocaleString()}
                     </div>
                   </div>
                 ) : (
@@ -305,16 +283,14 @@ function DetailProduct() {
                       color: theme.priceColor, // customize color if needed
                     }}
                   >
-                    đ{products.product_price}
+                    đ {products.product_price}
                   </div>
                 )}
 
                 <div className={cx("des-product")}>
-                  Pellentesque habitant morbi tristique senectus et netus et
-                  malesuada fames ac turpis egestas. Vestibulum tortor quam,
-                  feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu
-                  libero sit amet quam egestas semper. Aenean ultricies mi vitae
-                  est. Mauris placerat eleifend leo
+                  Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam,
+                  feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi
+                  vitae est. Mauris placerat eleifend leo
                 </div>
                 <div className={cx("AVAILABILITY")}>
                   AVAILABILITY:
@@ -337,21 +313,13 @@ function DetailProduct() {
                   <div className={cx("Soluong")}>
                     <Button onClick={handerTru}>-</Button>
                     <Input value={value} />
-                    <Button
-                      onClick={() => handerCong(products.product_quantity)}
-                    >
-                      +
-                    </Button>
+                    <Button onClick={() => handerCong(products.product_quantity)}>+</Button>
                   </div>
                   <button
                     className={cx("addtocart")}
                     onClick={() => handlerAddCart(products)}
                     disabled={products.product_quantity <= 0}
-                    title={
-                      products.product_quantity <= 0
-                        ? "Product is out of stock"
-                        : "Add to cart"
-                    }
+                    title={products.product_quantity <= 0 ? "Product is out of stock" : "Add to cart"}
                   >
                     {" "}
                     Add To Cart

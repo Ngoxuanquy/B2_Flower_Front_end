@@ -10,16 +10,65 @@ import Select from "@mui/material/Select";
 import styles from "./RegisteredUsers.module.scss";
 import classNames from "classnames/bind";
 import Cookies from "js-cookie";
-import {
-  Input,
-  Modal,
-  Select as AntSelect,
-  Collapse,
-  DatePicker,
-  message,
-} from "antd";
+import { Input, Modal, Select as AntSelect, Collapse, DatePicker, message } from "antd";
 
 const cx = classNames.bind(styles);
+
+export function handelDiscountO(cleanedJwtString, cleanId, textRadom, users, startDate, endDate, value) {
+  if (!cleanedJwtString) {
+    return {
+      isValid: false,
+      message: "Token không được để trống",
+    };
+  }
+
+  if (!cleanId) {
+    return {
+      isValid: false,
+      message: "ID không được để trống",
+    };
+  }
+
+  if (!textRadom) {
+    return {
+      isValid: false,
+      message: "Mã giảm giá không được để trống",
+    };
+  }
+
+  if (!users || users.length === 0) {
+    return {
+      isValid: false,
+      message: "Người dùng không được để trống",
+    };
+  }
+
+  if (!startDate) {
+    return {
+      isValid: false,
+      message: "Ngày bắt đầu không được để trống",
+    };
+  }
+
+  if (!endDate) {
+    return {
+      isValid: false,
+      message: "Ngày kết thúc không được để trống",
+    };
+  }
+
+  if (!value) {
+    return {
+      isValid: false,
+      message: "Giá trị không được để trống",
+    };
+  }
+
+  return {
+    isValid: true,
+  };
+}
+
 const RegisteredUsers = ({ apis }) => {
   const URL = process.env.REACT_APP_URL;
 
@@ -77,11 +126,7 @@ const RegisteredUsers = ({ apis }) => {
         setUsers([]);
       } else {
         // Nếu chưa chọn tất cả, chọn tất cả
-        setUsers(
-          optionUser
-            .map((option) => option.value)
-            .filter((value) => value !== "select_all")
-        );
+        setUsers(optionUser.map((option) => option.value).filter((value) => value !== "select_all"));
       }
     } else {
       // Cập nhật roles mà không bao gồm "Select All"
@@ -89,9 +134,7 @@ const RegisteredUsers = ({ apis }) => {
     }
   };
 
-  const filteredOptions = optionUser.filter(
-    (option) => option.value !== "select_all"
-  );
+  const filteredOptions = optionUser.filter((option) => option.value !== "select_all");
 
   useEffect(() => {
     setApi(apis);
@@ -112,65 +155,72 @@ const RegisteredUsers = ({ apis }) => {
     setStatus(api.status);
     setIsModalOpen(true);
   };
-  const handleDiscountOk = () => {
-    const token = Cookies.get("accessToken");
-    const id = Cookies.get("id");
-    const cleanedJwtString = token?.replace(/^"|"$/g, "");
-    const cleanId = id?.replace(/^"|"$/g, "");
 
-    // Validation checks
+  function handelDiscountO(cleanedJwtString, cleanId, textRadom, users, startDate, endDate, value) {
     if (!cleanedJwtString) {
-      messageApi.open({
-        type: "error",
-        content: "Token không được để trống",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "Token không được để trống",
+      };
     }
 
     if (!cleanId) {
-      messageApi.open({
-        type: "error",
-        content: "ID không được để trống",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "ID không được để trống",
+      };
     }
 
     if (!textRadom) {
-      messageApi.open({
-        type: "error",
-        content: "Mã giảm giá không được để trống",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "Mã giảm giá không được để trống",
+      };
     }
 
     if (!users || users.length === 0) {
-      messageApi.open({
-        type: "error",
-        content: "Người dùng không được để trống",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "Người dùng không được để trống",
+      };
     }
 
     if (!startDate) {
-      messageApi.open({
-        type: "error",
-        content: "Ngày bắt đầu không được để trống",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "Ngày bắt đầu không được để trống",
+      };
     }
 
     if (!endDate) {
-      messageApi.open({
-        type: "error",
-        content: "Ngày kết thúc không được để trống",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "Ngày kết thúc không được để trống",
+      };
     }
 
     if (!value) {
+      return {
+        isValid: false,
+        message: "Giá trị không được để trống",
+      };
+    }
+
+    return {
+      isValid: true,
+    };
+  }
+
+  const handleDiscountOk = () => {
+    const token = Cookies.get("accessToken")?.replace(/^"|"$/g, "");
+    const id = Cookies.get("id")?.replace(/^"|"$/g, "");
+
+    const validation = handelDiscountO(token, id, textRadom, users, startDate, endDate, value);
+
+    if (!validation.isValid) {
       messageApi.open({
         type: "error",
-        content: "Giá trị không được để trống",
+        content: validation.message,
       });
       return;
     }
@@ -180,8 +230,8 @@ const RegisteredUsers = ({ apis }) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.REACT_APP_API_KEY,
-        authorization: cleanedJwtString,
-        "x-client-id": cleanId,
+        authorization: token,
+        "x-client-id": id,
       },
       body: JSON.stringify({
         code: textRadom,
@@ -317,8 +367,7 @@ const RegisteredUsers = ({ apis }) => {
   };
 
   function getRandomString(length) {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let result = "";
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
@@ -363,11 +412,7 @@ const RegisteredUsers = ({ apis }) => {
           </div>
         </div>
       </Modal>
-      <Modal
-        open={isModalOpenDiscount}
-        onOk={handleDiscountOk}
-        onCancel={handleDiscountCancel}
-      >
+      <Modal open={isModalOpenDiscount} onOk={handleDiscountOk} onCancel={handleDiscountCancel}>
         <div>
           <h4>Mã khuyến mãi</h4>
           <div
@@ -465,10 +510,7 @@ const RegisteredUsers = ({ apis }) => {
       >
         <div className={cx("select_by")}>
           <div className="col-md-3">
-            <FormControl
-              sx={{ m: 1, minWidth: 120, width: "100%" }}
-              size="small"
-            >
+            <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
               <InputLabel id="demo-select-small-label">Show by</InputLabel>
               <Select
                 labelId="demo-select-small-label"
@@ -487,10 +529,7 @@ const RegisteredUsers = ({ apis }) => {
             </FormControl>
           </div>
           <div className="col-md-3 " style={{ marginLeft: "10px" }}>
-            <FormControl
-              sx={{ m: 1, minWidth: 120, width: "100%" }}
-              size="small"
-            >
+            <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
               <InputLabel id="demo-select-small-label">Category by</InputLabel>
               <Select
                 labelId="demo-select-small-label"
@@ -534,10 +573,7 @@ const RegisteredUsers = ({ apis }) => {
                   <td>#{index + 1}</td>
                   <td>
                     <div className={cx("info-user")}>
-                      <img
-                        src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg"
-                        alt="avatar of user"
-                      />
+                      <img src="https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg" alt="avatar of user" />
                       <p>{api.name}</p>
                     </div>
                   </td>

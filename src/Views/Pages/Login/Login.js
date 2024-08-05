@@ -20,6 +20,10 @@ import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 
 const cx = classNames.bind(styles);
 
+export function checkValiDangNhap(email, matkhau) {
+  return email !== "" && matkhau !== "" && email !== undefined && matkhau !== undefined;
+}
+
 function Logins() {
   const navigate = useNavigate();
 
@@ -59,9 +63,12 @@ function Logins() {
   const [matkhau, setMatKhau] = useState("");
   const [apis, setApi] = useState([]);
 
+  function checkValiDangNhap(email, matkhau) {
+    return email !== "" && matkhau !== "" && email !== undefined && matkhau !== undefined;
+  }
+
   function handerSubmit() {
-    console.log(email);
-    if (email != "" && matkhau != "" && email != undefined && matkhau != undefined) {
+    if (checkValiDangNhap(email, matkhau)) {
       setIsLoad(true);
       Call_Post_Api(
         {
@@ -106,7 +113,7 @@ function Logins() {
       });
     } else {
       // alert("Vui lòng nhập đủ thông tin!!!")
-      message.warning(" Vui lòng nhập đủ thông tin !!");
+      message.warning(" Nhập lại tài khoản hoặc mật khẩu !!");
     }
   }
 
