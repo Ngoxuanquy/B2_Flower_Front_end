@@ -80,106 +80,87 @@ const ranges = {
 const cx = classNames.bind(styles);
 const ITEM_HEIGHT = 48;
 
-const DashBoard = () => {
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [numTopProducts, setNumTopProducts] = useState(5);
-  const [topProducts, setTopProducts] = useState([]);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [totalOrders, setTotalOrders] = useState(0);
-  const [undeliveredOrder, setUndeliveredOrder] = useState(0);
-  const URL = process.env.REACT_APP_URL;
-  useEffect(() => {
-    Call_Post_Api(null, null, null, "/product/getAll")
-      .then((data) => {
-        setTotalProducts(data.metadata.length);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  });
-  const getApiTransactionOrder = () => {
-    const token = Cookies.get("accessToken");
-    const id = Cookies.get("id");
-    const cleanedJwtString = token?.replace(/"/g, "");
-    const cleanId = id?.replace(/"/g, "");
+  const DashBoard = () => {
+    const [totalProducts, setTotalProducts] = useState(0);
+    const [numTopProducts, setNumTopProducts] = useState(5);
+    const [topProducts, setTopProducts] = useState([]);
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const URL = process.env.REACT_APP_URL;
+    useEffect(() => {
+      Call_Post_Api(null, null, null, "/product/getAll")
+        .then((data) => {
+          setTotalProducts(data.metadata.length);
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+        });
+    });
+    const getApiTransactionOrder = () => {
+      const token = Cookies.get("accessToken");
+      const id = Cookies.get("id");
+      const cleanedJwtString = token?.replace(/"/g, "");
+      const cleanId = id?.replace(/"/g, "");
 
-    // Make both API calls concurrently
-    Promise.all([
       Call_Post_Api(
         null,
         cleanedJwtString,
         cleanId,
         `/transaction/getFullOrder_done`,
         "Get"
-      ),
-      Call_Post_Api(
-        null,
-        cleanedJwtString,
-        cleanId,
-        `/transaction/getFull`,
-        "Get"
-      ),
-    ])
-      .then(([doneOrdersResponse, fullOrdersResponse]) => {
-        // Combine the metadata from both responses
-        const combinedData = [
-          ...doneOrdersResponse.metadata,
-          ...fullOrdersResponse.metadata,
-        ];
-        setTotalOrders(combinedData.length);
-        setUndeliveredOrder(fullOrdersResponse.metadata.length);
-        // Process the combined data
-        calculateTopProducts(doneOrdersResponse.metadata);
-        calculateTotalPrice(doneOrdersResponse.metadata);
+      )
+        .then((data) => {
+          calculateTopProducts(data.metadata);
+          calculateTotalPrice(data.metadata);
+          console.log(data.metadata);
+          return;
+        })
+        .catch((err) => console.log({ err }));
+    };
 
-        return combinedData;
-      })
-      .catch((err) => console.log({ err }));
-  };
+    const calculateTopProducts = (orders) => {
+      const productMap = {};
 
-  const calculateTopProducts = (orders) => {
-    const productMap = {};
-
-    orders.forEach((order) => {
-      order.transaction_products.forEach((product) => {
-        if (productMap[product.product_name]) {
-          productMap[product.product_name].quantity += product.quantity;
-        } else {
-          productMap[product.product_name] = {
-            ...product,
-            quantity: product.quantity,
-          };
-        }
+      orders.forEach((order) => {
+        order.transaction_products.forEach((product) => {
+          if (productMap[product.product_name]) {
+            productMap[product.product_name].quantity += product.quantity;
+          } else {
+            productMap[product.product_name] = {
+              ...product,
+              quantity: product.quantity,
+            };
+          }
+        });
       });
-    });
 
-    const sortedProducts = Object.values(productMap).sort(
-      (a, b) => b.quantity - a.quantity
-    );
+      const sortedProducts = Object.values(productMap).sort(
+        (a, b) => b.quantity - a.quantity
+      );
 
-    setTopProducts(sortedProducts.slice(0, numTopProducts));
-  };
-  const calculateTotalPrice = (orders) => {
-    let total = 0;
-    orders.forEach((order) => {
-      total += order.total_amounts; // Assuming each order has a total_price field
-    });
-    setTotalPrice(total);
-  };
-  useEffect(() => {
-    getApiTransactionOrder();
-  }, [numTopProducts]);
-  const pageTitleProps = {
-    title: "Dashboard",
-    items: [
-      { text: "Admin", link: "/admin/dash-board" },
-      { text: "Dashboard", link: "/admin/dash-board" },
-    ],
-  };
-  useEffect(() => {
-    document.title = "Dash Broad";
-  }, []);
+      setTopProducts(sortedProducts.slice(0, numTopProducts));
+    };
+    const calculateTotalPrice = (orders) => {
+      let total = 0;
+      orders.forEach((order) => {
+        total += order.total_amounts; // Assuming each order has a total_price field
+      });
+      setTotalPrice(total);
+      console.log(total);
+    };
+    useEffect(() => {
+      getApiTransactionOrder();
+    }, [numTopProducts]);
+    const pageTitleProps = {
+      title: "Dashboard",
+      items: [
+        { text: "Admin", link: "/admin/dash-board" },
+        { text: "Dashboard", link: "/admin/dash-board" },
+      ],
+    };
+    useEffect(() => {
+      document.title = "Dash Broad";
+    }, []);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedRange, setSelectedRange] = useState("lastMonth");
   const open = Boolean(anchorEl);
@@ -221,6 +202,7 @@ const DashBoard = () => {
     fetch(URL + "/users/userId/" + cleanId, requestOptions)
       .then((res) => res.json())
       .then((res) => {
+        console.log(res.metadata);
         setTotalUsers(res.metadata.length);
       });
   }, [URL]);
@@ -244,7 +226,6 @@ const DashBoard = () => {
               />
               <DashBoardBox
                 title="Tổng Đơn Hàng"
-                number={totalOrders}
                 color={["#c012e2", "#eb64fe"]}
                 icon={<MdShoppingCart />}
               />
@@ -255,8 +236,7 @@ const DashBoard = () => {
                 icon={<FaBagShopping />}
               />
               <DashBoardBox
-                title="Đơn Chưa Giao"
-                number={undeliveredOrder}
+                title="Total Reviews"
                 color={["#e1950e", "#f3cd29"]}
                 grow={true}
                 icon={<GiStarsStack />}

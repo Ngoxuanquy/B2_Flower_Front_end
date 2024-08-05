@@ -221,6 +221,7 @@ const DashBoard = () => {
     fetch(URL + "/users/userId/" + cleanId, requestOptions)
       .then((res) => res.json())
       .then((res) => {
+        console.log(res.metadata);
         setTotalUsers(res.metadata.length);
       });
   }, [URL]);
