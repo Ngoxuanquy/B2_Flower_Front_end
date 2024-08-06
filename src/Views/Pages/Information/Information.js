@@ -705,7 +705,11 @@ const Information = () => {
                                 <h2 style={{ fontSize: "1.5rem", margin: "0" }}>
                                   Đơn hàng {index + 1}
                                 </h2>
-                                <h6>
+                                <h6
+                                  style={{
+                                    fontWeight: "bold",
+                                  }}
+                                >
                                   {order.total_amounts?.toLocaleString()} đ
                                 </h6>
                                 {order.notifications === "Đã thanh toán" ||
@@ -718,7 +722,7 @@ const Information = () => {
                                     }}
                                   >
                                     {" "}
-                                    Đã thanh toán
+                                    {order?.notifications}
                                   </span>
                                 ) : (
                                   <span
@@ -946,6 +950,35 @@ const Information = () => {
                                     >
                                       Đơn hàng {index + 1}
                                     </h2>
+                                    <h6
+                                      style={{
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {order.total_amounts?.toLocaleString()} đ
+                                    </h6>
+                                    {order.notifications === "Đã thanh toán" ||
+                                    order.notifications ===
+                                      "Thanh toán qua Ví 2Be Flower" ? (
+                                      <span
+                                        style={{
+                                          color: "green",
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        {" "}
+                                        {order?.notifications}
+                                      </span>
+                                    ) : (
+                                      <span
+                                        style={{
+                                          color: "red",
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        Chưa thanh toán
+                                      </span>
+                                    )}
                                     <p
                                       style={{
                                         margin: "0",

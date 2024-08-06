@@ -285,8 +285,6 @@ const Cart = () => {
         phiShip = 500 * distance;
       }
     }
-    console.log(phiShip);
-    console.log(valueDiscount);
     let formattedPhiShip = Math.round(phiShip / 1000) * 1000;
 
     setPhiShip(formattedPhiShip);
@@ -488,13 +486,9 @@ const Cart = () => {
           email: Cookies.get("name")?.replace(/"/g, ""),
           total_amounts:
             valueDiscount === 0
-              ? Number(
-                  (tong + Number(phiShip))
-                    .toFixed(0)
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                )
+              ? Number(tong + Number(phiShip))
               : Number(isDiscounted).toFixed(3),
+          discount: valueDiscount,
         },
         cleanedJwtString,
         cleanId,
@@ -539,6 +533,8 @@ const Cart = () => {
               : parseFloat(isDiscounted.replace(/\./g, "")),
           email: name,
           MaDonHang: MaDonHang,
+          phiShip: phiShip,
+          discount: valueDiscount,
         },
         null,
         null,
@@ -572,6 +568,7 @@ const Cart = () => {
             valueDiscount === 0
               ? Number(tong + Number(phiShip))
               : parseFloat(isDiscounted.replace(/\./g, "")),
+          discount: valueDiscount,
         },
         cleanedJwtString,
         cleanId,

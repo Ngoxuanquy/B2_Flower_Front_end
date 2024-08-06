@@ -111,17 +111,115 @@ function OrdersSent() {
                   </p>
                 </div>
                 <div>
-                  <h5>Thông tin</h5>
+                  <h4>Thông tin</h4>
+                  <div>
+                    {order.transaction_products.map((product, prodIndex) => (
+                      <div>
+                        <span>Giá sản phẩm : </span>
+                        <span
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {product?.product_discount ? (
+                            <>
+                              <span
+                                style={{
+                                  textDecoration: "line-through",
+                                  marginRight: "8px",
+                                }}
+                              >
+                                {product.product_price.toLocaleString()} đ
+                              </span>
+                              <span>
+                                {(
+                                  product.product_price *
+                                  (1 - product.product_discount / 100)
+                                ).toLocaleString()}{" "}
+                                đ
+                              </span>
+                            </>
+                          ) : (
+                            <span>
+                              {product.product_price.toLocaleString()} đ
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div>
+                    <span>Phí ship : </span>
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {order.phiShip?.toLocaleString()} đ
+                    </span>
+                  </div>
+                  <div>
+                    <span>Giảm giá : </span>
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {order.discount}
+                    </span>
+                  </div>
+                  <div>
+                    <span>Tồng tiền : </span>
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {order.total_amounts?.toLocaleString()} đ
+                    </span>
+                    <div>
+                      {" "}
+                      <label>Trạng thái : </label>{" "}
+                      {order.notifications != "null" ? (
+                        <span
+                          style={{
+                            color: "green",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {order.notifications}
+                        </span>
+                      ) : (
+                        <span
+                          style={{
+                            color: "red",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Chưa thanh toán
+                        </span>
+                      )}
+                    </div>
+                  </div>
                   <div>
                     {order.transaction_userId.map((item) => (
-                      <i>
+                      <i
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: "14px",
+                        }}
+                      >
                         {item?.name}, {item?.number} , {item?.diaChiCuThe},{" "}
                         {item?.phuongXa} , {item?.quanHuyen}, {item?.tinhThanh}{" "}
                       </i>
                     ))}
                   </div>
                 </div>
-
                 <div
                   className={cx("order-table")}
                   style={{ width: "100%", borderCollapse: "collapse" }}
@@ -159,12 +257,6 @@ function OrdersSent() {
                       style={{ flex: "1", padding: "10px" }}
                     >
                       Giá
-                    </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "2", padding: "10px" }}
-                    >
-                      Ngày đặt
                     </div>
                   </div>
                   {order.transaction_products.map((product, prodIndex) => (
@@ -212,15 +304,28 @@ function OrdersSent() {
                         className={cx("order-cell")}
                         style={{ flex: "1", padding: "10px" }}
                       >
-                        {product.product_price}
-                      </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "2", padding: "10px" }}
-                      >
-                        {new Date(product.updatedAt).toLocaleDateString(
-                          "vi-VN"
-                        )}
+                        <div>
+                          {product?.product_discount ? (
+                            <>
+                              <span
+                                style={{
+                                  textDecoration: "line-through",
+                                  marginRight: "8px",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                {product.product_price}
+                              </span>
+                              <span>
+                                {product.product_price *
+                                  (1 - product.product_discount / 100)}{" "}
+                                đ
+                              </span>
+                            </>
+                          ) : (
+                            <span>{product.product_price} đ</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}

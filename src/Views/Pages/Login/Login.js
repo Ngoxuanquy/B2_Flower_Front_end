@@ -72,12 +72,13 @@ function Logins() {
   const [matkhau, setMatKhau] = useState("");
   const [apis, setApi] = useState([]);
 
-  function checkValiDangNhap(field) {
-    return field === "" || field === undefined;
+  function checkValiDangNhap(email, matkhau) {
+    console.log({ email });
+    return email === "" || matkhau === "";
   }
 
   function handerSubmit() {
-    if (checkValiDangNhap(email, matkhau)) {
+    if (!checkValiDangNhap(email, matkhau)) {
       setIsLoad(true);
       Call_Post_Api(
         {

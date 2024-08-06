@@ -306,7 +306,9 @@ const DashBoard = () => {
                   </Menu>
                 </div>
               </div>
-              <h3 className={cx("totalPrice")}>{totalPrice} vnđ</h3>
+              <h3 className={cx("totalPrice")}>
+                {totalPrice?.toLocaleString()} vnđ
+              </h3>
               <p>$3,578.90 in {ranges[selectedRange]}</p>
               <div>
                 <Bar ref={chartRef} data={data} options={options} />

@@ -1,4 +1,3 @@
-
 // checkValiDangNhap.test.js
 
 import { checkValiDangNhap } from "./Login";
@@ -30,6 +29,5 @@ describe("checkValiDangNhap", () => {
 
   test("returns false when both email and matkhau are undefined", () => {
     expect(checkValiDangNhap(undefined, undefined)).toBe(false);
->>>>>>> b3d267c07dfb410e5f303fb62aa9e74dc7a087d1
   });
 });
