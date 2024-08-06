@@ -5,6 +5,29 @@ import classNames from "classnames/bind";
 import styles from "./ForgotPassword.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
+
+export function checkValiQuyenMK(inputEmail) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (inputEmail === null || inputEmail.trim() === "") {
+    return {
+      isValid: false,
+      message: "Vui lòng nhập email",
+    };
+  }
+
+  if (!emailRegex.test(inputEmail)) {
+    return {
+      isValid: false,
+      message: "Email không đúng định dạng",
+    };
+  }
+
+  return {
+    isValid: true,
+  };
+}
+
 function ForgotPassword(props) {
   const cx = classNames.bind(styles);
   const [messageApi, contextHolder] = message.useMessage();
@@ -17,20 +40,35 @@ function ForgotPassword(props) {
     setInputEmail(event.target.value);
   };
 
-  const handleSubmitEmail = () => {
+  function checkValiQuyenMK(inputEmail) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (inputEmail === null || inputEmail.trim() === "") {
-      return messageApi.open({
-        type: "warning",
-        content: "Vui lòng nhập email",
-      });
+      return {
+        isValid: false,
+        message: "Vui lòng nhập email",
+      };
     }
 
     if (!emailRegex.test(inputEmail)) {
+      return {
+        isValid: false,
+        message: "Email không đúng định dạng",
+      };
+    }
+
+    return {
+      isValid: true,
+    };
+  }
+
+  const handleSubmitEmail = () => {
+    const validation = checkValiQuyenMK(inputEmail);
+
+    if (!validation.isValid) {
       return messageApi.open({
         type: "warning",
-        content: "Email không đúng định dạng",
+        content: validation.message,
       });
     }
 
@@ -44,10 +82,7 @@ function ForgotPassword(props) {
     )
       .then((data) => {
         console.log(data);
-        if (
-          data.metadata.msg === "Gmail không tồn tại!!" ||
-          data.metadata.msg === "Gmail chưa được đăng ký!!"
-        ) {
+        if (data.metadata.msg === "Gmail không tồn tại!!" || data.metadata.msg === "Gmail chưa được đăng ký!!") {
           messageApi.open({
             type: "warning",
             content: data.metadata.msg,
@@ -107,10 +142,7 @@ function ForgotPassword(props) {
             <div className={cx("all")}>
               <div className={cx("left")}>
                 <div className={cx("login")}>Quên mật khẩu</div>
-                <div className={cx("titer")}>
-                  By logging in you agree to the ridiculously long terms that
-                  you didn't bother to read
-                </div>
+                <div className={cx("titer")}>By logging in you agree to the ridiculously long terms that you didn't bother to read</div>
                 <div className={cx("taikhoan")}>
                   Đột nhiên nhớ mật khẩu ?
                   <Link to={"/login"}>

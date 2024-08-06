@@ -23,8 +23,13 @@ import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 
 const cx = classNames.bind(styles);
 
-export function checkValiDangNhap(field) {
-  return field === "" || field === undefined;
+export function checkValiDangNhap(email, matkhau) {
+  return (
+    email !== "" &&
+    matkhau !== "" &&
+    email !== undefined &&
+    matkhau !== undefined
+  );
 }
 
 function Logins() {
@@ -72,8 +77,7 @@ function Logins() {
   }
 
   function handerSubmit() {
-    console.log(email);
-    if (!checkValiDangNhap(email) && !checkValiDangNhap(matkhau)) {
+    if (checkValiDangNhap(email, matkhau)) {
       setIsLoad(true);
       Call_Post_Api(
         {
@@ -125,7 +129,7 @@ function Logins() {
       });
     } else {
       // alert("Vui lòng nhập đủ thông tin!!!")
-      message.warning(" Vui lòng nhập đủ thông tin !!");
+      message.warning(" Nhập lại tài khoản hoặc mật khẩu !!");
     }
   }
 

@@ -1,27 +1,35 @@
+
+// checkValiDangNhap.test.js
+
 import { checkValiDangNhap } from "./Login";
 
 describe("checkValiDangNhap", () => {
-  it("should return true when the field is an empty string", () => {
-    expect(checkValiDangNhap("")).toBe(true);
+  test("returns true when email and matkhau are non-empty strings", () => {
+    expect(checkValiDangNhap("test@example.com", "password123")).toBe(true);
   });
 
-  it("should return true when the field is undefined", () => {
-    expect(checkValiDangNhap(undefined)).toBe(true);
+  test("returns false when email is an empty string", () => {
+    expect(checkValiDangNhap("", "password123")).toBe(false);
   });
 
-  it("should return false when the field is a non-empty string", () => {
-    expect(checkValiDangNhap("email@example.com")).toBe(false);
+  test("returns false when matkhau is an empty string", () => {
+    expect(checkValiDangNhap("test@example.com", "")).toBe(false);
   });
 
-  it("should return false when the field is a number", () => {
-    expect(checkValiDangNhap(123)).toBe(false);
+  test("returns false when email is undefined", () => {
+    expect(checkValiDangNhap(undefined, "password123")).toBe(false);
   });
 
-  it("should return false when the field is an object", () => {
-    expect(checkValiDangNhap({})).toBe(false);
+  test("returns false when matkhau is undefined", () => {
+    expect(checkValiDangNhap("test@example.com", undefined)).toBe(false);
   });
 
-  it("should return false when the field is null", () => {
-    expect(checkValiDangNhap(null)).toBe(false);
+  test("returns false when both email and matkhau are empty strings", () => {
+    expect(checkValiDangNhap("", "")).toBe(false);
+  });
+
+  test("returns false when both email and matkhau are undefined", () => {
+    expect(checkValiDangNhap(undefined, undefined)).toBe(false);
+>>>>>>> b3d267c07dfb410e5f303fb62aa9e74dc7a087d1
   });
 });

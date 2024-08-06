@@ -7,6 +7,40 @@ import { message } from "antd";
 
 const cx = classNames.bind(styles);
 
+export function checkValiDoiMK(cleanedName, currentPassword, newPassword, confirmPassword) {
+  if (!cleanedName || !currentPassword || !newPassword || !confirmPassword) {
+    return {
+      isValid: false,
+      message: "All fields are required.",
+    };
+  }
+
+  if (newPassword.length < 6) {
+    return {
+      isValid: false,
+      message: "New password must be at least 6 characters long.",
+    };
+  }
+
+  if (newPassword === currentPassword) {
+    return {
+      isValid: false,
+      message: "New password must be different from the current password.",
+    };
+  }
+
+  if (newPassword !== confirmPassword) {
+    return {
+      isValid: false,
+      message: "New password and confirm password do not match.",
+    };
+  }
+
+  return {
+    isValid: true,
+  };
+}
+
 const ResertPassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -25,42 +59,53 @@ const ResertPassword = () => {
     setConfirmPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your password change logic here
-    const name = Cookies.get("name");
-    const cleanedName = name?.replace(/"/g, "");
-
+  function checkValiDoiMK(cleanedName, currentPassword, newPassword, confirmPassword) {
     if (!cleanedName || !currentPassword || !newPassword || !confirmPassword) {
-      messageApi.open({
-        type: "error",
-        content: "All fields are required.",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "All fields are required.",
+      };
     }
 
     if (newPassword.length < 6) {
-      messageApi.open({
-        type: "error",
-        content: "New password must be at least 6 characters long.",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "New password must be at least 6 characters long.",
+      };
     }
 
     if (newPassword === currentPassword) {
-      messageApi.open({
-        type: "error",
-        content: "New password must be different from the current password.",
-      });
-      return;
+      return {
+        isValid: false,
+        message: "New password must be different from the current password.",
+      };
     }
 
     if (newPassword !== confirmPassword) {
-      messageApi.open({
+      return {
+        isValid: false,
+        message: "New password and confirm password do not match.",
+      };
+    }
+
+    return {
+      isValid: true,
+    };
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const name = Cookies.get("name");
+    const cleanedName = name?.replace(/"/g, "");
+
+    const validation = checkValiDoiMK(cleanedName, currentPassword, newPassword, confirmPassword);
+
+    if (!validation.isValid) {
+      return messageApi.open({
         type: "error",
-        content: "New password and confirm password do not match.",
+        content: validation.message,
       });
-      return;
     }
 
     Call_Post_Api(
@@ -90,27 +135,15 @@ const ResertPassword = () => {
       <form onSubmit={handleSubmit}>
         <div className={cx("form-group")}>
           <label htmlFor="currentPassword">Current Password</label>
-          <input
-            type="password"
-            value={currentPassword}
-            onChange={handleCurrentPasswordChange}
-          />
+          <input type="password" value={currentPassword} onChange={handleCurrentPasswordChange} />
         </div>
         <div className={cx("form-group")}>
           <label htmlFor="newPassword">New Password</label>
-          <input
-            type="password"
-            value={newPassword}
-            onChange={handleNewPasswordChange}
-          />
+          <input type="password" value={newPassword} onChange={handleNewPasswordChange} />
         </div>
         <div className={cx("form-group")}>
           <label htmlFor="confirmPassword">Confirm New Password</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-          />
+          <input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
         </div>
         <button type="submit">Change Password</button>
       </form>
