@@ -1,80 +1,99 @@
-import { updateQuantity } from "./Cart";
-
+import { toggleCheckbox, updateQuantity } from "./Cart";
+import Cookies from "js-cookie";
+import fetchMock from "jest-fetch-mock";
 jest.mock("js-cookie", () => ({
   get: jest.fn(),
 }));
 
 jest.mock("node-fetch", () => jest.fn());
 
+describe("toggleCheckbox function", () => {
+  it("should add value to an empty list", () => {
+    const checkedList = [];
+    const value = "item1";
+    const result = toggleCheckbox(checkedList, value);
+    expect(result).toEqual([value]);
+  });
+
+  it("should add value to a non-empty list", () => {
+    const checkedList = ["item1", "item2"];
+    const value = "item3";
+    const result = toggleCheckbox(checkedList, value);
+    expect(result).toEqual(["item1", "item2", value]);
+  });
+
+  it("should remove value from the list if already present", () => {
+    const checkedList = ["item1", "item2", "item3"];
+    const value = "item2";
+    const result = toggleCheckbox(checkedList, value);
+    expect(result).toEqual(["item1", "item3"]);
+  });
+
+  it("should return the original list if value is not present", () => {
+    const checkedList = ["item1", "item2", "item3"];
+    const value = "item4";
+    const result = toggleCheckbox(checkedList, value);
+    expect(result).toEqual(["item1", "item2", "item3", "item4"]);
+  });
+});
+
 describe("updateQuantity", () => {
-  it("should call fetch with the correct parameters", async () => {
-    // Mock the necessary data
-    const accessToken = "mocked-access-token";
-    const id = "mocked-id";
-    const checkedList = [
-      { _id: "product1", quantity: 2 },
-      { _id: "product2", quantity: 3 },
-    ];
+  beforeEach(() => {
+    fetch.resetMocks();
+    jest.clearAllMocks();
+  });
 
-    // Mock the Cookies.get function
-    require("js-cookie")
-      .get.mockReturnValueOnce(accessToken)
-      .mockReturnValueOnce(id);
+  it("should call fetch with correct options and log data", async () => {
+    const checkedList = [{ _id: "1", quantity: 5 }];
+    const mockData = { success: true };
 
-    // Mock the fetch function
-    const fetch = require("node-fetch");
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: jest.fn().mockResolvedValueOnce({ success: true }),
+    Cookies.get.mockImplementation((key) => {
+      if (key === "accessToken") return '"mockToken"';
+      if (key === "id") return '"mockId"';
+      return null;
     });
 
-    // Call the function to be tested
+    fetch.mockResponseOnce(JSON.stringify(mockData), { status: 200 });
+
+    console.log = jest.fn();
+
     await updateQuantity(checkedList);
 
-    // Verify that fetch was called with the correct parameters
     expect(fetch).toHaveBeenCalledWith(
       "http://localhost:3056/v1/api/product/updateQuantity",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-          "X-User-ID": id,
+          Authorization: "Bearer mockToken",
+          "X-User-ID": "mockId",
         },
-        body: JSON.stringify([
-          { id: "product1", quantity: -2 },
-          { id: "product2", quantity: -3 },
-        ]),
+        body: JSON.stringify([{ id: "1", quantity: -5 }]),
       }
     );
+
+    expect(console.log).toHaveBeenCalledWith(mockData);
   });
 
-  it("should log the response data", async () => {
-    // Mock the necessary data
-    const checkedList = [
-      { _id: "product1", quantity: 2 },
-      { _id: "product2", quantity: 3 },
-    ];
+  it("should log error if fetch fails", async () => {
+    const checkedList = [{ _id: "1", quantity: 5 }];
 
-    // Mock the fetch function
-    const fetch = require("node-fetch");
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: jest.fn().mockResolvedValueOnce({ success: true }),
+    Cookies.get.mockImplementation((key) => {
+      if (key === "accessToken") return '"mockToken"';
+      if (key === "id") return '"mockId"';
+      return null;
     });
 
-    // Mock the console.log function
-    const originalConsoleLog = console.log;
-    console.log = jest.fn();
+    fetch.mockResponseOnce(JSON.stringify({ error: "error" }), { status: 500 });
 
-    // Call the function to be tested
+    console.error = jest.fn();
+
     await updateQuantity(checkedList);
 
-    // Verify that console.log was called with the correct data
-    expect(console.log).toHaveBeenCalledWith({ success: true });
-
-    // Restore the original console.log function
-    console.log = originalConsoleLog;
+    expect(console.error).toHaveBeenCalledWith(
+      "Error updating quantity:",
+      new Error("HTTP error! Status: 500")
+    );
   });
 
   it("should handle fetch errors", async () => {

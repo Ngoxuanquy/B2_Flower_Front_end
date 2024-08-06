@@ -29,36 +29,52 @@ function DangKy() {
   const [showModal, setShowModal] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
-  function handerSubmit() {
+  function checkValiDangKy(email, pass, re_Pass, number, messageApi) {
     if (!email || !pass || !re_Pass || !number) {
       messageApi.open({
         type: "warning",
         content: "Vui lòng không để trống các trường!!!",
       });
-      return;
-    } else if (!validateEmail(email)) {
+      return false;
+    }
+
+    if (!validateEmail(email)) {
       messageApi.open({
         type: "warning",
         content: "Email không đúng định dạng!!!",
       });
-      return;
-    } else if (pass !== re_Pass) {
+      return false;
+    }
+
+    if (pass !== re_Pass) {
       messageApi.open({
         type: "warning",
         content: "Mật khẩu không khớp!!!",
       });
-      return;
-    } else if (pass.length <= 6) {
+      return false;
+    }
+
+    if (pass.length <= 6) {
       messageApi.open({
         type: "warning",
         content: "Mật khẩu phải dài hơn 6 kí tự",
       });
-      return;
-    } else if (!IsValidVietnamPhoneNumber(number)) {
+      return false;
+    }
+
+    if (!IsValidVietnamPhoneNumber(number)) {
       messageApi.open({
         type: "warning",
         content: "Sai định dạng số điện thoại",
       });
+      return false;
+    }
+
+    return true;
+  }
+
+  function handerSubmit() {
+    if (!checkValiDangKy(email, pass, re_Pass, number, messageApi)) {
       return;
     }
 

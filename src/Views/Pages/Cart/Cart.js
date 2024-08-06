@@ -29,6 +29,13 @@ import axios from "axios";
 
 const cx = classNames.bind(styles);
 
+export const toggleCheckbox = (checkedList, value) => {
+  const newCheckedList = checkedList.includes(value)
+    ? checkedList.filter((item) => item !== value)
+    : [...checkedList, value];
+  return newCheckedList;
+};
+
 export const updateQuantity = async (checkedList) => {
   try {
     const token = Cookies.get("accessToken");
@@ -269,7 +276,7 @@ const Cart = () => {
       } else if (distance < 20) {
         phiShip = 2500 * distance;
       } else if (distance < 30) {
-        phiShip = 20 * distance;
+        phiShip = 2000 * distance;
       } else if (distance < 50) {
         phiShip = 1500 * distance;
       } else if (distance < 100) {

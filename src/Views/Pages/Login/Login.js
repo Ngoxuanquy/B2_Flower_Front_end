@@ -10,7 +10,10 @@ import { Backgroug } from "../../../Components";
 
 import { LoginSocialFacebook, LoginSocialGoogle } from "reactjs-social-login";
 
-import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
+import {
+  FacebookLoginButton,
+  GoogleLoginButton,
+} from "react-social-login-buttons";
 import { resetWarned } from "antd/es/_util/warning";
 import { gapi } from "gapi-script";
 import { Button, Checkbox, Form, Input } from "antd";
@@ -20,6 +23,10 @@ import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 
 const cx = classNames.bind(styles);
 
+export function checkValiDangNhap(field) {
+  return field === "" || field === undefined;
+}
+
 function Logins() {
   const navigate = useNavigate();
 
@@ -27,7 +34,8 @@ function Logins() {
   useEffect(() => {
     function start() {
       gapi.client.init({
-        clientId: "620404535219-dep6m8nrhmdji646gofivtbu5lfp6dmt.apps.googleusercontent.com",
+        clientId:
+          "620404535219-dep6m8nrhmdji646gofivtbu5lfp6dmt.apps.googleusercontent.com",
 
         scope: "",
       });
@@ -59,9 +67,13 @@ function Logins() {
   const [matkhau, setMatKhau] = useState("");
   const [apis, setApi] = useState([]);
 
+  function checkValiDangNhap(field) {
+    return field === "" || field === undefined;
+  }
+
   function handerSubmit() {
     console.log(email);
-    if (email != "" && matkhau != "" && email != undefined && matkhau != undefined) {
+    if (!checkValiDangNhap(email) && !checkValiDangNhap(matkhau)) {
       setIsLoad(true);
       Call_Post_Api(
         {
@@ -75,7 +87,10 @@ function Logins() {
         // if (data.metadata.shop.verify == true) {
         //     alert("Tài khoản đã đăng nhập ở 1 nơi khác!!!")
         // }
-        if (data.metadata.msg !== "Sai mật khẩu hoặc tài khoản!!" && data.metadata.status !== "error") {
+        if (
+          data.metadata.msg !== "Sai mật khẩu hoặc tài khoản!!" &&
+          data.metadata.status !== "error"
+        ) {
           const token = data.metadata?.tokens?.accessToken;
           const name = data.metadata?.shop?.email;
           const secretKey = "my-secret-key";
@@ -88,7 +103,11 @@ function Logins() {
           Cookies.set("id", JSON.stringify(data.metadata?.shop?._id), {
             expires: 7,
           });
-          Cookies.set("timeeexp", JSON.stringify(data.metadata?.tokens?.timeExp), { expires: 7 });
+          Cookies.set(
+            "timeeexp",
+            JSON.stringify(data.metadata?.tokens?.timeExp),
+            { expires: 7 }
+          );
           setIsLoad(false);
           // navigate('/');
           if (data.metadata.shop.roles[0] === "SHOP") {
@@ -143,7 +162,8 @@ function Logins() {
   //   // Xử lý đăng nhập bằng Google
   // };
 
-  const REDIRECT_URI = "https://plenty-planets-beam-42-118-51-2.loca.lt/account/login";
+  const REDIRECT_URI =
+    "https://plenty-planets-beam-42-118-51-2.loca.lt/account/login";
 
   const [provider, setProvider] = useState("");
   const [profile, setProfile] = useState();
@@ -185,7 +205,10 @@ function Logins() {
     )
       .then((data) => {
         console.log(data.metadata);
-        if (data?.metadata.status === "success" || data?.metadata.status === "Đăng Nhập Thành Công1") {
+        if (
+          data?.metadata.status === "success" ||
+          data?.metadata.status === "Đăng Nhập Thành Công1"
+        ) {
           // Handle successful login
           Cookies.set("accessToken", data?.metadata.tokens.accessToken, {
             expires: 7,
@@ -232,17 +255,28 @@ function Logins() {
     )
       .then((data) => {
         console.log(data.metadata);
-        if (data?.metadata.status === "success" || data?.metadata.status === "Đăng Nhập Thành Công1") {
+        if (
+          data?.metadata.status === "success" ||
+          data?.metadata.status === "Đăng Nhập Thành Công1"
+        ) {
           // Handle successful login
-          Cookies.set("accessToken", JSON.stringify(data?.metadata.tokens.accessToken), {
-            expires: 7,
-          });
+          Cookies.set(
+            "accessToken",
+            JSON.stringify(data?.metadata.tokens.accessToken),
+            {
+              expires: 7,
+            }
+          );
           Cookies.set("name", JSON.stringify(res.data.name), {
             expires: 7,
           });
-          Cookies.set("img", JSON.stringify(res.data.picture.replace('""', "")), {
-            expires: 7,
-          });
+          Cookies.set(
+            "img",
+            JSON.stringify(res.data.picture.replace('""', "")),
+            {
+              expires: 7,
+            }
+          );
           Cookies.set("id", data?.metadata.shop._id, {
             expires: 7,
           });
@@ -301,7 +335,10 @@ function Logins() {
             <div className={cx("all")}>
               <div className={cx("left")}>
                 <div className={cx("login")}>Đăng Nhập</div>
-                <div className={cx("titer")}>By logging in you agree to the ridiculously long terms that you didn't bother to read</div>
+                <div className={cx("titer")}>
+                  By logging in you agree to the ridiculously long terms that
+                  you didn't bother to read
+                </div>
                 <div className={cx("taikhoan")}>
                   Bạn Chưa Có Tài Khoản?
                   <Link to={"/dangky"}>
@@ -394,7 +431,10 @@ function Logins() {
                           },
                         ]}
                       >
-                        <Input.Password placeholder="Password" onChange={(e) => setMatKhau(e.target.value)} />
+                        <Input.Password
+                          placeholder="Password"
+                          onChange={(e) => setMatKhau(e.target.value)}
+                        />
                       </Form.Item>
                     </div>
                     <Link to={"/quenmatkhau"}>
@@ -408,7 +448,11 @@ function Logins() {
                       </div>
                     </Link>
                     <Form.Item>
-                      <Button type="primary" htmlType="submit" onClick={() => handerSubmit()}>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        onClick={() => handerSubmit()}
+                      >
                         Submit
                       </Button>
                     </Form.Item>

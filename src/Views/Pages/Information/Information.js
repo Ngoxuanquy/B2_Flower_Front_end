@@ -489,7 +489,7 @@ const Information = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {Number(moneys).toLocaleString()} đ
+                      {Number(moneys)?.toLocaleString()} đ
                     </span>{" "}
                   </p>
                   <div>
@@ -706,7 +706,7 @@ const Information = () => {
                                   Đơn hàng {index + 1}
                                 </h2>
                                 <h6>
-                                  {order.total_amounts.toLocaleString()} đ
+                                  {order.total_amounts?.toLocaleString()} đ
                                 </h6>
                                 {order.notifications === "Đã thanh toán" ||
                                 order.notifications ===
