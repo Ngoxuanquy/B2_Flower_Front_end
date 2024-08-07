@@ -418,42 +418,7 @@ const RegisteredUsers = ({ apis }) => {
   const handelRamdom = () => {
     getRandomString(6);
   };
-  const handleBlockUser = (userId) => {
-    const token = Cookies.get("accessToken");
-    const id = Cookies.get("id");
-    const cleanedJwtString = token?.replace(/^"|"$/g, "");
-    const cleanId = id?.replace(/^"|"$/g, "");
 
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_API_KEY,
-        authorization: cleanedJwtString,
-        "x-client-id": cleanId,
-      },
-      body: JSON.stringify({
-        userId,
-      }),
-    };
-
-    fetch(URL + "/users/block", requestOptions)
-      .then((res) => res.json())
-      .then((res) => {
-        messageApi.open({
-          type: "success",
-          content: "Người dùng đã bị khóa thành công!",
-        });
-        getApi();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        messageApi.open({
-          type: "error",
-          content: "Khóa người dùng thất bại, vui lòng thử lại!",
-        });
-      });
-  };
   return (
     <div className={cx("container")}>
       {contextHolder}
@@ -687,11 +652,7 @@ const RegisteredUsers = ({ apis }) => {
                       <Button className={cx("success")} color="success">
                         <FaPencil onClick={() => showModal(api)} />
                       </Button>
-                      {/* <Button
-                        className={cx("error")}
-                        color="error"
-                        onClick={() => handleBlockUser(api._id)}
-                      >
+                      {/* <Button className={cx("error")} color="error">
                         <MdOutlineBlock />
                       </Button> */}
                     </div>

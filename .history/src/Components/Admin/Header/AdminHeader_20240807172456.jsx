@@ -21,12 +21,12 @@ import { Divider } from "@mui/material";
 import socketIOClient from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { Badge, message } from "antd";
-import { AdminContext } from "./AdminContext/AdminContext";
+import ThemeConText from "../../../config/themeConText";
 const AdminHeader = () => {
   const ENDPOINT = "http://localhost:4000";
   const [theme, setTheme] = useState("light");
   const [messageApi, contextHolder] = message.useMessage();
-  const context = useContext(AdminContext);
+  const context = useContext(ThemeConText);
   const navigate = useNavigate();
 
   const [menu, setMenu] = useState(true);
@@ -72,10 +72,10 @@ const AdminHeader = () => {
   const [showText, setShowText] = useState(true);
 
   const handleClickMenu = () => {
-    context.setIsToggeSideBar(!context.isToggled);
+    context.setIsToggled(!context.isToggled);
     console.log(context.isToggled);
     // setMenu(!menu);
-    // setShowText(!showText);
+    setShowText(!showText);
   };
   return (
     <div>

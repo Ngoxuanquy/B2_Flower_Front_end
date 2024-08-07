@@ -13,11 +13,11 @@ const cx = classNames.bind(styles);
 
 const ProductList = () => {
   const pageTitleProps = {
-    title: "Danh sách sản phẩm",
+    title: "Product List",
     items: [
       { text: "Admin", link: "/admin/dash-board" },
-      { text: "Sản phẩm", link: "/admin/danh-sách-sản-phẩm" },
-      { text: "Danh sách sản phẩm" },
+      { text: "Product", link: "/admin/product-list" },
+      { text: "Product List" },
     ],
   };
 
@@ -64,13 +64,6 @@ const ProductList = () => {
             icon={<AiFillProduct />}
             iconColor="#89ecb3"
           />
-          {/* <FloatCard
-            number="249"
-            text="Total_brands"
-            backgroundColor="linear-gradient(#ed68ff, #be0ee1)"
-            icon={<IoShieldCheckmarkSharp />}
-            iconColor="#f3a0ff"
-          /> */}
         </div>
         <ListProduct apis={apiproducts} fetchProducts={fetchProducts} />
       </div>

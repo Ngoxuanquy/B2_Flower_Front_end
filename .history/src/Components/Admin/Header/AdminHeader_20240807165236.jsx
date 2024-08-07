@@ -51,6 +51,9 @@ const AdminHeader = () => {
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
+  const hanleClickMenu = () => {
+    setMenu(!menu);
+  };
 
   useEffect(() => {
     const newSocket = socketIOClient(ENDPOINT);
@@ -96,7 +99,7 @@ const AdminHeader = () => {
 
             <div className="col-sm-3 d-flex align-items-center part2 pi-4">
               <Button className="rounded-circle" onClick={handleClickMenu}>
-                {context.isToggled ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
+                {menu ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
               </Button>
               <SearchBox />
             </div>

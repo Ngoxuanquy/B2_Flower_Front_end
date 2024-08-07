@@ -8,7 +8,7 @@ const SearchBox = () => {
   return (
     <div className="searchBox d-flex align-items-center posotion-relative">
       <FaSearch style={{ marginRight: 8 }} />
-      <input type="text" placeholder="Tìm kiếm..." />
+      <input type="text" placeholder="Search here..." />
     </div>
   );
 };

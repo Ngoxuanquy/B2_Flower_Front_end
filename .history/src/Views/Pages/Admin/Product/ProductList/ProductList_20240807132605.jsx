@@ -16,7 +16,7 @@ const ProductList = () => {
     title: "Danh sách sản phẩm",
     items: [
       { text: "Admin", link: "/admin/dash-board" },
-      { text: "Sản phẩm", link: "/admin/danh-sách-sản-phẩm" },
+      { text: "Sản phẩm", link: "/admin/product-list" },
       { text: "Danh sách sản phẩm" },
     ],
   };

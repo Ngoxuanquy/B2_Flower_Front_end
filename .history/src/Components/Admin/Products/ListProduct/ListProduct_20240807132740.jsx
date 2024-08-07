@@ -379,7 +379,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
         </div>
         <div className="col-md-3 " style={{ marginLeft: "10px" }}>
           <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
-            <InputLabel id="demo-select-small-label">Loại sản phẩm</InputLabel>
+            <InputLabel id="demo-select-small-label">Category by</InputLabel>
             <Select
               labelId="demo-select-small-label"
               id="demo-select-small"

@@ -418,42 +418,7 @@ const RegisteredUsers = ({ apis }) => {
   const handelRamdom = () => {
     getRandomString(6);
   };
-  const handleBlockUser = (userId) => {
-    const token = Cookies.get("accessToken");
-    const id = Cookies.get("id");
-    const cleanedJwtString = token?.replace(/^"|"$/g, "");
-    const cleanId = id?.replace(/^"|"$/g, "");
 
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_API_KEY,
-        authorization: cleanedJwtString,
-        "x-client-id": cleanId,
-      },
-      body: JSON.stringify({
-        userId,
-      }),
-    };
-
-    fetch(URL + "/users/block", requestOptions)
-      .then((res) => res.json())
-      .then((res) => {
-        messageApi.open({
-          type: "success",
-          content: "Người dùng đã bị khóa thành công!",
-        });
-        getApi();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        messageApi.open({
-          type: "error",
-          content: "Khóa người dùng thất bại, vui lòng thử lại!",
-        });
-      });
-  };
   return (
     <div className={cx("container")}>
       {contextHolder}
@@ -643,6 +608,7 @@ const RegisteredUsers = ({ apis }) => {
               <th>Tên Người Dùng</th>
               <th>Quyền</th>
               <th>EMAIL</th>
+              <th>Số điện thoại</th>
               <th>Trạng thái</th>
               <th>Ngày tạo</th>
               <th>hành động</th>
@@ -675,25 +641,22 @@ const RegisteredUsers = ({ apis }) => {
                   <td>
                     <span>{api.email}</span>
                   </td>
+                  <td>0123456789</td>
                   <td>
                     <p className={cx("status")}>{api.status}</p>
                   </td>
                   <td>{new Date(api.updatedAt).toLocaleDateString()}</td>
                   <td>
                     <div className={cx("actions")}>
-                      {/* <Button className={cx("secondary")} color="secondary">
+                      <Button className={cx("secondary")} color="secondary">
                         <FaEye />
-                      </Button> */}
+                      </Button>
                       <Button className={cx("success")} color="success">
                         <FaPencil onClick={() => showModal(api)} />
                       </Button>
-                      {/* <Button
-                        className={cx("error")}
-                        color="error"
-                        onClick={() => handleBlockUser(api._id)}
-                      >
+                      <Button className={cx("error")} color="error">
                         <MdOutlineBlock />
-                      </Button> */}
+                      </Button>
                     </div>
                   </td>
                 </tr>

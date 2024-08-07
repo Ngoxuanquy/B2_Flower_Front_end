@@ -219,7 +219,7 @@ const ProductUpload = () => {
         <PageTitle title={pageTitleProps.title} items={pageTitleProps.items} />
         <div className={cx("information")}>
           <div className={cx("info-header")}>
-            <h4>Thông Tin Cơ Bản</h4>
+            <h4>Basic Information</h4>
           </div>
           <form onSubmit={handleSubmit}>
             <Row className={cx("row")}>
