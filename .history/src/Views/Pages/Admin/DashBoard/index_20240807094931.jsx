@@ -88,21 +88,7 @@ const DashBoard = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
   const [undeliveredOrder, setUndeliveredOrder] = useState(0);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedRange, setSelectedRange] = useState("lastMonth");
-  const [totalRevenue, setTotalRevenue] = useState(0);
-  const [order, setOrders] = useState([]);
-  const chartRef = useRef(null);
-  const open = Boolean(anchorEl);
   const URL = process.env.REACT_APP_URL;
-
-  const pageTitleProps = {
-    title: "Dashboard",
-    items: [
-      { text: "Admin", link: "/admin/dash-board" },
-      { text: "Dashboard", link: "/admin/dash-board" },
-    ],
-  };
   useEffect(() => {
     Call_Post_Api(null, null, null, "/product/getAll")
       .then((data) => {
@@ -111,20 +97,20 @@ const DashBoard = () => {
       .catch((error) => {
         console.error("Error fetching products:", error);
       });
-  }, []);
-
+  });
   const getApiTransactionOrder = () => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
+    // Make both API calls concurrently
     Promise.all([
       Call_Post_Api(
         null,
         cleanedJwtString,
         cleanId,
-        `/transaction/getFullOrderReceived`,
+        `/transaction/getFullOrder_done`,
         "Get"
       ),
       Call_Post_Api(
@@ -136,16 +122,17 @@ const DashBoard = () => {
       ),
     ])
       .then(([doneOrdersResponse, fullOrdersResponse]) => {
+        // Combine the metadata from both responses
         const combinedData = [
           ...doneOrdersResponse.metadata,
           ...fullOrdersResponse.metadata,
         ];
         setTotalOrders(combinedData.length);
         setUndeliveredOrder(fullOrdersResponse.metadata.length);
+        // Process the combined data
         calculateTopProducts(doneOrdersResponse.metadata);
         calculateTotalPrice(doneOrdersResponse.metadata);
-        console.log(combinedData);
-        setOrders(doneOrdersResponse.metadata);
+
         return combinedData;
       })
       .catch((err) => console.log({ err }));
@@ -173,70 +160,48 @@ const DashBoard = () => {
 
     setTopProducts(sortedProducts.slice(0, numTopProducts));
   };
-
   const calculateTotalPrice = (orders) => {
     let total = 0;
     orders.forEach((order) => {
-      total += order.total_amounts;
+      total += order.total_amounts; // Assuming each order has a total_price field
     });
     setTotalPrice(total);
   };
-
-  const calculateTotalRevenue = (orders, range) => {
-    let total = 0;
-    const now = new Date();
-
-    orders.forEach((order) => {
-      const orderDate = new Date(order.modifieOn); // Assuming `createdAt` is the date field
-
-      if (range === "lastDay" && isSameDay(orderDate, now)) {
-        total += order.total_amounts;
-      } else if (range === "lastWeek" && isWithinLastWeek(orderDate, now)) {
-        total += order.total_amounts;
-      } else if (range === "lastMonth" && isWithinLastMonth(orderDate, now)) {
-        total += order.total_amounts;
-      } else if (range === "lastYear" && isWithinLastYear(orderDate, now)) {
-        total += order.total_amounts;
-      }
-    });
-
-    setTotalRevenue(total);
-  };
-
-  const isSameDay = (date1, date2) => {
-    return (
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate()
-    );
-  };
-
-  const isWithinLastWeek = (date, now) => {
-    const oneWeekAgo = new Date(now);
-    oneWeekAgo.setDate(now.getDate() - 7);
-    return date > oneWeekAgo;
-  };
-
-  const isWithinLastMonth = (date, now) => {
-    const oneMonthAgo = new Date(now);
-    oneMonthAgo.setMonth(now.getMonth() - 1);
-    return date > oneMonthAgo;
-  };
-
-  const isWithinLastYear = (date, now) => {
-    const oneYearAgo = new Date(now);
-    oneYearAgo.setFullYear(now.getFullYear() - 1);
-    return date > oneYearAgo;
-  };
-
   useEffect(() => {
     getApiTransactionOrder();
   }, [numTopProducts]);
+  const pageTitleProps = {
+    title: "Dashboard",
+    items: [
+      { text: "Admin", link: "/admin/dash-board" },
+      { text: "Dashboard", link: "/admin/dash-board" },
+    ],
+  };
+  useEffect(() => {
+    document.title = "Dash Broad";
+  }, []);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedRange, setSelectedRange] = useState("lastMonth");
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleMenuItemClick = (rangeKey) => {
+    setSelectedRange(rangeKey);
+    handleClose();
+  };
+  const chartRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Dashboard";
-  }, []);
+    const chart = chartRef.current;
 
+    return () => {
+      chart.destroy();
+    };
+  }, []);
   useEffect(() => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
@@ -259,26 +224,6 @@ const DashBoard = () => {
         setTotalUsers(res.metadata.length);
       });
   }, [URL]);
-
-  useEffect(() => {
-    if (order.length > 0) {
-      calculateTotalRevenue(order, selectedRange);
-    }
-  }, [selectedRange, order]);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMenuItemClick = (rangeKey) => {
-    setSelectedRange(rangeKey);
-    handleClose();
-  };
-
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
@@ -361,10 +306,10 @@ const DashBoard = () => {
                   </Menu>
                 </div>
               </div>
-              <h3 className={cx("totalPrice")}>{totalPrice} vnđ</h3>
-              <p>
-                {totalRevenue} vnđ in {ranges[selectedRange]}
-              </p>
+              <h3 className={cx("totalPrice")}>
+                {totalPrice?.toLocaleString()} vnđ
+              </h3>
+              <p>$3,578.90 in {ranges[selectedRange]}</p>
               <div>
                 <Bar ref={chartRef} data={data} options={options} />
               </div>

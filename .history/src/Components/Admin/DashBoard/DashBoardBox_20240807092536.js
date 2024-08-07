@@ -59,9 +59,9 @@ const DashBoardBox = (props) => {
           )}
         </div>
       </div>
-      <div className={cx("bottomEle")}>
+      {/* <div className={cx("bottomEle")}>
         <div className={cx("timeline")}>
-          {/* <div className={cx("ratio")}>+45%</div> */}
+          <div className={cx("ratio")}>+45%</div>
           <h6>{ranges[selectedRange]}</h6>
         </div>
         <div style={{ marginLeft: "auto" }}>
@@ -97,7 +97,7 @@ const DashBoardBox = (props) => {
             ))}
           </Menu>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

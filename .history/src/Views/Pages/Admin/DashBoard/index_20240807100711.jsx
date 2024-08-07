@@ -91,11 +91,10 @@ const DashBoard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRange, setSelectedRange] = useState("lastMonth");
   const [totalRevenue, setTotalRevenue] = useState(0);
-  const [order, setOrders] = useState([]);
+  const [orders, setOrders] = useState([]);
   const chartRef = useRef(null);
   const open = Boolean(anchorEl);
   const URL = process.env.REACT_APP_URL;
-
   const pageTitleProps = {
     title: "Dashboard",
     items: [
@@ -124,7 +123,7 @@ const DashBoard = () => {
         null,
         cleanedJwtString,
         cleanId,
-        `/transaction/getFullOrderReceived`,
+        `/transaction/getFullOrder_done`,
         "Get"
       ),
       Call_Post_Api(
@@ -144,8 +143,8 @@ const DashBoard = () => {
         setUndeliveredOrder(fullOrdersResponse.metadata.length);
         calculateTopProducts(doneOrdersResponse.metadata);
         calculateTotalPrice(doneOrdersResponse.metadata);
-        console.log(combinedData);
-        setOrders(doneOrdersResponse.metadata);
+
+        setOrders(combinedData);
         return combinedData;
       })
       .catch((err) => console.log({ err }));
@@ -187,7 +186,7 @@ const DashBoard = () => {
     const now = new Date();
 
     orders.forEach((order) => {
-      const orderDate = new Date(order.modifieOn); // Assuming `createdAt` is the date field
+      const orderDate = new Date(order.createdAt); // Assuming `createdAt` is the date field
 
       if (range === "lastDay" && isSameDay(orderDate, now)) {
         total += order.total_amounts;
@@ -261,10 +260,10 @@ const DashBoard = () => {
   }, [URL]);
 
   useEffect(() => {
-    if (order.length > 0) {
-      calculateTotalRevenue(order, selectedRange);
+    if (orders.length > 0) {
+      calculateTotalRevenue(orders, selectedRange);
     }
-  }, [selectedRange, order]);
+  }, [selectedRange, orders]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

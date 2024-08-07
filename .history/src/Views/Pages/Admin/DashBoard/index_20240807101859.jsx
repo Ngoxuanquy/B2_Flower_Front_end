@@ -124,7 +124,7 @@ const DashBoard = () => {
         null,
         cleanedJwtString,
         cleanId,
-        `/transaction/getFullOrderReceived`,
+        `/transaction/getFullOrder_done`,
         "Get"
       ),
       Call_Post_Api(

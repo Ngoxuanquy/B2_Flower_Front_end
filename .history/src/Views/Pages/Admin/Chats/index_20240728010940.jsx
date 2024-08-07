@@ -139,10 +139,7 @@ const Chats = () => {
           email: "admin",
         }),
       };
-      fetch(
-        "https://chat-b2-flower.onrender.com/v1/api/chat/create",
-        requestOptions
-      )
+      fetch("https://chat-b2-flower.onrender.com/v1/api/chat/create", requestOptions)
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
@@ -155,9 +152,7 @@ const Chats = () => {
   const fetchMessages = async (id) => {
     try {
       setIsLoad(true);
-      const response = await fetch(
-        "https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id
-      );
+      const response = await fetch("https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -165,10 +160,7 @@ const Chats = () => {
       setIsLoad(false);
       setMessages(messages.metadata.message);
     } catch (error) {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error
-      );
+      console.error("There has been a problem with your fetch operation:", error);
     }
   };
 
@@ -244,10 +236,7 @@ const Chats = () => {
       <div className={cx("box")}>
         <div className={cx("box-title")}>
           {apis.map((api) => (
-            <div
-              className={cx("box-chat", { active: roomId === api._id })}
-              onClick={() => handleOpentChat(api._id, api.email)}
-            >
+            <div className={cx("box-chat", { active: roomId === api._id })} onClick={() => handleOpentChat(api._id, api.email)}>
               <div>
                 <Badge count={api.countMessage}>
                   <img
@@ -258,7 +247,6 @@ const Chats = () => {
                       margin: 0,
                     }}
                     src="https://img5.thuthuatphanmem.vn/uploads/2021/12/30/anh-nen-mau-xanh-la-cay-cute-dang-yeu_032126625.jpg"
-                    alt=""
                   />
                 </Badge>
               </div>
@@ -326,10 +314,7 @@ const Chats = () => {
               dataSource={messages}
               renderItem={(item) => (
                 <List.Item
-                  className={cx({
-                    right: item.id === testCleanId,
-                    left: item.id !== testCleanId,
-                  })}
+                  className={cx({ right: item.id === testCleanId, left: item.id !== testCleanId })}
                   style={{ backgroundColor: getColorForMessage(item.message) }}
                 >
                   <div>{item.message}</div>
