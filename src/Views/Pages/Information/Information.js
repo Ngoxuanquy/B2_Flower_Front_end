@@ -410,6 +410,7 @@ const Information = () => {
       {
         transactionId,
         status: "Đã nhận hàng",
+        notifications: "Đã thanh toán",
       },
       cleanedJwtString,
       cleanId,
