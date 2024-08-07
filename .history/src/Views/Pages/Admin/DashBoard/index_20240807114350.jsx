@@ -417,7 +417,7 @@ const DashBoard = () => {
               </p>
 
               <div className={cx("chart")}>
-                <h3>Tổng doanh thu 7 ngày gần nhất</h3>
+                <h3>tổng doanh thu 7 ngày gần nhất</h3>
                 <Bar ref={chartRef} data={chartData} options={options} />
               </div>
             </div>

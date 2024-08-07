@@ -47,7 +47,7 @@ const options = {
     tooltip: {
       callbacks: {
         label: function (tooltipItem) {
-          return `${tooltipItem.raw}`.toLocaleString(); // Add dollar sign before the value in tooltips
+          return `${tooltipItem.raw}.toLocaleString()`; // Add dollar sign before the value in tooltips
         },
       },
       bodyColor: "white", // Color for tooltip body text
@@ -416,9 +416,10 @@ const DashBoard = () => {
                 {ranges[selectedRange]}
               </p>
 
-              <div className={cx("chart")}>
-                <h3>Tổng doanh thu 7 ngày gần nhất</h3>
+              <div>
                 <Bar ref={chartRef} data={chartData} options={options} />
+
+                <h3> 7 ngày gần nhất</h3>
               </div>
             </div>
           </div>

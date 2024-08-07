@@ -416,9 +416,10 @@ const DashBoard = () => {
                 {ranges[selectedRange]}
               </p>
 
-              <div className={cx("chart")}>
-                <h3>Tổng doanh thu 7 ngày gần nhất</h3>
+              <div>
                 <Bar ref={chartRef} data={chartData} options={options} />
+
+                <h3>Doanh thu 7 ngày gần nhất</h3>
               </div>
             </div>
           </div>
