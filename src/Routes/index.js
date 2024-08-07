@@ -30,6 +30,7 @@ import Discounts from "../Views/Pages/Discounts/Discounts";
 import ResertPassword from "../Views/Pages/ResertPassword/ResertPassword";
 import FlowerCancellationList from "../Views/Pages/FlowerCancellationList/FlowerCancellationList";
 import FlowerApprovedList from "../Views/Pages/FlowerApprovedList/FlowerApprovedList";
+import OrdersReceived from "../Views/Pages/Admin/OrdersReceived/OrdersReceived";
 
 export const publicRoute = [
   { path: "/", component: <HomePage /> },
@@ -68,4 +69,5 @@ export const adminRoute = [
   { path: "/admin/cancelProduct", component: <CancelProduct /> },
   { path: "/admin/danh-sách-hủy-hoa", component: <FlowerCancellationList /> },
   { path: "/admin/danh-sách-đã-duyệt", component: <FlowerApprovedList /> },
+  { path: "/admin/sản-phẩm-đã-giao", component: <OrdersReceived /> },
 ];
