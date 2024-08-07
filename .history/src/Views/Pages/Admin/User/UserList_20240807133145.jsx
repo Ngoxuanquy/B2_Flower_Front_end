@@ -12,16 +12,15 @@ import Cookies from "js-cookie";
 const UserList = () => {
   const URL = process.env.REACT_APP_URL;
   const pageTitleProps = {
-    title: "Danh Sách Người Dùng",
+    title: "User List",
     items: [
       { text: "Admin", link: "/admin/dash-board" },
-      { text: "Người Dùng", link: "/admin/danh-sách-người-dùng" },
+      { text: "NGười Dùng", link: "/admin/danh-sách-người-dùng" },
       { text: "Danh Sách Người Dùng" },
     ],
   };
 
   const cx = classNames.bind(styles);
-  const [totalUser, setTotaluser] = useState(0);
   const [apis, setApi] = useState([]);
 
   useEffect(() => {
@@ -45,7 +44,6 @@ const UserList = () => {
       .then((res) => {
         console.log(res.metadata);
         setApi(res.metadata);
-        setTotaluser(res.metadata.length);
       });
   }, [URL]);
   return (
@@ -54,8 +52,8 @@ const UserList = () => {
         <PageTitle title={pageTitleProps.title} items={pageTitleProps.items} />
         <div className={cx("list-floatcard")}>
           <FloatCard
-            number={totalUser}
-            text="Tổng người dùng"
+            number="547"
+            text="Pending User"
             backgroundColor="linear-gradient(#ed68ff, #be0ee1)"
             icon={<MdPending />}
             iconColor="#f3a0ff"

@@ -18,6 +18,7 @@ import { AdminProvider } from "../Components/Admin/Header/AdminContext/AdminCont
 const App = () => {
   const [mode, setMode] = useState(false);
   const [themeColor, setThemeColor] = useState(false);
+
   const [ordersLength, setOrderLength] = useState(0);
   const [isToggled, setIsToggled] = useState(false);
   useEffect(() => {
@@ -88,7 +89,6 @@ const App = () => {
     setIsToggled(value);
     console.log("", value);
   };
-  console.log("aaaaaa", isToggled);
   return (
     <ThemeConText.Provider
       value={[theme.dark, ordersLength, isToggled, setIsToggeSideBar]}

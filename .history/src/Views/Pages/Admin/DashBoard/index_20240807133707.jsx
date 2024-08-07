@@ -120,20 +120,44 @@ const DashBoard = () => {
     const cleanId = id?.replace(/"/g, "");
 
     Promise.all([
-      Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrderReceived`, "Get"),
-      Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFull`, "Get"),
-      Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrder_done`, "Get"),
+      Call_Post_Api(
+        null,
+        cleanedJwtString,
+        cleanId,
+        `/transaction/getFullOrderReceived`,
+        "Get"
+      ),
+      Call_Post_Api(
+        null,
+        cleanedJwtString,
+        cleanId,
+        `/transaction/getFull`,
+        "Get"
+      ),
+      Call_Post_Api(
+        null,
+        cleanedJwtString,
+        cleanId,
+        `/transaction/getFullOrder_done`,
+        "Get"
+      ),
     ])
-      .then(([ReceivedOrdersResponse, fullOrdersResponse, doneOrderResponse]) => {
-        const combinedData = [...ReceivedOrdersResponse.metadata, ...fullOrdersResponse.metadata, ...doneOrderResponse.metadata];
-        setTotalOrders(combinedData.length);
-        setUndeliveredOrder(fullOrdersResponse.metadata.length);
-        calculateTopProducts(ReceivedOrdersResponse.metadata);
-        calculateTotalPrice(ReceivedOrdersResponse.metadata);
-        console.log(combinedData);
-        setOrders(ReceivedOrdersResponse.metadata);
-        return combinedData;
-      })
+      .then(
+        ([ReceivedOrdersResponse, fullOrdersResponse, doneOrderResponse]) => {
+          const combinedData = [
+            ...ReceivedOrdersResponse.metadata,
+            ...fullOrdersResponse.metadata,
+            ...doneOrderResponse.metadata,
+          ];
+          setTotalOrders(combinedData.length);
+          setUndeliveredOrder(fullOrdersResponse.metadata.length);
+          calculateTopProducts(ReceivedOrdersResponse.metadata);
+          calculateTotalPrice(ReceivedOrdersResponse.metadata);
+          console.log(combinedData);
+          setOrders(ReceivedOrdersResponse.metadata);
+          return combinedData;
+        }
+      )
       .catch((err) => console.log({ err }));
   };
   const calculateDailyRevenue = (orders) => {
@@ -190,7 +214,9 @@ const DashBoard = () => {
       });
     });
 
-    const sortedProducts = Object.values(productMap).sort((a, b) => b.quantity - a.quantity);
+    const sortedProducts = Object.values(productMap).sort(
+      (a, b) => b.quantity - a.quantity
+    );
 
     setTopProducts(sortedProducts.slice(0, numTopProducts));
   };
@@ -225,7 +251,11 @@ const DashBoard = () => {
   };
 
   const isSameDay = (date1, date2) => {
-    return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate();
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
   };
 
   const isWithinLastWeek = (date, now) => {
@@ -299,7 +329,11 @@ const DashBoard = () => {
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
-        <PageTitle className="w-100" title={pageTitleProps.title} items={pageTitleProps.items} />
+        <PageTitle
+          className="w-100"
+          title={pageTitleProps.title}
+          items={pageTitleProps.items}
+        />
         <div className={cx("dashboardBoxWrapperRow")}>
           <div className="col-md-8">
             <div className={cx("dashboardBoxWrapper")}>
@@ -310,8 +344,18 @@ const DashBoard = () => {
                 icon={<FaCircleUser />}
                 grow={true}
               />
-              <DashBoardBox title="Tổng Đơn Hàng" number={totalOrders} color={["#c012e2", "#eb64fe"]} icon={<MdShoppingCart />} />
-              <DashBoardBox title="Tổng Sản Phẩm" number={totalProducts} color={["#2c78e5", "#60aff5"]} icon={<FaBagShopping />} />
+              <DashBoardBox
+                title="Tổng Đơn Hàng"
+                number={totalOrders}
+                color={["#c012e2", "#eb64fe"]}
+                icon={<MdShoppingCart />}
+              />
+              <DashBoardBox
+                title="Tổng Sản Phẩm"
+                number={totalProducts}
+                color={["#2c78e5", "#60aff5"]}
+                icon={<FaBagShopping />}
+              />
               <DashBoardBox
                 title="Đơn Chưa Giao"
                 number={undeliveredOrder}
@@ -347,7 +391,10 @@ const DashBoard = () => {
                     }}
                   >
                     {Object.entries(ranges).map(([key, text]) => (
-                      <MenuItem key={key} onClick={() => handleMenuItemClick(key)}>
+                      <MenuItem
+                        key={key}
+                        onClick={() => handleMenuItemClick(key)}
+                      >
                         <GiBackwardTime
                           style={{
                             fontSize: "17px",
@@ -361,10 +408,12 @@ const DashBoard = () => {
                   </Menu>
                 </div>
               </div>
-
-              <h3 className={cx("totalPrice")}>{totalPrice.toLocaleString()} vnđ</h3>
+              <h3 className={cx("totalPrice")}>
+                {totalPrice.toLocaleString()} vnđ
+              </h3>
               <p>
-                +{totalRevenue.toLocaleString()} vnđ so với {ranges[selectedRange]}
+                +{totalRevenue.toLocaleString()} vnđ so với{" "}
+                {ranges[selectedRange]}
               </p>
 
               <div className={cx("chart")}>
@@ -374,7 +423,10 @@ const DashBoard = () => {
             </div>
           </div>
         </div>
-        <BestSellingProduct data={topProducts} onNumTopProductsChange={(num) => setNumTopProducts(num)} />
+        <BestSellingProduct
+          data={topProducts}
+          onNumTopProductsChange={(num) => setNumTopProducts(num)}
+        />
       </div>
     </div>
   );

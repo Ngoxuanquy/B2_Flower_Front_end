@@ -54,8 +54,8 @@ const UserList = () => {
         <PageTitle title={pageTitleProps.title} items={pageTitleProps.items} />
         <div className={cx("list-floatcard")}>
           <FloatCard
-            number={totalUser}
-            text="Tổng người dùng"
+            number="547"
+            text="Pending User"
             backgroundColor="linear-gradient(#ed68ff, #be0ee1)"
             icon={<MdPending />}
             iconColor="#f3a0ff"

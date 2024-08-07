@@ -13,13 +13,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import SideBar from "../Components/Admin/SideBars";
 import { Modal } from "antd";
-import { AdminProvider } from "../Components/Admin/Header/AdminContext/AdminContext";
 
 const App = () => {
   const [mode, setMode] = useState(false);
   const [themeColor, setThemeColor] = useState(false);
+
   const [ordersLength, setOrderLength] = useState(0);
-  const [isToggled, setIsToggled] = useState(false);
+  const [isToggleSideBar, setIsToggeSideBar] = useState(false);
   useEffect(() => {
     let b = EventRegister.addEventListener("chaneLength", (data) => {
       setOrderLength(data);
@@ -84,28 +84,72 @@ const App = () => {
     background: themeColor.colorBackground,
     maunen: themeColor.colorBackground,
   };
-  const setIsToggeSideBar = (value) => {
-    setIsToggled(value);
-    console.log("", value);
-  };
-  console.log("aaaaaa", isToggled);
+
   return (
-    <ThemeConText.Provider
-      value={[theme.dark, ordersLength, isToggled, setIsToggeSideBar]}
-    >
-      <AdminProvider>
-        <Router>
-          <ScrollToTop />
-          <Routes>
-            {publicRoute.map((route, index) => {
-              let Page = route.component;
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <DefaultLayout>
+    <ThemeConText.Provider value={[theme.dark, ordersLength]}>
+      <Router>
+        <ScrollToTop />
+        <Routes>
+          {publicRoute.map((route, index) => {
+            let Page = route.component;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <DefaultLayout>
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    >
+                      {Page}
+                    </div>
+                  </DefaultLayout>
+                }
+              />
+            );
+          })}
+          {adminRoute.map((route, index) => {
+            let Page = route.component;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <>
+                    <AdminHeader />
+                    <div className="main d-flex">
+                      <div className="sidebarWrapper">
+                        <SideBar />
+                      </div>
                       <div
+                        className="contents"
+                        style={{
+                          width: "100%",
+                          background: "#D9D9D9",
+                        }}
+                      >
+                        {Page}
+                      </div>
+                    </div>
+                  </>
+                }
+              />
+            );
+          })}
+          {privateRoute.map((route, index) => {
+            let Page = route.component;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <>
+                    <div className="main d-flex">
+                      <div
+                        className="contents"
                         style={{
                           width: "100%",
                           height: "100%",
@@ -113,72 +157,14 @@ const App = () => {
                       >
                         {Page}
                       </div>
-                    </DefaultLayout>
-                  }
-                />
-              );
-            })}
-            {adminRoute.map((route, index) => {
-              let Page = route.component;
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <>
-                      <AdminHeader />
-                      <div className="main d-flex">
-                        <div
-                          className={`sidebarWrapper ${
-                            isToggled === true ? "toggled" : ""
-                          }`}
-                        >
-                          <SideBar />
-                        </div>
-                        <div
-                          className={`contents ${
-                            isToggled === true ? "toggled" : ""
-                          }`}
-                          style={{
-                            width: "100%",
-                            background: "#D9D9D9",
-                          }}
-                        >
-                          {Page}
-                        </div>
-                      </div>
-                    </>
-                  }
-                />
-              );
-            })}
-            {privateRoute.map((route, index) => {
-              let Page = route.component;
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <>
-                      <div className="main d-flex">
-                        <div
-                          className="contents"
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                          }}
-                        >
-                          {Page}
-                        </div>
-                      </div>
-                    </>
-                  }
-                />
-              );
-            })}
-          </Routes>
-        </Router>
-      </AdminProvider>
+                    </div>
+                  </>
+                }
+              />
+            );
+          })}
+        </Routes>
+      </Router>
     </ThemeConText.Provider>
   );
 };

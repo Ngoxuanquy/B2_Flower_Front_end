@@ -18,6 +18,7 @@ import { AdminProvider } from "../Components/Admin/Header/AdminContext/AdminCont
 const App = () => {
   const [mode, setMode] = useState(false);
   const [themeColor, setThemeColor] = useState(false);
+
   const [ordersLength, setOrderLength] = useState(0);
   const [isToggled, setIsToggled] = useState(false);
   useEffect(() => {

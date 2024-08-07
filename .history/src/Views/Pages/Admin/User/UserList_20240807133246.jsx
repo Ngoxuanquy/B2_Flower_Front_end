@@ -21,7 +21,6 @@ const UserList = () => {
   };
 
   const cx = classNames.bind(styles);
-  const [totalUser, setTotaluser] = useState(0);
   const [apis, setApi] = useState([]);
 
   useEffect(() => {
@@ -45,7 +44,6 @@ const UserList = () => {
       .then((res) => {
         console.log(res.metadata);
         setApi(res.metadata);
-        setTotaluser(res.metadata.length);
       });
   }, [URL]);
   return (
@@ -54,8 +52,8 @@ const UserList = () => {
         <PageTitle title={pageTitleProps.title} items={pageTitleProps.items} />
         <div className={cx("list-floatcard")}>
           <FloatCard
-            number={totalUser}
-            text="Tổng người dùng"
+            number="547"
+            text="Pending User"
             backgroundColor="linear-gradient(#ed68ff, #be0ee1)"
             icon={<MdPending />}
             iconColor="#f3a0ff"
