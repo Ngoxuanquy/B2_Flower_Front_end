@@ -19,14 +19,11 @@ import logo from "../../../access/logo-1.png";
 import SearchBox from "./SeachBox/SearchBox";
 import { Divider } from "@mui/material";
 import socketIOClient from "socket.io-client";
-import { useNavigate } from "react-router-dom";
 import { Badge, message } from "antd";
 const AdminHeader = () => {
   const ENDPOINT = "http://localhost:4000";
   const [theme, setTheme] = useState("light");
   const [messageApi, contextHolder] = message.useMessage();
-
-  const navigate = useNavigate();
 
   const [menu, setMenu] = useState(true);
   const [noti, setNoti] = useState([]);

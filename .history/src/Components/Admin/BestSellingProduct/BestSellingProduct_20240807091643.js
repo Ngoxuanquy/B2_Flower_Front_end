@@ -155,27 +155,12 @@ const BestSellingProduct = ({ data, onNumTopProductsChange }) => {
                 </td>
                 <td>{item.product_type}</td>
                 <td>
-                  {item.product_discount > 0 && (
-                    <del className={cx("old")}>
-                      {Math.floor(item.product_price)}
-                    </del>
-                  )}
-                  <span className={cx("new")}>
-                    {Math.floor(
-                      item.product_price * (1 - item.product_discount / 100)
-                    )}
-                  </span>
+                  <del className={cx("old")}>{item.product_price} đ</del>
+                  <span className={cx("new")}>{item.product_price} đ</span>
                 </td>
                 <td>{item.product_quantity}</td>
                 <td>{item.quantity}</td>
-                <td>
-                  {Math.floor(
-                    item.product_price *
-                      (1 - item.product_discount / 100) *
-                      item.quantity
-                  )}{" "}
-                  đ
-                </td>
+                <td>{item.product_price * item.quantity} đ</td>
               </tr>
             ))}
           </tbody>
