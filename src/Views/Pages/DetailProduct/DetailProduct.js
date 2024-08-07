@@ -104,9 +104,9 @@ function DetailProduct() {
             fontSize: "17px",
           }}
         >
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-          enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat.'
+          Giới thiệu Sản phẩm Hoa: Chúng tôi tự hào giới thiệu bộ sưu tập hoa tươi đẹp của chúng tôi, mang đến cho bạn những lựa chọn tuyệt
+          vời để làm đẹp không gian sống hoặc làm quà tặng ý nghĩa. Mỗi sản phẩm hoa của chúng tôi được chọn lọc kỹ lưỡng và chăm sóc tận
+          tình, đảm bảo chất lượng tươi mới và bền lâu.
           <div
             style={{
               marginLeft: "20px",
@@ -114,13 +114,22 @@ function DetailProduct() {
               fontSize: "14px",
             }}
           >
-            <li>Any Product types that You want - Simple, Configurable</li>
-            <li>Downloadable/Digital Products, Virtual Products</li>
-            <li>Inventory Management with Backordered items</li>
+            <li>
+              <b> Chất lượng hàng đầu:</b> Chúng tôi sử dụng các loại hoa tươi nhất từ các nhà cung cấp uy tín, đảm bảo sản phẩm của bạn
+              luôn đẹp và bền lâu.
+            </li>
+            <li>
+              <b> Đa dạng lựa chọn:</b> Từ những bó hoa lãng mạn, hoa cưới trang nhã đến những bình hoa trang trí sang trọng, chúng tôi có
+              nhiều lựa chọn phù hợp với nhu cầu và sở thích của bạn.
+            </li>
+            <li>
+              <b> Thiết kế độc quyền: </b>Các bó hoa và bình hoa của chúng tôi được thiết kế bởi đội ngũ chuyên gia với kinh nghiệm, mang
+              đến sự tinh tế và sáng tạo trong từng sản phẩm.
+            </li>
           </div>
           <div>
-            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat.
+            <b> Dịch vụ giao hàng tận nơi: </b>Chúng tôi cung cấp dịch vụ giao hàng nhanh chóng và an toàn, đảm bảo rằng hoa của bạn đến tay
+            người nhận trong tình trạng tốt nhất.
           </div>
         </div>
       ),
@@ -287,11 +296,7 @@ function DetailProduct() {
                   </div>
                 )}
 
-                <div className={cx("des-product")}>
-                  Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam,
-                  feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi
-                  vitae est. Mauris placerat eleifend leo
-                </div>
+                <div className={cx("des-product")}>{products.product_description}</div>
                 <div className={cx("AVAILABILITY")}>
                   AVAILABILITY:
                   <span>IN STOCK</span>

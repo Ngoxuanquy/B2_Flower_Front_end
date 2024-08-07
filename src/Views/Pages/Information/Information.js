@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { Radio } from "antd";
 import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
+import { EditOutlined } from "@ant-design/icons";
 const { TabPane } = Tabs;
 
 const Information = () => {
@@ -17,6 +18,9 @@ const Information = () => {
   const [address, setAddress] = useState([]);
   const [orders, setOrder] = useState([]);
   const [ordersSend, setOrderSend] = useState([]);
+  const [ordersReceived, setOrderReceived] = useState([]);
+  const [orderEdit, setOrderEdit] = useState([]);
+
   const [moneys, setMoneys] = useState(0);
 
   const [tabPaneHeight, setTabPaneHeight] = useState("auto"); // State to track height of TabPane dynamically
@@ -29,10 +33,20 @@ const Information = () => {
   const [activeTab, setActiveTab] = useState("0"); // State to track the active tab
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [amount, setAmount] = useState("");
-  const [isModalOpenUpdateAddress, setIsModalOpenUpdateAddress] =
-    useState(false);
+  const [isModalOpenUpdateAddress, setIsModalOpenUpdateAddress] = useState(false);
 
-  const showModal = () => {
+  const [isModalOpenEditOrder, setIsModalOpenEditOrder] = useState(false);
+  const showModalEditOrder = () => {
+    setIsModalOpenEditOrder(true);
+  };
+  const handleEditOrderOk = () => {
+    setIsModalOpenEditOrder(false);
+  };
+  const handleEditOrderCancel = () => {
+    setIsModalOpenEditOrder(false);
+  };
+
+  const showEditOrderModal = () => {
     setIsModalVisible(true);
   };
 
@@ -66,17 +80,9 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      { userId: cleanId },
-      cleanedJwtString,
-      cleanId,
-      "/cart/getlistCart"
-    )
+    Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart")
       .then((data) => {
-        EventRegister.emit(
-          "chaneLength",
-          data.metadata?.cart_products?.length ?? 0
-        );
+        EventRegister.emit("chaneLength", data.metadata?.cart_products?.length ?? 0);
       })
       .catch((err) => {
         console.log({ err });
@@ -138,13 +144,7 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/users/getAddressUser/${cleanId}`,
-      "GET"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
       .then((data) => {
         console.log(data);
         setAddress(data.metadata.address);
@@ -165,13 +165,7 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/transaction/getFullUseId/${cleanId}`,
-      "Get"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullUseId/${cleanId}`, "Get")
       .then((data) => {
         setOrder(data.metadata.reverse());
         setIsLoad(false);
@@ -186,15 +180,41 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/transaction/getFullOrder_doneUseId/${cleanId}`,
-      "Get"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrder_doneUseId/${cleanId}`, "Get")
       .then((data) => {
-        setOrderSend(data.metadata.reverse());
+        const orders = data.metadata.reverse();
+        setOrderSend(orders);
+        setIsLoad(false);
+
+        // Get today's date
+        const today = new Date();
+
+        // Check each order's createdOn date
+        orders.forEach((order) => {
+          const createdOn = new Date(order.createdOn); // Ensure createdOn is in Date format
+          const diffTime = Math.abs(today - createdOn);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          // If the order is older than 5 days, call handelNhanDon
+          if (diffDays > 5) {
+            handelNhanDon(order.transactionId); // Ensure transactionId is available in the order object
+          }
+        });
+
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
+
+  const getApiTransactionOrderReceived = () => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrder_receivedUseId/${cleanId}`, "Get")
+      .then((data) => {
+        setOrderReceived(data.metadata.reverse());
         setIsLoad(false);
         return;
       })
@@ -224,12 +244,7 @@ const Information = () => {
       quantity: product.quantity,
     }));
 
-    Call_Post_Api(
-      convertedProducts,
-      cleanedJwtString,
-      cleanId,
-      "/product/updateQuantity"
-    ).then((data) => {
+    Call_Post_Api(convertedProducts, cleanedJwtString, cleanId, "/product/updateQuantity").then((data) => {
       console.log(data);
     });
   };
@@ -241,12 +256,7 @@ const Information = () => {
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/transaction/deleteTransaction/${transactionId}`
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/deleteTransaction/${transactionId}`)
       .then((data) => {
         setIsLoad(false);
         messageApi.open({
@@ -256,10 +266,7 @@ const Information = () => {
         getApiTransactionOrder();
         updateQuantity(product);
 
-        if (
-          status === "Đã thanh toán" ||
-          status === "Thanh toán qua Ví 2Be Flower"
-        ) {
+        if (status === "Đã thanh toán" || status === "Thanh toán qua Ví 2Be Flower") {
           const token = Cookies.get("accessToken");
           const id = Cookies.get("id");
           const cleanedJwtString = token?.replace(/"/g, "");
@@ -293,6 +300,7 @@ const Information = () => {
       case "2":
         getApiTransactionOrder();
         getApiTransactionOrderSend();
+        getApiTransactionOrderReceived();
         break;
       case "3":
         getApiAdrressUser();
@@ -392,6 +400,36 @@ const Information = () => {
       .catch((err) => console.log({ err }));
   };
 
+  const handelNhanDon = (transactionId) => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    Call_Post_Api(
+      {
+        transactionId,
+        status: "Đã nhận hàng",
+      },
+      cleanedJwtString,
+      cleanId,
+      `/transaction/updateStatus`
+    )
+      .then((data) => {
+        getApiTransactionOrderSend();
+        getApiTransactionOrderReceived();
+
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
+
+  const handelEditOrder = (order) => {
+    setIsModalOpenEditOrder(true);
+    console.log(order);
+    setOrderEdit(order);
+  };
+
   return (
     <div
       className={cx("container_")}
@@ -470,12 +508,7 @@ const Information = () => {
                   }}
                 >
                   {/* Content for Tab 1 */}
-                  <Modal
-                    title="Nạp tiền vào ví 2Be flower"
-                    visible={isModalVisible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                  >
+                  <Modal title="Nạp tiền vào ví 2Be flower" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                     <div>
                       <div>Số tiền cần Nạp</div>
                       <Input value={amount} onChange={handleChange} />
@@ -508,44 +541,19 @@ const Information = () => {
                     >
                       <Form layout="vertical">
                         <Form.Item label="Tên">
-                          <Input
-                            placeholder="Tên"
-                            name="name"
-                            value={addresUpdate.name}
-                            onChange={handleInputChange}
-                          />
+                          <Input placeholder="Tên" name="name" value={addresUpdate.name} onChange={handleInputChange} />
                         </Form.Item>
                         <Form.Item label="Số điện thoại">
-                          <Input
-                            placeholder="Số điện thoại"
-                            name="number"
-                            value={addresUpdate.number}
-                            onChange={handleInputChange}
-                          />
+                          <Input placeholder="Số điện thoại" name="number" value={addresUpdate.number} onChange={handleInputChange} />
                         </Form.Item>
                         <Form.Item label="Phường/Xã">
-                          <Input
-                            placeholder="Phường/Xã"
-                            name="phuongXa"
-                            value={addresUpdate.phuongXa}
-                            onChange={handleInputChange}
-                          />
+                          <Input placeholder="Phường/Xã" name="phuongXa" value={addresUpdate.phuongXa} onChange={handleInputChange} />
                         </Form.Item>
                         <Form.Item label="Quận/Huyện">
-                          <Input
-                            placeholder="Quận/Huyện"
-                            name="quanHuyen"
-                            value={addresUpdate.quanHuyen}
-                            onChange={handleInputChange}
-                          />
+                          <Input placeholder="Quận/Huyện" name="quanHuyen" value={addresUpdate.quanHuyen} onChange={handleInputChange} />
                         </Form.Item>
                         <Form.Item label="Tỉnh/Thành">
-                          <Input
-                            placeholder="Tỉnh/Thành"
-                            name="tinhThanh"
-                            value={addresUpdate.tinhThanh}
-                            onChange={handleInputChange}
-                          />
+                          <Input placeholder="Tỉnh/Thành" name="tinhThanh" value={addresUpdate.tinhThanh} onChange={handleInputChange} />
                         </Form.Item>
                         <Form.Item label="Địa chỉ cụ thể">
                           <Input
@@ -619,8 +627,7 @@ const Information = () => {
                               </div>
                             </div>
                             <div>
-                              {item.diaChiCuThe}, {item.phuongXa},{" "}
-                              {item.quanHuyen}, {item.tinhThanh}
+                              {item.diaChiCuThe}, {item.phuongXa}, {item.quanHuyen}, {item.tinhThanh}
                             </div>
                           </div>
                         </div>
@@ -650,10 +657,7 @@ const Information = () => {
                       lineHeight: "50px",
                     }}
                   >
-                    <ModalMap
-                      props={"Thêm"}
-                      onClickHandler={handleEventFromChild}
-                    />
+                    <ModalMap props={"Thêm"} onClickHandler={handleEventFromChild} />
                   </div>
                 </div>
               ) : (
@@ -666,6 +670,100 @@ const Information = () => {
                       color: theme.color,
                     }}
                   >
+                    <Modal
+                      title="Edit Order"
+                      open={isModalOpenEditOrder}
+                      onOk={handleEditOrderOk}
+                      onCancel={handleEditOrderCancel}
+                      className={cx("custom-modal")}
+                    >
+                      {orderEdit ? (
+                        <div className={cx("modal-content")}>
+                          <div>
+                            <strong>Order ID:</strong> {orderEdit._id}
+                          </div>
+
+                          <div>
+                            <strong>Transaction ID:</strong> {orderEdit.transactionId}
+                          </div>
+
+                          <div>
+                            <strong>Products:</strong>
+                            <ul>
+                              {orderEdit.transaction_products?.map((product) => (
+                                <li key={product._id}>
+                                  <img src={product.product_thumb} alt={product.product_name} />
+                                  <div>
+                                    <strong>Name:</strong> {product.product_name}
+                                  </div>
+                                  <div>
+                                    <strong>Description:</strong> {product.product_description}
+                                  </div>
+                                  <div>
+                                    <strong>Price:</strong> {product.product_price}
+                                  </div>
+                                  <div>
+                                    <strong>Quantity:</strong> {product.quantity}
+                                  </div>
+                                  <div>
+                                    <strong>Discount:</strong> {product.product_discount}
+                                  </div>
+                                  <div>
+                                    <strong>Attributes:</strong> Color: {product.product_attributes.color}, Size:{" "}
+                                    {product.product_attributes.size}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div>
+                            <strong>Status:</strong> {orderEdit.status}
+                          </div>
+                          <div>
+                            <strong>Transaction User:</strong>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                listStyleType: "none",
+                              }}
+                            >
+                              {orderEdit.transaction_userId?.map((user) => (
+                                <div key={user._id}>
+                                  <div>
+                                    <strong>Name:</strong> {user.name}
+                                  </div>
+                                  <div>
+                                    <strong>Address:</strong> {user.diaChiCuThe}
+                                  </div>
+                                  <div>
+                                    <strong>Phone:</strong> {user.number}
+                                  </div>
+                                  <div>
+                                    <strong>Address Details:</strong> {user.phuongXa}, {user.quanHuyen}, {user.tinhThanh}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <strong>Payment Expression:</strong> {orderEdit.payment_expression}
+                          </div>
+                          <div>
+                            <strong>Total Amount:</strong> {orderEdit.total_amounts}
+                          </div>
+                          <div>
+                            <strong>Discount:</strong> {orderEdit.discount}
+                          </div>
+                          <div>
+                            <strong>Shipping Fee:</strong> {orderEdit.phiShip}
+                          </div>
+                        </div>
+                      ) : (
+                        <p>Loading...</p>
+                      )}
+                    </Modal>
                     <div>
                       <div style={{ fontSize: "20px", fontWeight: "bold" }}>
                         Đơn hàng của tôi -{" "}
@@ -702,9 +800,10 @@ const Information = () => {
                                   color: theme.color,
                                 }}
                               >
-                                <h2 style={{ fontSize: "1.5rem", margin: "0" }}>
-                                  Đơn hàng {index + 1}
-                                </h2>
+                                <span>
+                                  <EditOutlined onClick={() => handelEditOrder(order)} />
+                                </span>
+                                <h2 style={{ fontSize: "1.5rem", margin: "0" }}>Đơn hàng {order.transactionId}</h2>
                                 <h6
                                   style={{
                                     fontWeight: "bold",
@@ -712,9 +811,7 @@ const Information = () => {
                                 >
                                   {order.total_amounts?.toLocaleString()} đ
                                 </h6>
-                                {order.notifications === "Đã thanh toán" ||
-                                order.notifications ===
-                                  "Thanh toán qua Ví 2Be Flower" ? (
+                                {order.notifications === "Đã thanh toán" || order.notifications === "Thanh toán qua Ví 2Be Flower" ? (
                                   <span
                                     style={{
                                       color: "green",
@@ -741,10 +838,7 @@ const Information = () => {
                                     color: theme.color,
                                   }}
                                 >
-                                  Ngày đặt:{" "}
-                                  {new Date(order.createdOn).toLocaleDateString(
-                                    "vi-VN"
-                                  )}
+                                  Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
                                 </p>
                                 <p
                                   style={{
@@ -756,12 +850,7 @@ const Information = () => {
                                   {order.status === "Đang nhận đơn" ? (
                                     <Button
                                       onClick={() =>
-                                        handelHuyDon(
-                                          order._id,
-                                          order.notifications,
-                                          order.total_amounts,
-                                          order.transaction_products
-                                        )
+                                        handelHuyDon(order._id, order.notifications, order.total_amounts, order.transaction_products)
                                       }
                                     >
                                       Hủy đơn
@@ -783,102 +872,56 @@ const Information = () => {
                                     fontWeight: "bold",
                                   }}
                                 >
-                                  <div
-                                    className={cx("order-cell")}
-                                    style={{ flex: "1", padding: "10px" }}
-                                  >
+                                  <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                                     STT
                                   </div>
-                                  <div
-                                    className={cx("order-cell")}
-                                    style={{ flex: "2", padding: "10px" }}
-                                  >
+                                  <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
                                     Sản phẩm
                                   </div>
-                                  <div
-                                    className={cx("order-cell")}
-                                    style={{ flex: "3", padding: "10px" }}
-                                  >
+                                  <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
                                     Hình ảnh
                                   </div>
-                                  <div
-                                    className={cx("order-cell")}
-                                    style={{ flex: "1", padding: "10px" }}
-                                  >
+                                  <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                                     Số lượng
                                   </div>
-                                  <div
-                                    className={cx("order-cell")}
-                                    style={{ flex: "1", padding: "10px" }}
-                                  >
+                                  <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                                     Giá
                                   </div>
-                                  <div
-                                    className={cx("order-cell")}
-                                    style={{ flex: "2", padding: "10px" }}
-                                  >
-                                    Ngày đặt
-                                  </div>
                                 </div>
-                                {order.transaction_products.map(
-                                  (product, prodIndex) => (
-                                    <div
-                                      key={prodIndex}
-                                      className={cx("order-row")}
-                                      style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        borderBottom: "1px solid #eee",
-                                        padding: "10px 0",
-                                      }}
-                                    >
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "1", padding: "10px" }}
-                                      >
-                                        {prodIndex + 1}
-                                      </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "2", padding: "10px" }}
-                                      >
-                                        {product.product_name}
-                                      </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "3", padding: "10px" }}
-                                      >
-                                        <Image
-                                          src={product.product_thumb}
-                                          style={{
-                                            width: "80px",
-                                            height: "80px",
-                                          }}
-                                        />
-                                      </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "1", padding: "10px" }}
-                                      >
-                                        {product.quantity}
-                                      </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "1", padding: "10px" }}
-                                      >
-                                        {product.product_price}
-                                      </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "2", padding: "10px" }}
-                                      >
-                                        {new Date(
-                                          product.updatedAt
-                                        ).toLocaleDateString("vi-VN")}
-                                      </div>
+                                {order.transaction_products.map((product, prodIndex) => (
+                                  <div
+                                    key={prodIndex}
+                                    className={cx("order-row")}
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      borderBottom: "1px solid #eee",
+                                      padding: "10px 0",
+                                    }}
+                                  >
+                                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      {prodIndex + 1}
                                     </div>
-                                  )
-                                )}
+                                    <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                      {product.product_name}
+                                    </div>
+                                    <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
+                                      <Image
+                                        src={product.product_thumb}
+                                        style={{
+                                          width: "80px",
+                                          height: "80px",
+                                        }}
+                                      />
+                                    </div>
+                                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      {product.quantity}
+                                    </div>
+                                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      {product.product_price}
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           ))
@@ -942,13 +985,16 @@ const Information = () => {
                                       color: theme.color,
                                     }}
                                   >
+                                    <span>
+                                      <EditOutlined onClick={() => handelEditOrder(order)} />
+                                    </span>
                                     <h2
                                       style={{
                                         fontSize: "1.5rem",
                                         margin: "0",
                                       }}
                                     >
-                                      Đơn hàng {index + 1}
+                                      Đơn hàng {order.transactionId}
                                     </h2>
                                     <h6
                                       style={{
@@ -957,9 +1003,7 @@ const Information = () => {
                                     >
                                       {order.total_amounts?.toLocaleString()} đ
                                     </h6>
-                                    {order.notifications === "Đã thanh toán" ||
-                                    order.notifications ===
-                                      "Thanh toán qua Ví 2Be Flower" ? (
+                                    {order.notifications === "Đã thanh toán" || order.notifications === "Thanh toán qua Ví 2Be Flower" ? (
                                       <span
                                         style={{
                                           color: "green",
@@ -986,10 +1030,222 @@ const Information = () => {
                                         color: theme.color,
                                       }}
                                     >
-                                      Ngày đặt:{" "}
-                                      {new Date(
-                                        order.createdOn
-                                      ).toLocaleDateString("vi-VN")}
+                                      Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
+                                    </p>
+                                    <p
+                                      style={{
+                                        margin: "0",
+                                        fontSize: "1.2rem",
+                                        color: theme.color,
+                                      }}
+                                    >
+                                      <Button onClick={() => handelNhanDon(order._id)}>Đã nhận đơn</Button>
+                                    </p>
+                                  </div>
+                                  <div
+                                    className={cx("order-table")}
+                                    style={{
+                                      width: "100%",
+                                      borderCollapse: "collapse",
+                                    }}
+                                  >
+                                    <div
+                                      className={cx("order-row", "order-header")}
+                                      style={{
+                                        backgroundColor: "#f0f0f0",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                        STT
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                        Sản phẩm
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
+                                        Hình ảnh
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                        Số lượng
+                                      </div>
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                        Giá
+                                      </div>
+                                    </div>
+                                    {order.transaction_products.map((product, prodIndex) => (
+                                      <div
+                                        key={prodIndex}
+                                        className={cx("order-row")}
+                                        style={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          borderBottom: "1px solid #eee",
+                                          padding: "10px 0",
+                                        }}
+                                      >
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "1",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          {prodIndex + 1}
+                                        </div>
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "2",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          {product.product_name}
+                                        </div>
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "3",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          <Image
+                                            src={product.product_thumb}
+                                            style={{
+                                              width: "80px",
+                                              height: "80px",
+                                            }}
+                                          />
+                                        </div>
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "1",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          {product.quantity}
+                                        </div>
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "1",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          {product.product_price}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <p
+                                style={{
+                                  fontStyle: "italic",
+                                  textAlign: "center",
+                                  marginTop: "20px",
+                                }}
+                              >
+                                Chưa có đơn hàng
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          marginBottom: "50px",
+                        }}
+                      >
+                        <div>
+                          <div
+                            style={{
+                              fontSize: "20px",
+                              fontWeight: "bold",
+                              marginTop: "20px",
+                            }}
+                          >
+                            Đơn hàng của tôi -{" "}
+                            <i
+                              style={{
+                                fontSize: "16px",
+                                fontWeight: 400,
+                              }}
+                            >
+                              Đơn đã nhận (Nếu không xác nhận thì sau 5 ngày đơn sẽ tự động xác nhận)
+                            </i>
+                          </div>
+                          <div className={cx("orders-container")}>
+                            {ordersReceived?.length > 0 ? (
+                              ordersReceived.map((order, index) => (
+                                <div
+                                  key={order._id}
+                                  style={{
+                                    marginBottom: "20px",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "5px",
+                                    padding: "20px",
+                                  }}
+                                >
+                                  <div
+                                    className={cx("order-header")}
+                                    style={{
+                                      marginBottom: "10px",
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      padding: "10px",
+                                      backgroundColor: theme.button,
+                                      color: theme.color,
+                                    }}
+                                  >
+                                    <span>
+                                      <EditOutlined onClick={() => handelEditOrder(order)} />
+                                    </span>
+                                    <h2
+                                      style={{
+                                        fontSize: "1.5rem",
+                                        margin: "0",
+                                      }}
+                                    >
+                                      Đơn hàng {index + 1}
+                                    </h2>
+                                    <h6
+                                      style={{
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {order.total_amounts?.toLocaleString()} đ
+                                    </h6>
+                                    {order.notifications === "Đã thanh toán" || order.notifications === "Thanh toán qua Ví 2Be Flower" ? (
+                                      <span
+                                        style={{
+                                          color: "green",
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        {" "}
+                                        {order?.notifications}
+                                      </span>
+                                    ) : (
+                                      <span
+                                        style={{
+                                          color: "red",
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        Chưa thanh toán
+                                      </span>
+                                    )}
+                                    <p
+                                      style={{
+                                        margin: "0",
+                                        fontSize: "1.2rem",
+                                        color: theme.color,
+                                      }}
+                                    >
+                                      Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
                                     </p>
                                     <p
                                       style={{
@@ -999,13 +1255,7 @@ const Information = () => {
                                       }}
                                     >
                                       {order.status === "Đang nhận đơn" ? (
-                                        <Button
-                                          onClick={() =>
-                                            handelHuyDon(order._id)
-                                          }
-                                        >
-                                          Hủy đơn
-                                        </Button>
+                                        <Button onClick={() => handelHuyDon(order._id)}>Hủy đơn</Button>
                                       ) : null}
                                     </p>
                                   </div>
@@ -1017,129 +1267,92 @@ const Information = () => {
                                     }}
                                   >
                                     <div
-                                      className={cx(
-                                        "order-row",
-                                        "order-header"
-                                      )}
+                                      className={cx("order-row", "order-header")}
                                       style={{
                                         backgroundColor: "#f0f0f0",
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "1", padding: "10px" }}
-                                      >
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                                         STT
                                       </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "2", padding: "10px" }}
-                                      >
+                                      <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
                                         Sản phẩm
                                       </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "3", padding: "10px" }}
-                                      >
+                                      <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
                                         Hình ảnh
                                       </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "1", padding: "10px" }}
-                                      >
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                                         Số lượng
                                       </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "1", padding: "10px" }}
-                                      >
+                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                                         Giá
                                       </div>
-                                      <div
-                                        className={cx("order-cell")}
-                                        style={{ flex: "2", padding: "10px" }}
-                                      >
-                                        Ngày đặt
-                                      </div>
                                     </div>
-                                    {order.transaction_products.map(
-                                      (product, prodIndex) => (
+                                    {order.transaction_products.map((product, prodIndex) => (
+                                      <div
+                                        key={prodIndex}
+                                        className={cx("order-row")}
+                                        style={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          borderBottom: "1px solid #eee",
+                                          padding: "10px 0",
+                                        }}
+                                      >
                                         <div
-                                          key={prodIndex}
-                                          className={cx("order-row")}
+                                          className={cx("order-cell")}
                                           style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            borderBottom: "1px solid #eee",
-                                            padding: "10px 0",
+                                            flex: "1",
+                                            padding: "10px",
                                           }}
                                         >
-                                          <div
-                                            className={cx("order-cell")}
-                                            style={{
-                                              flex: "1",
-                                              padding: "10px",
-                                            }}
-                                          >
-                                            {prodIndex + 1}
-                                          </div>
-                                          <div
-                                            className={cx("order-cell")}
-                                            style={{
-                                              flex: "2",
-                                              padding: "10px",
-                                            }}
-                                          >
-                                            {product.product_name}
-                                          </div>
-                                          <div
-                                            className={cx("order-cell")}
-                                            style={{
-                                              flex: "3",
-                                              padding: "10px",
-                                            }}
-                                          >
-                                            <Image
-                                              src={product.product_thumb}
-                                              style={{
-                                                width: "80px",
-                                                height: "80px",
-                                              }}
-                                            />
-                                          </div>
-                                          <div
-                                            className={cx("order-cell")}
-                                            style={{
-                                              flex: "1",
-                                              padding: "10px",
-                                            }}
-                                          >
-                                            {product.quantity}
-                                          </div>
-                                          <div
-                                            className={cx("order-cell")}
-                                            style={{
-                                              flex: "1",
-                                              padding: "10px",
-                                            }}
-                                          >
-                                            {product.product_price}
-                                          </div>
-                                          <div
-                                            className={cx("order-cell")}
-                                            style={{
-                                              flex: "2",
-                                              padding: "10px",
-                                            }}
-                                          >
-                                            {new Date(
-                                              product.updatedAt
-                                            ).toLocaleDateString("vi-VN")}
-                                          </div>
+                                          {prodIndex + 1}
                                         </div>
-                                      )
-                                    )}
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "2",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          {product.product_name}
+                                        </div>
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "3",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          <Image
+                                            src={product.product_thumb}
+                                            style={{
+                                              width: "80px",
+                                              height: "80px",
+                                            }}
+                                          />
+                                        </div>
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "1",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          {product.quantity}
+                                        </div>
+                                        <div
+                                          className={cx("order-cell")}
+                                          style={{
+                                            flex: "1",
+                                            padding: "10px",
+                                          }}
+                                        >
+                                          {product.product_price}
+                                        </div>
+                                      </div>
+                                    ))}
                                   </div>
                                 </div>
                               ))

@@ -84,3 +84,92 @@
 .footer_svg__6xIHg {
   display: none;
 }
+.custom-modal {
+  width: 600px !important;
+}
+/* Modal Styles */
+.custom-modal .ant-modal {
+  border-radius: 12px; /* Góc bo tròn nhẹ nhàng */
+  overflow: hidden; /* Ẩn phần tràn ra ngoài */
+  background-color: #ffffff; /* Nền trắng cho modal */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho modal */
+}
+
+.custom-modal .ant-modal-header {
+  background-color: #f7f9fc; /* Nền header sáng hơn */
+  border-bottom: 1px solid #e1e5e8; /* Đường viền mỏng */
+  border-top-left-radius: 12px; /* Bo tròn góc trên bên trái */
+  border-top-right-radius: 12px; /* Bo tròn góc trên bên phải */
+}
+
+.custom-modal .ant-modal-title {
+  font-size: 20px; /* Cỡ chữ tiêu đề lớn hơn */
+  color: #333; /* Màu chữ tối cho tiêu đề */
+}
+
+.custom-modal .ant-modal-body {
+  padding: 20px; /* Padding cho nội dung */
+  font-size: 16px; /* Cỡ chữ vừa phải cho nội dung */
+  color: #555; /* Màu chữ cho nội dung */
+}
+
+.custom-modal .ant-modal-footer {
+  display: flex;
+  justify-content: flex-end; /* Nút ở phía bên phải */
+  padding: 15px; /* Padding cho footer */
+  background-color: #f7f9fc; /* Nền sáng cho footer */
+  border-top: 1px solid #e1e5e8; /* Đường viền mỏng phía trên footer */
+}
+
+.custom-modal .ant-btn {
+  border-radius: 5px; /* Bo tròn nút */
+  padding: 10px 20px; /* Padding cho nút */
+  font-size: 14px; /* Cỡ chữ vừa phải */
+}
+
+.custom-modal .ant-btn-primary {
+  background-color: #1890ff; /* Màu nền cho nút chính */
+  border: none; /* Xóa đường viền */
+  color: #fff; /* Màu chữ trắng */
+}
+
+.custom-modal .ant-btn-danger {
+  background-color: #ff4d4f; /* Màu nền cho nút hủy */
+  border: none; /* Xóa đường viền */
+  color: #fff; /* Màu chữ trắng */
+}
+
+/* Custom styling for modal content */
+.modal-content {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Font chữ hiện đại */
+  line-height: 1.6; /* Khoảng cách dòng */
+}
+
+.modal-content img {
+  border-radius: 8px; /* Bo tròn hình ảnh */
+  border: 1px solid #e1e5e8; /* Đường viền nhẹ */
+  max-width: 100px; /* Chiều rộng tối đa */
+  max-height: 100px; /* Chiều cao tối đa */
+  object-fit: cover; /* Căn chỉnh hình ảnh */
+  margin-right: 10px; /* Khoảng cách giữa hình ảnh và văn bản */
+}
+
+.modal-content ul {
+  list-style-type: none; /* Xóa dấu chấm đầu dòng */
+  padding: 0; /* Xóa padding */
+  margin: 0; /* Xóa margin */
+}
+
+.modal-content li {
+  margin-bottom: 15px; /* Khoảng cách giữa các mục */
+  display: flex; /* Sắp xếp theo hàng ngang */
+  align-items: center; /* Canh giữa các mục */
+}
+
+.modal-content li div {
+  margin-left: 10px; /* Khoảng cách giữa hình ảnh và văn bản */
+}
+
+.modal-content strong {
+  color: #333; /* Màu chữ cho các label */
+}

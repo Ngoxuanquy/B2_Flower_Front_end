@@ -18,13 +18,7 @@ function Orders() {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/transaction/getFull`,
-      "Get"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFull`, "Get")
       .then((data) => {
         setOrder(data.metadata);
         return;
@@ -43,10 +37,13 @@ function Orders() {
     const cleanId = id?.replace(/"/g, "");
 
     Call_Post_Api(
-      null,
+      {
+        transactionId,
+        status: "Đã gửi hàng",
+      },
       cleanedJwtString,
       cleanId,
-      `/transaction/updateStatus/${transactionId}`
+      `/transaction/updateStatus`
     )
       .then((data) => {
         getApiTransactionOrder();
@@ -61,9 +58,7 @@ function Orders() {
     const printWindow = window.open("", "", "height=600,width=800");
     printWindow.document.write("<html><head><title>Print</title></head><body>");
 
-    printWindow.document.write(
-      "<div style='margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; padding: 20px;'>"
-    );
+    printWindow.document.write("<div style='margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; padding: 20px;'>");
     printWindow.document.write(
       `<div style='margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: ${theme.button}; color: ${theme.color};'>`
     );
@@ -71,16 +66,12 @@ function Orders() {
       `<h2 style='font-size: 1.5rem; margin: 0;'>Đơn hàng: <span style='font-weight: bold; font-size: 12px;'>${orders?.transactionId}</span></h2>`
     );
     printWindow.document.write(
-      `<p style='margin: 0; font-size: 1.2rem; color: ${
-        theme.color
-      };'>Ngày đặt: ${new Date(orders.createdOn).toLocaleDateString(
+      `<p style='margin: 0; font-size: 1.2rem; color: ${theme.color};'>Ngày đặt: ${new Date(orders.createdOn).toLocaleDateString(
         "vi-VN"
       )}</p>`
     );
     printWindow.document.write(
-      `<p style='margin: 0; font-size: 1.2rem; color: ${
-        theme.color
-      };'>Trạng thái: ${
+      `<p style='margin: 0; font-size: 1.2rem; color: ${theme.color};'>Trạng thái: ${
         orders.status === "Đang nhận đơn" ? "Đang nhận đơn" : ""
       }</p>`
     );
@@ -113,12 +104,8 @@ function Orders() {
       `<div><span>Tổng tiền: </span><span style='font-weight: bold; font-size: 14px;'>${orders.total_amounts?.toLocaleString()} đ</span></div>`
     );
     printWindow.document.write(
-      `<div><label>Trạng thái: </label><span style='color: ${
-        orders.notifications !== "null" ? "green" : "red"
-      }; font-size: 14px;'>${
-        orders.notifications !== "null"
-          ? orders.notifications
-          : "Chưa thanh toán"
+      `<div><label>Trạng thái: </label><span style='color: ${orders.notifications !== "null" ? "green" : "red"}; font-size: 14px;'>${
+        orders.notifications !== "null" ? orders.notifications : "Chưa thanh toán"
       }</span></div>`
     );
 
@@ -128,50 +115,26 @@ function Orders() {
       );
     });
 
-    printWindow.document.write(
-      "<div style='width: 100%; border-collapse: collapse;'>"
-    );
-    printWindow.document.write(
-      "<div style='background-color: #f0f0f0; font-weight: bold; display: flex;'>"
-    );
-    printWindow.document.write(
-      "<div style='flex: 1; padding: 10px;'>STT</div>"
-    );
-    printWindow.document.write(
-      "<div style='flex: 2; padding: 10px;'>Sản phẩm</div>"
-    );
-    printWindow.document.write(
-      "<div style='flex: 3; padding: 10px;'>Hình ảnh</div>"
-    );
-    printWindow.document.write(
-      "<div style='flex: 1; padding: 10px;'>Số lượng</div>"
-    );
-    printWindow.document.write(
-      "<div style='flex: 1; padding: 10px;'>Giá</div>"
-    );
+    printWindow.document.write("<div style='width: 100%; border-collapse: collapse;'>");
+    printWindow.document.write("<div style='background-color: #f0f0f0; font-weight: bold; display: flex;'>");
+    printWindow.document.write("<div style='flex: 1; padding: 10px;'>STT</div>");
+    printWindow.document.write("<div style='flex: 2; padding: 10px;'>Sản phẩm</div>");
+    printWindow.document.write("<div style='flex: 3; padding: 10px;'>Hình ảnh</div>");
+    printWindow.document.write("<div style='flex: 1; padding: 10px;'>Số lượng</div>");
+    printWindow.document.write("<div style='flex: 1; padding: 10px;'>Giá</div>");
     printWindow.document.write("</div>");
     orders.transaction_products.forEach((product, prodIndex) => {
-      printWindow.document.write(
-        "<div style='display: flex; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0;'>"
-      );
-      printWindow.document.write(
-        `<div style='flex: 1; padding: 10px;'>${prodIndex + 1}</div>`
-      );
-      printWindow.document.write(
-        `<div style='flex: 2; padding: 10px;'>${product.product_name}</div>`
-      );
+      printWindow.document.write("<div style='display: flex; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0;'>");
+      printWindow.document.write(`<div style='flex: 1; padding: 10px;'>${prodIndex + 1}</div>`);
+      printWindow.document.write(`<div style='flex: 2; padding: 10px;'>${product.product_name}</div>`);
       printWindow.document.write(
         `<div style='flex: 3; padding: 10px;'><img src='${product.product_thumb}' style='width: 80px; height: 80px;' /></div>`
       );
-      printWindow.document.write(
-        `<div style='flex: 1; padding: 10px;'>${product.quantity}</div>`
-      );
+      printWindow.document.write(`<div style='flex: 1; padding: 10px;'>${product.quantity}</div>`);
       printWindow.document.write(
         `<div style='flex: 1; padding: 10px;'>${
           product?.product_discount
-            ? `<span style='text-decoration: line-through; margin-right: 8px; font-size: 12px;'>${
-                product.product_price
-              }</span><span>${
+            ? `<span style='text-decoration: line-through; margin-right: 8px; font-size: 12px;'>${product.product_price}</span><span>${
                 product.product_price * (1 - product.product_discount / 100)
               } đ</span>`
             : `${product.product_price} đ`
@@ -233,8 +196,7 @@ function Orders() {
                       color: theme.color,
                     }}
                   >
-                    Ngày đặt:{" "}
-                    {new Date(order.createdOn).toLocaleDateString("vi-VN")}
+                    Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
                   </p>
                   <p
                     style={{
@@ -243,11 +205,7 @@ function Orders() {
                       color: theme.color,
                     }}
                   >
-                    {order.status === "Đang nhận đơn" ? (
-                      <Button onClick={() => handelGuiDon(order._id)}>
-                        Gửi đơn
-                      </Button>
-                    ) : null}
+                    {order.status === "Đang nhận đơn" ? <Button onClick={() => handelGuiDon(order._id)}>Gửi đơn</Button> : null}
                     <Button onClick={() => handlePrint(order)}>In</Button>
                   </p>
                 </div>
@@ -273,18 +231,10 @@ function Orders() {
                               >
                                 {product.product_price.toLocaleString()} đ
                               </span>
-                              <span>
-                                {(
-                                  product.product_price *
-                                  (1 - product.product_discount / 100)
-                                ).toLocaleString()}{" "}
-                                đ
-                              </span>
+                              <span>{(product.product_price * (1 - product.product_discount / 100)).toLocaleString()} đ</span>
                             </>
                           ) : (
-                            <span>
-                              {product.product_price.toLocaleString()} đ
-                            </span>
+                            <span>{product.product_price.toLocaleString()} đ</span>
                           )}
                         </span>
                       </div>
@@ -355,49 +305,27 @@ function Orders() {
                           fontSize: "14px",
                         }}
                       >
-                        {item?.name}, {item?.number} , {item?.diaChiCuThe},{" "}
-                        {item?.phuongXa} , {item?.quanHuyen}, {item?.tinhThanh}{" "}
+                        {item?.name}, {item?.number} , {item?.diaChiCuThe}, {item?.phuongXa} , {item?.quanHuyen}, {item?.tinhThanh}{" "}
                       </i>
                     ))}
                   </div>
                 </div>
 
-                <div
-                  className={cx("order-table")}
-                  style={{ width: "100%", borderCollapse: "collapse" }}
-                >
-                  <div
-                    className={cx("order-row", "order-header")}
-                    style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}
-                  >
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "1", padding: "10px" }}
-                    >
+                <div className={cx("order-table")} style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <div className={cx("order-row", "order-header")} style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}>
+                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                       STT
                     </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "2", padding: "10px" }}
-                    >
+                    <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
                       Sản phẩm
                     </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "3", padding: "10px" }}
-                    >
+                    <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
                       Hình ảnh
                     </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "1", padding: "10px" }}
-                    >
+                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                       Số lượng
                     </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "1", padding: "10px" }}
-                    >
+                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                       Giá
                     </div>
                   </div>
@@ -412,22 +340,13 @@ function Orders() {
                         padding: "10px 0",
                       }}
                     >
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "1", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                         {prodIndex + 1}
                       </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "2", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
                         {product.product_name}
                       </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "3", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
                         <Image
                           src={product.product_thumb}
                           style={{
@@ -436,16 +355,10 @@ function Orders() {
                           }}
                         />
                       </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "1", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                         {product.quantity}
                       </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "1", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                         <div>
                           {product?.product_discount ? (
                             <>
@@ -458,11 +371,7 @@ function Orders() {
                               >
                                 {product.product_price}
                               </span>
-                              <span>
-                                {product.product_price *
-                                  (1 - product.product_discount / 100)}{" "}
-                                đ
-                              </span>
+                              <span>{product.product_price * (1 - product.product_discount / 100)} đ</span>
                             </>
                           ) : (
                             <span>{product.product_price} đ</span>

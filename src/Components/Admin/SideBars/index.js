@@ -59,13 +59,7 @@ const Sidebar = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/shop/get_roles/${cleanId}`,
-      "GET"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/shop/get_roles/${cleanId}`, "GET")
       .then((data) => {
         setRoles(data.metadata);
         console.log(data);
@@ -84,9 +78,7 @@ const Sidebar = () => {
           isActive={activeItem === "Dashboard"} // Set active state
         />
       )}
-      {(roles.includes("READ") ||
-        roles.includes("ADMIN") ||
-        roles.includes("CREATE")) && (
+      {(roles.includes("READ") || roles.includes("ADMIN") || roles.includes("CREATE")) && (
         <SideBarItem
           icon={<AiFillProduct />}
           primary="Products"
@@ -110,7 +102,7 @@ const Sidebar = () => {
         <SideBarItem
           icon={<BsCartCheckFill />}
           primary="Order"
-          subItems={["Orders List", "Orders Sent"]}
+          subItems={["Orders List", "Orders Sent", "Sản phẩm đã giao"]}
           onItemClick={handleItemClick}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Order"}
@@ -144,11 +136,7 @@ const Sidebar = () => {
         <SideBarItem
           icon={<FaBoltLightning />}
           primary="Yêu cầu hủy sản phẩm"
-          subItems={
-            roles.includes("ADMIN")
-              ? ["Danh sách hủy hoa", "Danh sách đã duyệt"]
-              : null
-          }
+          subItems={roles.includes("ADMIN") ? ["Danh sách hủy hoa", "Danh sách đã duyệt"] : null}
           onItemClick={handleCancelProducts}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Yêu cầu hủy sản phẩm"}
@@ -175,8 +163,7 @@ const Sidebar = () => {
               cookies.forEach((cookie) => {
                 const eqPos = cookie.indexOf("=");
                 const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie =
-                  name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
               });
               navigate("/login");
             }}
