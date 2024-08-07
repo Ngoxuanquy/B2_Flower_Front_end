@@ -752,13 +752,13 @@ const Information = () => {
                             <strong>Payment Expression:</strong> {orderEdit.payment_expression}
                           </div>
                           <div>
-                            <strong>Total Amount:</strong> {orderEdit.total_amounts}
+                            <strong>Total Amount:</strong> {orderEdit.total_amounts?.toLocaleString()} đ
                           </div>
                           <div>
-                            <strong>Discount:</strong> {orderEdit.discount}
+                            <strong>Discount:</strong> {orderEdit.discount ? orderEdit.discount : 0}
                           </div>
                           <div>
-                            <strong>Shipping Fee:</strong> {orderEdit.phiShip}
+                            <strong>Shipping Fee:</strong> {orderEdit.phiShip ? orderEdit.phiShip : 0}
                           </div>
                         </div>
                       ) : (
