@@ -20,44 +20,44 @@ import ThemeConText from "../../../../config/themeConText";
 Chart.register(...registerables);
 Chart.register(zoomPlugin);
 
-const options = {
-  scales: {
-    x: {
-      beginAtZero: true,
-      ticks: {
-        color: "white", // Color for X-axis labels
-      },
-    },
-    y: {
-      beginAtZero: true,
-      ticks: {
-        color: "white",
-        callback: function (value) {
-          return `${value}`.toLocaleString(); // Add dollar sign before the value
-        },
-      },
-    },
-  },
-  plugins: {
-    legend: {
-      labels: {
-        color: "white", // Color for legend labels
-      },
-    },
-    tooltip: {
-      callbacks: {
-        label: function (tooltipItem) {
-          return `${tooltipItem.raw}`.toLocaleString(); // Add dollar sign before the value in tooltips
-        },
-      },
-      bodyColor: "white", // Color for tooltip body text
-      titleColor: "white", // Color for tooltip title
-    },
-    title: {
-      display: false, // Disable the built-in title
-    },
-  },
-};
+// const options = {
+//   scales: {
+//     x: {
+//       beginAtZero: true,
+//       ticks: {
+//         color: "white", // Color for X-axis labels
+//       },
+//     },
+//     y: {
+//       beginAtZero: true,
+//       ticks: {
+//         color: "white",
+//         callback: function (value) {
+//           return `${value}`.toLocaleString(); // Add dollar sign before the value
+//         },
+//       },
+//     },
+//   },
+//   plugins: {
+//     legend: {
+//       labels: {
+//         color: "white", // Color for legend labels
+//       },
+//     },
+//     tooltip: {
+//       callbacks: {
+//         label: function (tooltipItem) {
+//           return `${tooltipItem.raw}`.toLocaleString(); // Add dollar sign before the value in tooltips
+//         },
+//       },
+//       bodyColor: "white", // Color for tooltip body text
+//       titleColor: "white", // Color for tooltip title
+//     },
+//     title: {
+//       display: false, // Disable the built-in title
+//     },
+//   },
+// };
 const ranges = {
   lastDay: "hôm qua",
   lastWeek: "tuần trước",
@@ -325,7 +325,27 @@ const DashBoard = () => {
     setSelectedRange(rangeKey);
     handleClose();
   };
-
+  const options = {
+    responsive: true,
+    plugins: {},
+    scales: {
+      x: {
+        beginAtZero: true,
+        ticks: {
+          color: "white", // Color for X-axis labels
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: "white",
+          callback: function (value) {
+            return `${value}`; // Add "vnđ" after the value
+          },
+        },
+      },
+    },
+  };
   return (
     <div className={cx("container")}>
       <div className={cx("contents")}>
@@ -416,9 +436,10 @@ const DashBoard = () => {
                 {ranges[selectedRange]}
               </p>
 
-              <div className={cx("chart")}>
-                <h3>Tổng doanh thu 7 ngày gần nhất</h3>
+              <div className={cx("chartTotal")}>
                 <Bar ref={chartRef} data={chartData} options={options} />
+
+                {/* <h3>Doanh thu 7 ngày gần nhất</h3> */}
               </div>
             </div>
           </div>

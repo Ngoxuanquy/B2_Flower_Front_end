@@ -20,6 +20,19 @@ import ThemeConText from "../../../../config/themeConText";
 Chart.register(...registerables);
 Chart.register(zoomPlugin);
 
+const data = {
+  labels: ["2021", "2022", "2023", "2024"],
+  datasets: [
+    {
+      label: "Total",
+      data: [30, 120, 130, 90],
+      backgroundColor: "blue",
+      borderColor: "blue",
+      borderWidth: 1,
+    },
+  ],
+};
+
 const options = {
   scales: {
     x: {
@@ -33,7 +46,7 @@ const options = {
       ticks: {
         color: "white",
         callback: function (value) {
-          return `${value}`.toLocaleString(); // Add dollar sign before the value
+          return `$${value}`; // Add dollar sign before the value
         },
       },
     },
@@ -47,7 +60,7 @@ const options = {
     tooltip: {
       callbacks: {
         label: function (tooltipItem) {
-          return `${tooltipItem.raw}`.toLocaleString(); // Add dollar sign before the value in tooltips
+          return `$${tooltipItem.raw}`; // Add dollar sign before the value in tooltips
         },
       },
       bodyColor: "white", // Color for tooltip body text
@@ -59,10 +72,10 @@ const options = {
   },
 };
 const ranges = {
-  lastDay: "hôm qua",
-  lastWeek: "tuần trước",
-  lastMonth: "tháng trước",
-  lastYear: "năm trước",
+  lastDay: "Last Day",
+  lastWeek: "Last Week",
+  lastMonth: "Last Month",
+  lastYear: "Last Year",
 };
 const cx = classNames.bind(styles);
 const ITEM_HEIGHT = 48;
@@ -79,20 +92,7 @@ const DashBoard = () => {
   const [selectedRange, setSelectedRange] = useState("lastMonth");
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [order, setOrders] = useState([]);
-  const [chartData, setChartData] = useState({
-    labels: [],
-    datasets: [
-      {
-        label: "Total",
-        data: [],
-        backgroundColor: "blue",
-        borderColor: "blue",
-        borderWidth: 1,
-      },
-    ],
-  });
   const chartRef = useRef(null);
-
   const open = Boolean(anchorEl);
   const URL = process.env.REACT_APP_URL;
 
@@ -160,44 +160,7 @@ const DashBoard = () => {
       )
       .catch((err) => console.log({ err }));
   };
-  const calculateDailyRevenue = (orders) => {
-    const dailyRevenue = {};
 
-    orders.forEach((order) => {
-      const date = new Date(order.modifieOn); // Assuming `modifieOn` is the date field
-      const day = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
-      if (!dailyRevenue[day]) {
-        dailyRevenue[day] = 0;
-      }
-      dailyRevenue[day] += order.total_amounts;
-    });
-
-    return dailyRevenue;
-  };
-  useEffect(() => {
-    if (order.length > 0) {
-      const dailyRevenue = calculateDailyRevenue(order);
-      const last7Days = Object.keys(dailyRevenue)
-        .sort((a, b) => new Date(b) - new Date(a))
-        .slice(0, 7)
-        .reverse();
-
-      const data = {
-        labels: last7Days,
-        datasets: [
-          {
-            label: "Total Revenue",
-            data: last7Days.map((day) => dailyRevenue[day]),
-            backgroundColor: "blue",
-            borderColor: "blue",
-            borderWidth: 1,
-          },
-        ],
-      };
-
-      setChartData(data);
-    }
-  }, [order]);
   const calculateTopProducts = (orders) => {
     const productMap = {};
 
@@ -408,17 +371,12 @@ const DashBoard = () => {
                   </Menu>
                 </div>
               </div>
-              <h3 className={cx("totalPrice")}>
-                {totalPrice.toLocaleString()} vnđ
-              </h3>
+              <h3 className={cx("totalPrice")}>{totalPrice} vnđ</h3>
               <p>
-                +{totalRevenue.toLocaleString()} vnđ so với{" "}
-                {ranges[selectedRange]}
+                {totalRevenue} vnđ in {ranges[selectedRange]}
               </p>
-
-              <div className={cx("chart")}>
-                <h3>Tổng doanh thu 7 ngày gần nhất</h3>
-                <Bar ref={chartRef} data={chartData} options={options} />
+              <div>
+                <Bar ref={chartRef} data={data} options={options} />
               </div>
             </div>
           </div>

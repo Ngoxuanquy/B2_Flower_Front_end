@@ -20,6 +20,19 @@ import ThemeConText from "../../../../config/themeConText";
 Chart.register(...registerables);
 Chart.register(zoomPlugin);
 
+const data = {
+  labels: ["2021", "2022", "2023", "2024"],
+  datasets: [
+    {
+      label: "Total",
+      data: [30, 120, 130, 90],
+      backgroundColor: "blue",
+      borderColor: "blue",
+      borderWidth: 1,
+    },
+  ],
+};
+
 const options = {
   scales: {
     x: {
@@ -33,7 +46,7 @@ const options = {
       ticks: {
         color: "white",
         callback: function (value) {
-          return `${value}`.toLocaleString(); // Add dollar sign before the value
+          return `$${value}`; // Add dollar sign before the value
         },
       },
     },
@@ -47,7 +60,7 @@ const options = {
     tooltip: {
       callbacks: {
         label: function (tooltipItem) {
-          return `${tooltipItem.raw}`.toLocaleString(); // Add dollar sign before the value in tooltips
+          return `$${tooltipItem.raw}`; // Add dollar sign before the value in tooltips
         },
       },
       bodyColor: "white", // Color for tooltip body text
@@ -83,7 +96,7 @@ const DashBoard = () => {
     labels: [],
     datasets: [
       {
-        label: "Total",
+        label: "Total Revenue",
         data: [],
         backgroundColor: "blue",
         borderColor: "blue",
@@ -416,9 +429,14 @@ const DashBoard = () => {
                 {ranges[selectedRange]}
               </p>
 
-              <div className={cx("chart")}>
-                <h3>Tổng doanh thu 7 ngày gần nhất</h3>
-                <Bar ref={chartRef} data={chartData} options={options} />
+              <div>
+                <Bar
+                  ref={chartRef}
+                  data={chartData}
+                  options={{ responsive: true }}
+                />
+
+                <h3> 7 ngày gần nhất</h3>
               </div>
             </div>
           </div>
