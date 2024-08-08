@@ -4,6 +4,7 @@ import styles from "./ResertPassword.module.scss";
 import { Call_Post_Api } from "../../../Components/CallApi/CallApis";
 import Cookies from "js-cookie";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
@@ -119,7 +120,6 @@ const ResertPassword = () => {
       `/shop/resert_password`
     )
       .then((data) => {
-        console.log(data);
         messageApi.open({
           type: "warning",
           content: data.metadata.msg,

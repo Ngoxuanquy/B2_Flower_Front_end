@@ -81,7 +81,6 @@ function ForgotPassword(props) {
       "/shop/forgot_password"
     )
       .then((data) => {
-        console.log(data);
         if (data.metadata.msg === "Gmail không tồn tại!!" || data.metadata.msg === "Gmail chưa được đăng ký!!") {
           messageApi.open({
             type: "warning",
@@ -92,6 +91,11 @@ function ForgotPassword(props) {
             type: "success",
             content: "Check email để lấy lại mật khẩu",
           });
+
+          // Delay navigation by 3 seconds (3000 milliseconds)
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
         }
       })
       .catch((error) => {

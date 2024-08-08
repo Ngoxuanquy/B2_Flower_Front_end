@@ -25,6 +25,23 @@ const VisuallyHiddenInput = styled("input")({
 
 const cx = classNames.bind(styles);
 
+export const checkValidation = (apiProducts, name, price, quantity) => {
+  const isDuplicateName = apiProducts.some((product) => product.product_name.toLowerCase() === name.toLowerCase());
+  if (isDuplicateName) {
+    return "*Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác!";
+  }
+
+  if (Number(price) < 0) {
+    return "*Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!";
+  }
+
+  if (Number(quantity) < 0) {
+    return "*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!";
+  }
+
+  return ""; // Return empty string if no validation errors
+};
+
 const ProductUpload = () => {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,8 +115,7 @@ const ProductUpload = () => {
       });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const checkValidation = () => {
     let valid = true;
 
     const isDuplicateName = apiProducts.some((product) => product.product_name.toLowerCase() === name.toLowerCase());
@@ -110,6 +126,7 @@ const ProductUpload = () => {
     } else {
       setNameError("");
     }
+
     if (Number(price) < 0) {
       setPriceError("*Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
       priceInputRef.current.focus();
@@ -117,6 +134,7 @@ const ProductUpload = () => {
     } else {
       setPriceError("");
     }
+
     if (Number(quantity) < 0) {
       setQuantityError("*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
       quantityInputRef.current.focus();
@@ -125,7 +143,14 @@ const ProductUpload = () => {
       setQuantityError("");
     }
 
-    if (!valid) return;
+    return valid;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const isValid = checkValidation();
+    if (!isValid) return;
 
     const images = await uploadImage();
     try {
