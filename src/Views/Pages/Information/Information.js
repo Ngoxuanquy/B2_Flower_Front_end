@@ -53,21 +53,28 @@ const Information = () => {
   const handleOk = () => {
     setIsModalVisible(false);
     console.log(amount);
-    const token = Cookies.get("accessToken");
-    const id = Cookies.get("id");
-    const cleanedJwtString = token?.replace(/"/g, "");
-    const cleanId = id?.replace(/"/g, "");
-    Call_Post_Api(
-      {
-        amount: amount.replace(/\./g, ""),
-        userId: cleanId,
-      },
-      null,
-      null,
-      "/vnpay/create-payment-link-donet"
-    ).then((data) => {
-      window.location.replace(data);
-    });
+    if (Number(amount.replace(/\./g, "")) > 1000 && amount !== undefined) {
+      const token = Cookies.get("accessToken");
+      const id = Cookies.get("id");
+      const cleanedJwtString = token?.replace(/"/g, "");
+      const cleanId = id?.replace(/"/g, "");
+      Call_Post_Api(
+        {
+          amount: amount.replace(/\./g, ""),
+          userId: cleanId,
+        },
+        null,
+        null,
+        "/vnpay/create-payment-link-donet"
+      ).then((data) => {
+        window.location.replace(data);
+      });
+    } else {
+      messageApi.open({
+        type: "warning",
+        content: "Vui lòng nhập số tiền lớn hơn 1000",
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -919,7 +926,24 @@ const Information = () => {
                                       {product.quantity}
                                     </div>
                                     <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
-                                      {product.product_price}
+                                      <div>
+                                        {product?.product_discount ? (
+                                          <>
+                                            <span
+                                              style={{
+                                                textDecoration: "line-through",
+                                                marginRight: "8px",
+                                                fontSize: "12px",
+                                              }}
+                                            >
+                                              {product.product_price}
+                                            </span>
+                                            <span>{product.product_price * (1 - product.product_discount / 100)} đ</span>
+                                          </>
+                                        ) : (
+                                          <span>{product.product_price} đ</span>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 ))}
@@ -1133,7 +1157,24 @@ const Information = () => {
                                             padding: "10px",
                                           }}
                                         >
-                                          {product.product_price}
+                                          <div>
+                                            {product?.product_discount ? (
+                                              <>
+                                                <span
+                                                  style={{
+                                                    textDecoration: "line-through",
+                                                    marginRight: "8px",
+                                                    fontSize: "12px",
+                                                  }}
+                                                >
+                                                  {product.product_price}
+                                                </span>
+                                                <span>{product.product_price * (1 - product.product_discount / 100)} đ</span>
+                                              </>
+                                            ) : (
+                                              <span>{product.product_price} đ</span>
+                                            )}
+                                          </div>
                                         </div>
                                       </div>
                                     ))}
@@ -1350,7 +1391,24 @@ const Information = () => {
                                             padding: "10px",
                                           }}
                                         >
-                                          {product.product_price}
+                                          <div>
+                                            {product?.product_discount ? (
+                                              <>
+                                                <span
+                                                  style={{
+                                                    textDecoration: "line-through",
+                                                    marginRight: "8px",
+                                                    fontSize: "12px",
+                                                  }}
+                                                >
+                                                  {product.product_price}
+                                                </span>
+                                                <span>{product.product_price * (1 - product.product_discount / 100)} đ</span>
+                                              </>
+                                            ) : (
+                                              <span>{product.product_price} đ</span>
+                                            )}
+                                          </div>
                                         </div>
                                       </div>
                                     ))}

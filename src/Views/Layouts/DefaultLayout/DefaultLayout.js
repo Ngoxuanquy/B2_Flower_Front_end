@@ -3,30 +3,15 @@ import { Header, Footer } from "../../../Components";
 import classNames from "classnames/bind";
 import styles from "./defaultlayout.module.scss";
 import { useContext, useEffect, useRef, useState } from "react";
-import {
-  FloatButton,
-  Drawer,
-  Input,
-  Button,
-  List,
-  message,
-  Space,
-  Badge,
-  ColorPicker,
-  Modal,
-} from "antd";
-import {
-  CommentOutlined,
-  CustomerServiceOutlined,
-  DashboardOutlined,
-} from "@ant-design/icons";
+import { FloatButton, Drawer, Input, Button, List, message, Space, Badge, ColorPicker, Modal } from "antd";
+import { CommentOutlined, CustomerServiceOutlined, DashboardOutlined } from "@ant-design/icons";
 import socketIOClient from "socket.io-client";
 import Cookies from "js-cookie";
 import ThemeConText from "../../../config/themeConText";
 import { EventRegister } from "react-event-listeners";
 
-const ENDPOINT = "https://chat-b2-flower.onrender.com";
-// const ENDPOINT = "http://localhost:4000";
+// const ENDPOINT = "https://chat-b2-flower.onrender.com";
+const ENDPOINT = "http://localhost:4000";
 
 const cx = classNames.bind(styles);
 
@@ -49,8 +34,7 @@ const DefaultLayout = ({ children }) => {
   const [roomId, setRoomId] = useState("");
   const socketRef = useRef();
 
-  const [isCustomerServiceClicked, setIsCustomerServiceClicked] =
-    useState(false);
+  const [isCustomerServiceClicked, setIsCustomerServiceClicked] = useState(false);
   const [isCommentClicked, setIsCommentClicked] = useState(false);
 
   const [colorText, setColorText] = useState("#000000");
@@ -132,10 +116,7 @@ const DefaultLayout = ({ children }) => {
       const Idclean = id?.replace(/^"|"$/g, "");
 
       setCountMessage((prevCountMessage) => {
-        const newCountMessage =
-          prevCountMessage !== undefined && prevCountMessage !== null
-            ? prevCountMessage + 1
-            : 1;
+        const newCountMessage = prevCountMessage !== undefined && prevCountMessage !== null ? Number(prevCountMessage) + 1 : 1;
 
         const requestOptions = {
           method: "POST",
@@ -223,10 +204,7 @@ const DefaultLayout = ({ children }) => {
           email: "admin",
         }),
       };
-      fetch(
-        "https://chat-b2-flower.onrender.com/v1/api/chat/create",
-        requestOptions
-      )
+      fetch("https://chat-b2-flower.onrender.com/v1/api/chat/create", requestOptions)
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
@@ -237,9 +215,7 @@ const DefaultLayout = ({ children }) => {
 
   const fetchMessages = async (id) => {
     try {
-      const response = await fetch(
-        "https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id
-      );
+      const response = await fetch("https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -247,10 +223,7 @@ const DefaultLayout = ({ children }) => {
       console.log(messages);
       setMessages(messages.metadata.message);
     } catch (error) {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error
-      );
+      console.error("There has been a problem with your fetch operation:", error);
     }
   };
 
@@ -318,33 +291,20 @@ const DefaultLayout = ({ children }) => {
       <Drawer title="Basic Drawer" onClose={onCloseColor} open={openColor}>
         <div>
           <div className={cx("color-picker-container")}>
-            <ColorPicker
-              defaultValue="#000000"
-              onChange={handleTextColorChange}
-            />
+            <ColorPicker defaultValue="#000000" onChange={handleTextColorChange} />
             <span> Text: {colorText}</span>
           </div>
           <div className={cx("color-picker-container")}>
-            <ColorPicker
-              defaultValue="rgb(253, 124, 147)"
-              onChange={handleButtonColorChange}
-            />
+            <ColorPicker defaultValue="rgb(253, 124, 147)" onChange={handleButtonColorChange} />
             <span> Button: {colorButton}</span>
           </div>
           <div className={cx("color-picker-container")}>
-            <ColorPicker
-              defaultValue="#ffffff"
-              onChange={handleBackgroundColorChange}
-            />
+            <ColorPicker defaultValue="#ffffff" onChange={handleBackgroundColorChange} />
             <span> Background: {colorBackground}</span>
           </div>
         </div>
 
-        <Button
-          className={cx("update-button")}
-          type="primary"
-          onClick={handleDarkmode}
-        >
+        <Button className={cx("update-button")} type="primary" onClick={handleDarkmode}>
           Cập nhật
         </Button>
       </Drawer>
@@ -393,7 +353,7 @@ const DefaultLayout = ({ children }) => {
               {item?.message}
             </List.Item>
           )}
-          style={{ maxHeight: "75vh", overflow: "auto" }}
+          style={{ maxHeight: "73vh", overflow: "auto" }}
         />
         <div
           style={{
@@ -409,11 +369,7 @@ const DefaultLayout = ({ children }) => {
             onPressEnter={sendMessage}
             placeholder="Type your message..."
           />
-          <Button
-            type="primary"
-            onClick={sendMessage}
-            style={{ marginTop: 10 }}
-          >
+          <Button type="primary" onClick={sendMessage} style={{ marginTop: 10 }}>
             Send
           </Button>
         </div>

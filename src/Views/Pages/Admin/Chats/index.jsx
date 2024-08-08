@@ -6,8 +6,8 @@ import Cookies from "js-cookie";
 import socketIOClient from "socket.io-client";
 import { Badge, Button, Input, List, Spin, message } from "antd";
 
-const ENDPOINT = "https://chat-b2-flower.onrender.com";
-// const ENDPOINT = "http://localhost:4000";
+// const ENDPOINT = "https://chat-b2-flower.onrender.com";
+const ENDPOINT = "http://localhost:4000";
 
 const Chats = () => {
   const cx = classNames.bind(styles);
@@ -139,14 +139,11 @@ const Chats = () => {
           email: "admin",
         }),
       };
-      fetch(
-        "https://chat-b2-flower.onrender.com/v1/api/chat/create",
-        requestOptions
-      )
+      fetch("https://chat-b2-flower.onrender.com/v1/api/chat/create", requestOptions)
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
-          updateCountMessage();
+          updateCountMessage(roomId);
           setMessageInput("");
         });
     }
@@ -155,9 +152,7 @@ const Chats = () => {
   const fetchMessages = async (id) => {
     try {
       setIsLoad(true);
-      const response = await fetch(
-        "https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id
-      );
+      const response = await fetch("https://chat-b2-flower.onrender.com/v1/api/chat/getMessageUser/" + id);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -165,10 +160,7 @@ const Chats = () => {
       setIsLoad(false);
       setMessages(messages.metadata.message);
     } catch (error) {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error
-      );
+      console.error("There has been a problem with your fetch operation:", error);
     }
   };
 
@@ -176,7 +168,7 @@ const Chats = () => {
     console.log(messages);
   };
 
-  const updateCountMessage = () => {
+  const updateCountMessage = (roomId) => {
     const token = Cookies.get("accessToken");
     const id12 = Cookies.get("id");
     const cleanedJwtString = token?.replace(/^"|"$/g, "");
@@ -244,10 +236,7 @@ const Chats = () => {
       <div className={cx("box")}>
         <div className={cx("box-title")}>
           {apis.map((api) => (
-            <div
-              className={cx("box-chat", { active: roomId === api._id })}
-              onClick={() => handleOpentChat(api._id, api.email)}
-            >
+            <div className={cx("box-chat", { active: roomId === api._id })} onClick={() => handleOpentChat(api._id, api.email)}>
               <div>
                 <Badge count={api.countMessage}>
                   <img

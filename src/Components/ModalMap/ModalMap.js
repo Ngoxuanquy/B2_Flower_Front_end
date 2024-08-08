@@ -45,6 +45,8 @@ function ModalMap({ props, onClickHandler }) {
   };
 
   const fetchData = async () => {
+    setIsLoad(true);
+
     const options = {
       method: "GET",
       url: "https://toinh-api-tinh-thanh.onrender.com/province",
@@ -97,10 +99,34 @@ function ModalMap({ props, onClickHandler }) {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    if (!cleanId || !valuePhuongXa || !valueQuanHuyen || !valueTinhThanh || !valueAddressCuThe || !valueNumber || !valueName) {
+    // List of required fields
+    const requiredFields = [
+      { value: cleanId, name: "ID" },
+      { value: valuePhuongXa, name: "Phường/Xã" },
+      { value: valueQuanHuyen, name: "Quận/Huyện" },
+      { value: valueTinhThanh, name: "Tỉnh/Thành phố" },
+      { value: valueAddressCuThe, name: "Địa chỉ cụ thể" },
+      { value: valueNumber, name: "Số điện thoại" },
+      { value: valueName, name: "Tên" },
+    ];
+
+    // Check for missing fields
+    const missingFields = requiredFields.filter((field) => !field.value).map((field) => field.name);
+
+    if (missingFields.length > 0) {
       messageApi.open({
         type: "warning",
-        content: "Please fill in all required fields.",
+        content: `Vui lòng nhập đủ trường: ${missingFields.join(", ")}!`,
+      });
+      return;
+    }
+
+    // Phone number validation
+    const phoneRegex = /^[0-9]{10,15}$/; // Adjust based on your requirements
+    if (!phoneRegex.test(valueNumber)) {
+      messageApi.open({
+        type: "warning",
+        content: "Số điện thoại không hợp lệ!",
       });
       return;
     }
