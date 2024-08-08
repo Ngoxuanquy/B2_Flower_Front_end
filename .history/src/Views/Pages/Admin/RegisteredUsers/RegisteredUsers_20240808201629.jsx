@@ -683,7 +683,7 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
           <Pagination
             count={totalPages}
             page={currentPage}
-            onChange={(value) => setCurrentPage(value)}
+            onChange={(event, value) => setCurrentPage(value)}
           />
         </div>
       </div>
