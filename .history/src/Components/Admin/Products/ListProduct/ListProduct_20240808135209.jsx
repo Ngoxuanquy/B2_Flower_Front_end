@@ -399,10 +399,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
     XLSX.writeFile(workbook, "DanhSachSanPham.xlsx");
-
-    setSnackbarMessage("Xuất tệp Excel thành công!");
-    setSnackbarSeverity("success");
-    setSnackbarOpen(true);
   };
 
   const handleSnackbarClose = () => {
@@ -730,7 +726,6 @@ const ListProduct = ({ apis, fetchProducts }) => {
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
           {snackbarMessage}
