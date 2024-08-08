@@ -10,6 +10,8 @@ import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Call_Post_Api } from "../../../../../Components/CallApi/CallApis";
 import { ClimbingBoxLoader } from "react-spinners";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -59,6 +61,9 @@ const ProductUpload = () => {
   const priceInputRef = useRef(null);
   const quantityInputRef = useRef(null);
   const [apiProducts, setApiProduct] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const pageTitleProps = {
     title: "Thêm Sản Phẩm",
@@ -68,7 +73,6 @@ const ProductUpload = () => {
       { text: "Thêm Sản Phẩm" },
     ],
   };
-
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -196,9 +200,15 @@ const ProductUpload = () => {
       setColor("");
       setSize("");
       setUploadedImage(null);
+      setSnackbarMessage("Thêm sản phẩm thành công!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     } catch (error) {
       console.error("Error submitting product:", error);
       setIsLoading(false);
+      setSnackbarMessage("Lỗi khi thêm sản phẩm!");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -219,7 +229,9 @@ const ProductUpload = () => {
   const handleButtonClick = () => {
     document.getElementById("fileInput").click();
   };
-
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   return (
     <div className={cx("container")}>
       {isLoading && (
@@ -675,6 +687,16 @@ const ProductUpload = () => {
           </form>
         </div>
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
