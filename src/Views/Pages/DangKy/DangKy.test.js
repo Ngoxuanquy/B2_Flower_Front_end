@@ -4,7 +4,7 @@ import { validateEmail, IsValidVietnamPhoneNumber } from "./DangKy";
 describe("DangKy Component Validation Functions", () => {
   test("validateEmail should correctly validate email addresses", () => {
     const validEmails = ["test@example.com", "user@domain.co"];
-    const invalidEmails = ["invalid-email", "user@.com", "@domain.com"];
+    const invalidEmails = ["", "invalid-email", "user@.com", "@domain.com"];
 
     validEmails.forEach((email) => {
       expect(validateEmail(email)).toBe(true);
