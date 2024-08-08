@@ -531,8 +531,8 @@ const ListProduct = ({ apis, fetchProducts }) => {
                           disabled={
                             !(
                               roles.includes("DELETE") ||
-                              (roles.includes("ADMIN") &&
-                                item.product_quantity === 0)
+                              roles.includes("ADMIN") ||
+                              item.product_quantity === 0
                             )
                           }
                         >

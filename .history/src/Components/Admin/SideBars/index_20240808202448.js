@@ -75,27 +75,21 @@ const Sidebar = () => {
         <SideBarItem
           icon={<AiFillProduct />}
           primary="Sản phẩm"
-          subItems={(() => {
-            let items = [];
-            if (roles.includes("ADMIN")) {
-              items.push("Danh sách sản phẩm", "Thêm sản phẩm");
-            } else {
-              if (roles.includes("READ")) {
-                items.push("Danh sách sản phẩm");
-              }
-              if (roles.includes("CREATE")) {
-                items.push("Thêm sản phẩm");
-              }
-            }
-            return items;
-          })()}
+          subItems={
+            roles.includes("ADMIN")
+              ? ["Danh sách sản phẩm", "Thêm sản phẩm"]
+              : roles.includes("CREATE")
+              ? ["Thêm sản phẩm"]
+              : roles.includes("READ")
+              ? ["Danh sách sản phẩm"]
+              : []
+          }
           onItemClick={() => handleItemClick("Products")}
           onSubItemClick={handleSubItemClick}
           isOpen={openItem === "Products"}
           isActive={activeItem === "Products"}
         />
       )}
-
       {(roles.includes("READ") || roles.includes("ADMIN")) && (
         <SideBarItem
           icon={<BsCartCheckFill />}

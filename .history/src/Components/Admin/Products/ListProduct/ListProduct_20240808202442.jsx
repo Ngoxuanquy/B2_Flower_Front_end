@@ -513,31 +513,33 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>{formatDate(item.createdAt)}</td>
                     <td>
                       <div className={cx("actions")}>
-                        <Button
-                          className={cx("success")}
-                          color="success"
-                          onClick={() => handleClickOpenUpdate(item._id)}
-                          disabled={
-                            !(roles.includes("EDIT") || roles.includes("ADMIN"))
-                          }
-                        >
-                          <FaPencil />
-                        </Button>
-
-                        <Button
-                          className={cx("error")}
-                          color="error"
-                          onClick={() => handleClickOpen(item._id)}
-                          disabled={
-                            !(
-                              roles.includes("DELETE") ||
-                              (roles.includes("ADMIN") &&
-                                item.product_quantity === 0)
-                            )
-                          }
-                        >
-                          <MdOutlineBlock />
-                        </Button>
+                        {(roles.includes("EDIT") ||
+                          roles.includes("ADMIN")) && (
+                          <Button
+                            className={cx("success")}
+                            color="success"
+                            onClick={() => handleClickOpenUpdate(item._id)}
+                          >
+                            <FaPencil />
+                          </Button>
+                        )}
+                        {(roles.includes("DELETE") ||
+                          roles.includes("ADMIN")) &&
+                          (item.product_quantity === 0 ? (
+                            <Button
+                              className={cx("error")}
+                              color="error"
+                              onClick={() => handleClickOpen(item._id)}
+                            >
+                              <MdOutlineBlock />
+                            </Button>
+                          ) : (
+                            <div>
+                              <Button className={cx("error")} disabled>
+                                <MdOutlineBlock />
+                              </Button>
+                            </div>
+                          ))}
                       </div>
                     </td>
                   </tr>
