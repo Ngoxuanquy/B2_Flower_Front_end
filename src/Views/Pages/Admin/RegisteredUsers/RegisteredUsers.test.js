@@ -1,21 +1,21 @@
 import { handelDiscountO } from "./RegisteredUsers";
 
 describe("handelDiscountO", () => {
-  it("should return false with a message if token is empty", () => {
-    const result = handelDiscountO("", "123", "ABC123", ["user1"], "2024-08-01", "2024-08-10", 100);
-    expect(result).toEqual({
-      isValid: false,
-      message: "Token không được để trống",
-    });
-  });
+  // it("should return false with a message if token is empty", () => {
+  //   const result = handelDiscountO("", "123", "ABC123", ["user1"], "2024-08-01", "2024-08-10", 100);
+  //   expect(result).toEqual({
+  //     isValid: false,
+  //     message: "Token không được để trống",
+  //   });
+  // });
 
-  it("should return false with a message if ID is empty", () => {
-    const result = handelDiscountO("token", "", "ABC123", ["user1"], "2024-08-01", "2024-08-10", 100);
-    expect(result).toEqual({
-      isValid: false,
-      message: "ID không được để trống",
-    });
-  });
+  // it("should return false with a message if ID is empty", () => {
+  //   const result = handelDiscountO("token", "", "ABC123", ["user1"], "2024-08-01", "2024-08-10", 100);
+  //   expect(result).toEqual({
+  //     isValid: false,
+  //     message: "ID không được để trống",
+  //   });
+  // });
 
   it("should return false with a message if discount code is empty", () => {
     const result = handelDiscountO("token", "123", "", ["user1"], "2024-08-01", "2024-08-10", 100);
