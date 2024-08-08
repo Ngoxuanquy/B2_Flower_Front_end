@@ -21,6 +21,7 @@ import { Divider } from "@mui/material";
 import socketIOClient from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { Badge, message } from "antd";
+import ThemeConText from "../../../config/themeConText";
 import { AdminContext } from "./AdminContext/AdminContext";
 const AdminHeader = () => {
   const ENDPOINT = "http://localhost:4000";
@@ -50,6 +51,9 @@ const AdminHeader = () => {
   };
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
+  };
+  const hanleClickMenu = () => {
+    setMenu(!menu);
   };
 
   useEffect(() => {
@@ -96,7 +100,7 @@ const AdminHeader = () => {
 
             <div className="col-sm-3 d-flex align-items-center part2 pi-4">
               <Button className="rounded-circle" onClick={handleClickMenu}>
-                {context.isToggled ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
+                {menu ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
               </Button>
               <SearchBox />
             </div>

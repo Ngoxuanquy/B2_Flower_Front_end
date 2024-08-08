@@ -687,13 +687,13 @@ const RegisteredUsers = ({ apis }) => {
                       <Button className={cx("success")} color="success">
                         <FaPencil onClick={() => showModal(api)} />
                       </Button>
-                      {/* <Button
+                      <Button
                         className={cx("error")}
                         color="error"
                         onClick={() => handleBlockUser(api._id)}
                       >
                         <MdOutlineBlock />
-                      </Button> */}
+                      </Button>
                     </div>
                   </td>
                 </tr>

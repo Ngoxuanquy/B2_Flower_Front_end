@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdContactMail, MdDashboard } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
 import { FaBell, FaBoltLightning, FaCircleUser } from "react-icons/fa6";
@@ -11,13 +11,12 @@ import { Button } from "@mui/material";
 import { TbLogout } from "react-icons/tb";
 import { Call_Post_Api } from "../../CallApi/CallApis";
 import Cookies from "js-cookie";
-import { AdminContext } from "../Header/AdminContext/AdminContext";
 
 const Sidebar = () => {
   const [openItem, setOpenItem] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
   const [roles, setRoles] = useState([]);
-  const context = useContext(AdminContext);
+
   const navigate = useNavigate();
 
   const handleItemClick = (primary) => {
@@ -138,7 +137,7 @@ const Sidebar = () => {
       {(roles.includes("ADMIN") || roles.includes("CHAT")) && (
         <SideBarItem
           icon={<MdContactMail />}
-          primary="Tin nhắn"
+          primary="Message"
           onItemClick={handleOpenMessage}
           isOpen={openItem === "Message"}
           isActive={activeItem === "Message"} // Set active state

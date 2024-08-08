@@ -75,7 +75,7 @@ const AdminHeader = () => {
     context.setIsToggeSideBar(!context.isToggled);
     console.log(context.isToggled);
     // setMenu(!menu);
-    // setShowText(!showText);
+    setShowText(!showText);
   };
   return (
     <div>

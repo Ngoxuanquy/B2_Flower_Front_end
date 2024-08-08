@@ -25,23 +25,6 @@ const VisuallyHiddenInput = styled("input")({
 
 const cx = classNames.bind(styles);
 
-export const checkValidation = (apiProducts, name, price, quantity) => {
-  const isDuplicateName = apiProducts.some((product) => product.product_name.toLowerCase() === name.toLowerCase());
-  if (isDuplicateName) {
-    return "*Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác!";
-  }
-
-  if (Number(price) < 0) {
-    return "*Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!";
-  }
-
-  if (Number(quantity) < 0) {
-    return "*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!";
-  }
-
-  return ""; // Return empty string if no validation errors
-};
-
 const ProductUpload = () => {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -119,7 +102,8 @@ const ProductUpload = () => {
       });
   };
 
-  const checkValidation = () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     let valid = true;
 
     const isDuplicateName = apiProducts.some(
@@ -132,7 +116,6 @@ const ProductUpload = () => {
     } else {
       setNameError("");
     }
-
     if (Number(price) < 0) {
       setPriceError(
         "*Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
@@ -142,7 +125,6 @@ const ProductUpload = () => {
     } else {
       setPriceError("");
     }
-
     if (Number(quantity) < 0) {
       setQuantityError(
         "*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
@@ -153,14 +135,7 @@ const ProductUpload = () => {
       setQuantityError("");
     }
 
-    return valid;
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const isValid = checkValidation();
-    if (!isValid) return;
+    if (!valid) return;
 
     const images = await uploadImage();
     try {
@@ -244,7 +219,7 @@ const ProductUpload = () => {
         <PageTitle title={pageTitleProps.title} items={pageTitleProps.items} />
         <div className={cx("information")}>
           <div className={cx("info-header")}>
-            <h4>Thông Tin Cơ Bản</h4>
+            <h4>Basic Information</h4>
           </div>
           <form onSubmit={handleSubmit}>
             <Row className={cx("row")}>

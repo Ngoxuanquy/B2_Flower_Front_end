@@ -62,7 +62,7 @@ export const adminRoute = [
   { path: "/admin/danh-sách-sản-phẩm", component: <ProductList /> },
   { path: "/admin/thêm-sảm-phẩm", component: <ProductUpload /> },
   { path: "/admin/dash-board", component: <DashBoard /> },
-  { path: "/admin/danh-sách-người-dùng", component: <UserList /> },
+  { path: "/admin/user-list", component: <UserList /> },
   { path: "/admin/danh-sách-đơn-hàng", component: <Orders /> },
   { path: "/admin/đơn-hàng-đã-gửi", component: <OrdersSent /> },
   { path: "/admin/discount", component: <Discounts /> },

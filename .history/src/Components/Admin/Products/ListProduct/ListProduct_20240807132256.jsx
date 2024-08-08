@@ -356,11 +356,11 @@ const ListProduct = ({ apis, fetchProducts }) => {
   };
   return (
     <div className={cx("container")}>
-      <h4 className={cx("titleRegistered")}>Danh Sách Sản Phẩm</h4>
+      <h4 className={cx("titleRegistered")}>Products List</h4>
       <div className={cx("select_by")}>
         <div className="col-md-3">
           <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
-            <InputLabel id="demo-select-small-label">Hiển thị</InputLabel>
+            <InputLabel id="demo-select-small-label">Show by</InputLabel>
             <Select
               labelId="demo-select-small-label"
               id="demo-select-small"
@@ -371,15 +371,15 @@ const ListProduct = ({ apis, fetchProducts }) => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>10 hàng</MenuItem>
-              <MenuItem value={20}>20 hàng</MenuItem>
-              <MenuItem value={30}>30 hàng</MenuItem>
+              <MenuItem value={10}>10 row</MenuItem>
+              <MenuItem value={20}>20 row</MenuItem>
+              <MenuItem value={30}>30 row</MenuItem>
             </Select>
           </FormControl>
         </div>
         <div className="col-md-3 " style={{ marginLeft: "10px" }}>
           <FormControl sx={{ m: 1, minWidth: 120, width: "100%" }} size="small">
-            <InputLabel id="demo-select-small-label">Loại sản phẩm</InputLabel>
+            <InputLabel id="demo-select-small-label">Category by</InputLabel>
             <Select
               labelId="demo-select-small-label"
               id="demo-select-small"
@@ -412,7 +412,7 @@ const ListProduct = ({ apis, fetchProducts }) => {
               <th>Loại</th>
               <th>Giảm giá</th>
               <th>Ngày Tạo</th>
-              <th>Hành Động</th>
+              <th>ACTION</th>
             </tr>
           </thead>
           {!loading && (
