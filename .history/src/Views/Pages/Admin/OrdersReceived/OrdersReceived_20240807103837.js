@@ -18,13 +18,7 @@ function OrdersReceived() {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      null,
-      cleanedJwtString,
-      cleanId,
-      `/transaction/getFullOrderReceived`,
-      "Get"
-    )
+    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrderReceived`, "Get")
       .then((data) => {
         setOrder(data.metadata);
         return;
@@ -63,17 +57,7 @@ function OrdersReceived() {
                     color: theme.color,
                   }}
                 >
-                  <h2 style={{ fontSize: "1.5rem", margin: "0" }}>
-                    Đơn hàng:{" "}
-                    <span
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: "12px",
-                      }}
-                    >
-                      {order?.transactionId}
-                    </span>
-                  </h2>
+                  <h2 style={{ fontSize: "1.5rem", margin: "0" }}>Đơn hàng {index + 1}</h2>
                   <p
                     style={{
                       margin: "0",
@@ -81,8 +65,7 @@ function OrdersReceived() {
                       color: theme.color,
                     }}
                   >
-                    Ngày đặt:{" "}
-                    {new Date(order.createdOn).toLocaleDateString("vi-VN")}
+                    Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
                   </p>
                   <p
                     style={{
@@ -114,18 +97,10 @@ function OrdersReceived() {
                               >
                                 {product.product_price.toLocaleString()} đ
                               </span>
-                              <span>
-                                {(
-                                  product.product_price *
-                                  (1 - product.product_discount / 100)
-                                ).toLocaleString()}{" "}
-                                đ
-                              </span>
+                              <span>{(product.product_price * (1 - product.product_discount / 100)).toLocaleString()} đ</span>
                             </>
                           ) : (
-                            <span>
-                              {product.product_price.toLocaleString()} đ
-                            </span>
+                            <span>{product.product_price.toLocaleString()} đ</span>
                           )}
                         </span>
                       </div>
@@ -196,48 +171,26 @@ function OrdersReceived() {
                           fontSize: "14px",
                         }}
                       >
-                        {item?.name}, {item?.number} , {item?.diaChiCuThe},{" "}
-                        {item?.phuongXa} , {item?.quanHuyen}, {item?.tinhThanh}{" "}
+                        {item?.name}, {item?.number} , {item?.diaChiCuThe}, {item?.phuongXa} , {item?.quanHuyen}, {item?.tinhThanh}{" "}
                       </i>
                     ))}
                   </div>
                 </div>
-                <div
-                  className={cx("order-table")}
-                  style={{ width: "100%", borderCollapse: "collapse" }}
-                >
-                  <div
-                    className={cx("order-row", "order-header")}
-                    style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}
-                  >
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "1", padding: "10px" }}
-                    >
+                <div className={cx("order-table")} style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <div className={cx("order-row", "order-header")} style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}>
+                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                       STT
                     </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "2", padding: "10px" }}
-                    >
+                    <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
                       Sản phẩm
                     </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "3", padding: "10px" }}
-                    >
+                    <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
                       Hình ảnh
                     </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "1", padding: "10px" }}
-                    >
+                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                       Số lượng
                     </div>
-                    <div
-                      className={cx("order-cell")}
-                      style={{ flex: "1", padding: "10px" }}
-                    >
+                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                       Giá
                     </div>
                   </div>
@@ -252,22 +205,13 @@ function OrdersReceived() {
                         padding: "10px 0",
                       }}
                     >
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "1", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                         {prodIndex + 1}
                       </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "2", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
                         {product.product_name}
                       </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "3", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
                         <Image
                           src={product.product_thumb}
                           style={{
@@ -276,16 +220,10 @@ function OrdersReceived() {
                           }}
                         />
                       </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "1", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                         {product.quantity}
                       </div>
-                      <div
-                        className={cx("order-cell")}
-                        style={{ flex: "1", padding: "10px" }}
-                      >
+                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
                         <div>
                           {product?.product_discount ? (
                             <>
@@ -298,11 +236,7 @@ function OrdersReceived() {
                               >
                                 {product.product_price}
                               </span>
-                              <span>
-                                {product.product_price *
-                                  (1 - product.product_discount / 100)}{" "}
-                                đ
-                              </span>
+                              <span>{product.product_price * (1 - product.product_discount / 100)} đ</span>
                             </>
                           ) : (
                             <span>{product.product_price} đ</span>

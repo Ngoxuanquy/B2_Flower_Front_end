@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import classNames from "classnames/bind";
-import styles from "./OrdersReceived.module.scss";
+import styles from "./OrdersSent.module.scss";
 import Cookies from "js-cookie";
 import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
 import { Button, Image } from "antd";
@@ -8,7 +8,7 @@ import ThemeConText from "../../../../config/themeConText";
 
 const cx = classNames.bind(styles);
 
-function OrdersReceived() {
+function OrdersSent() {
   const [orders, setOrder] = useState([]);
   const [theme, ordersLength] = useContext(ThemeConText);
 
@@ -22,7 +22,7 @@ function OrdersReceived() {
       null,
       cleanedJwtString,
       cleanId,
-      `/transaction/getFullOrderReceived`,
+      `/transaction/getFullOrder_done`,
       "Get"
     )
       .then((data) => {
@@ -35,6 +35,26 @@ function OrdersReceived() {
   useEffect(() => {
     getApiTransactionOrder();
   }, []);
+
+  const handelGuiDon = (transactionId) => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/"/g, "");
+    const cleanId = id?.replace(/"/g, "");
+
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/transaction/updateStatus/${transactionId}`
+    )
+      .then((data) => {
+        getApiTransactionOrder();
+        console.log(data);
+        return;
+      })
+      .catch((err) => console.log({ err }));
+  };
 
   return (
     <div className={cx("container")}>
@@ -64,7 +84,7 @@ function OrdersReceived() {
                   }}
                 >
                   <h2 style={{ fontSize: "1.5rem", margin: "0" }}>
-                    Đơn hàng:{" "}
+                    Đơn hàng{" "}
                     <span
                       style={{
                         fontWeight: "bold",
@@ -90,7 +110,13 @@ function OrdersReceived() {
                       fontSize: "1.2rem",
                       color: theme.color,
                     }}
-                  ></p>
+                  >
+                    {order.status === "Đang nhận đơn" ? (
+                      <Button onClick={() => handelGuiDon(order._id)}>
+                        Gửi đơn
+                      </Button>
+                    ) : null}
+                  </p>
                 </div>
                 <div>
                   <h4>Thông tin</h4>
@@ -331,4 +357,4 @@ function OrdersReceived() {
   );
 }
 
-export default OrdersReceived;
+export default OrdersSent;

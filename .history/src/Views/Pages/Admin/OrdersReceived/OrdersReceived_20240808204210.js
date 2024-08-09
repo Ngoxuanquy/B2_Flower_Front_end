@@ -64,7 +64,7 @@ function OrdersReceived() {
                   }}
                 >
                   <h2 style={{ fontSize: "1.5rem", margin: "0" }}>
-                    Đơn hàng:{" "}
+                    Đơn hàng{" "}
                     <span
                       style={{
                         fontWeight: "bold",

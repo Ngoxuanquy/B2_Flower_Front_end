@@ -433,7 +433,6 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
     (currentPage - 1) * selectShow,
     currentPage * selectShow
   );
-
   return (
     <div className={cx("container")}>
       {contextHolder}
