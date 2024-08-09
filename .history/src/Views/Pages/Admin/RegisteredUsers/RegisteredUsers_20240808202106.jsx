@@ -433,7 +433,6 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
     (currentPage - 1) * selectShow,
     currentPage * selectShow
   );
-
   return (
     <div className={cx("container")}>
       {contextHolder}
@@ -684,7 +683,7 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
           <Pagination
             count={totalPages}
             page={currentPage}
-            onChange={(event, value) => setCurrentPage(value)}
+            onChange={(value) => setCurrentPage(value)}
           />
         </div>
       </div>

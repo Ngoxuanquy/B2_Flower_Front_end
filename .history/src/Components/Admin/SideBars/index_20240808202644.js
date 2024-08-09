@@ -111,9 +111,7 @@ const Sidebar = () => {
           isActive={activeItem === "Order"}
         />
       )}
-      {(roles.includes("ADMIN") ||
-        roles.includes("DISCOUNT") ||
-        roles.includes("READ")) && (
+      {(roles.includes("ADMIN") || roles.includes("DISCOUNT")) && (
         <SideBarItem
           icon={<FaCircleUser />}
           primary="Người dùng"
@@ -139,7 +137,7 @@ const Sidebar = () => {
           primary="Yêu cầu hủy sản phẩm"
           subItems={
             roles.includes("ADMIN")
-              ? ["Tạo báo cáo", "Danh sách hủy hoa", "Danh sách đã duyệt"]
+              ? ["Danh sách hủy hoa", "Danh sách đã duyệt"]
               : null
           }
           onItemClick={() => handleItemClick("Yêu cầu hủy sản phẩm")}

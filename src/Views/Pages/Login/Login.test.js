@@ -16,6 +16,7 @@ describe("checkValiDangNhap", () => {
   test("should return false for empty email or password", () => {
     expect(checkValiDangNhap("", "password123")).toBe(false);
     expect(checkValiDangNhap("test@example.com", "")).toBe(false);
+
     expect(checkValiDangNhap("", "")).toBe(false);
   });
 

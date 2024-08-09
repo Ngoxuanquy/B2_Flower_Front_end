@@ -40,40 +40,6 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-
-export const handleOpenUpdate = async (updateProductData) => {
-  // Kiểm tra các trường dữ liệu không được để trống
-  const token = Cookies.get("accessToken")?.replace(/"/g, "");
-  const id = Cookies.get("id")?.replace(/"/g, "");
-
-  // Kiểm tra nếu token hoặc id bị thiếu
-  if (!token || !id) {
-    return "Thiếu token hoặc client ID";
-  }
-  if (
-    !updateProductData.name ||
-    !updateProductData.price ||
-    !updateProductData.quantity ||
-    !updateProductData.size ||
-    !updateProductData.color ||
-    !updateProductData.type ||
-    !updateProductData.description
-  ) {
-    return "Vui lòng điền đầy đủ thông tin sản phẩm.";
-  }
-};
-
-export const handleDelete = async () => {
-  // Lấy token và id từ cookie và loại bỏ dấu ngoặc kép nếu có
-  const token = Cookies.get("accessToken")?.replace(/"/g, "");
-  const id = Cookies.get("id")?.replace(/"/g, "");
-
-  // Kiểm tra nếu token hoặc id bị thiếu
-  if (!token || !id) {
-    return "Thiếu token hoặc client ID";
-  }
-};
-
 const ListProduct = ({ apis, fetchProducts }) => {
   const [api, setApi] = useState([]);
   const [selectShow, setSelectShow] = useState(10);
@@ -108,7 +74,13 @@ const ListProduct = ({ apis, fetchProducts }) => {
         const token = Cookies.get("accessToken")?.replace(/"/g, "");
         const id = Cookies.get("id")?.replace(/"/g, "");
 
-        const data = await Call_Post_Api(null, token, id, `/shop/get_roles/${id}`, "GET");
+        const data = await Call_Post_Api(
+          null,
+          token,
+          id,
+          `/shop/get_roles/${id}`,
+          "GET"
+        );
         setRoles(data.metadata);
       } catch (error) {
         console.error("Error fetching roles:", error);
@@ -141,7 +113,10 @@ const ListProduct = ({ apis, fetchProducts }) => {
       };
 
       // Gửi yêu cầu xóa sản phẩm
-      const response = await fetch(`${process.env.REACT_APP_URL}/product/delete/${productId}`, requestOptions);
+      const response = await fetch(
+        `${process.env.REACT_APP_URL}/product/delete/${productId}`,
+        requestOptions
+      );
 
       // Kiểm tra phản hồi từ server
       if (response.ok) {
@@ -149,7 +124,11 @@ const ListProduct = ({ apis, fetchProducts }) => {
         setSnackbarMessage("Xóa sản phẩm thành công!");
         setSnackbarSeverity("success");
       } else {
-        console.error("Yêu cầu xóa thất bại!", response.status, response.statusText);
+        console.error(
+          "Yêu cầu xóa thất bại!",
+          response.status,
+          response.statusText
+        );
         setSnackbarMessage("Yêu cầu xóa thất bại!");
         setSnackbarSeverity("error");
       }
@@ -177,7 +156,11 @@ const ListProduct = ({ apis, fetchProducts }) => {
     quantity: "",
   });
   const isProductNameDuplicate = (name) => {
-    return api.some((item) => item.product_name.toLowerCase() === name.toLowerCase() && item._id !== selectedProductId);
+    return api.some(
+      (item) =>
+        item.product_name.toLowerCase() === name.toLowerCase() &&
+        item._id !== selectedProductId
+    );
   };
   const handleOpenUpdate = async (confirm) => {
     // Kiểm tra các trường dữ liệu không được để trống
@@ -196,12 +179,24 @@ const ListProduct = ({ apis, fetchProducts }) => {
 
     // Kiểm tra giá và số lượng có hợp lệ không
     if (confirm && selectedProductId) {
-      if (isProductNameDuplicate(updateProductData.name) || updateProductData.price < 0 || updateProductData.quantity < 0) {
+      if (
+        isProductNameDuplicate(updateProductData.name) ||
+        updateProductData.price < 0 ||
+        updateProductData.quantity < 0
+      ) {
         setErrorMessages((prevErrors) => ({
           ...prevErrors,
-          name: isProductNameDuplicate(updateProductData.name) ? "Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác." : "",
-          price: updateProductData.price < 0 ? "Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!" : "",
-          quantity: updateProductData.quantity < 0 ? "Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!" : "",
+          name: isProductNameDuplicate(updateProductData.name)
+            ? "Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác."
+            : "",
+          price:
+            updateProductData.price < 0
+              ? "Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
+              : "",
+          quantity:
+            updateProductData.quantity < 0
+              ? "Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
+              : "",
         }));
 
         // Focus vào trường dữ liệu sai
@@ -364,11 +359,21 @@ const ListProduct = ({ apis, fetchProducts }) => {
   const handleButtonClick = () => {
     document.getElementById("fileInput").click();
   };
-  const filteredProducts = api.filter((product) => (selectCategory ? product.product_type === selectCategory : true));
+  const filteredProducts = api.filter((product) =>
+    selectCategory ? product.product_type === selectCategory : true
+  );
   const productsToDisplay =
-    selectShow === api.length ? filteredProducts : filteredProducts.slice((currentPage - 1) * selectShow, currentPage * selectShow);
+    selectShow === api.length
+      ? filteredProducts
+      : filteredProducts.slice(
+          (currentPage - 1) * selectShow,
+          currentPage * selectShow
+        );
 
-  const totalPages = selectShow === api.length ? 1 : Math.ceil(filteredProducts.length / selectShow);
+  const totalPages =
+    selectShow === api.length
+      ? 1
+      : Math.ceil(filteredProducts.length / selectShow);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("vi-VN");
@@ -379,7 +384,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
         STT: index + 1,
         "Tên Sản Phẩm": item.product_name,
         Giá:
-          item.product_discount > 0 ? Math.floor(item.product_price * (1 - item.product_discount / 100)) : Math.floor(item.product_price),
+          item.product_discount > 0
+            ? Math.floor(item.product_price * (1 - item.product_discount / 100))
+            : Math.floor(item.product_price),
         Kho: item.product_quantity,
         "Kích Cỡ": item.product_attributes.size,
         "Màu Sắc": item.product_attributes.color,
@@ -470,7 +477,11 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>
                       <div className={cx("info-user")}>
                         <div className={cx("imgWrapper")}>
-                          <Image src={item.product_thumb} alt="image_products" className="w-100" />
+                          <Image
+                            src={item.product_thumb}
+                            alt="image_products"
+                            className="w-100"
+                          />
                         </div>
                         <div className={cx("info")}>
                           <h6>{item.product_name}</h6>
@@ -479,8 +490,16 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     </td>
 
                     <td>
-                      {item.product_discount > 0 && <del className={cx("old")}>{Math.floor(item.product_price)}</del>}
-                      <span className={cx("new")}>{Math.floor(item.product_price * (1 - item.product_discount / 100))}</span>
+                      {item.product_discount > 0 && (
+                        <del className={cx("old")}>
+                          {Math.floor(item.product_price)}
+                        </del>
+                      )}
+                      <span className={cx("new")}>
+                        {Math.floor(
+                          item.product_price * (1 - item.product_discount / 100)
+                        )}
+                      </span>
                     </td>
                     <td>
                       <span>{item.product_quantity}</span>
@@ -488,27 +507,39 @@ const ListProduct = ({ apis, fetchProducts }) => {
                     <td>{item.product_attributes.size}</td>
                     <td>{item.product_attributes.color}</td>
                     <td>{item.product_type}</td>
-                    <td style={{ color: "red" }}>{item.product_discount ?? 0}%</td>
+                    <td style={{ color: "red" }}>
+                      {item.product_discount ?? 0}%
+                    </td>
                     <td>{formatDate(item.createdAt)}</td>
                     <td>
                       <div className={cx("actions")}>
-                        <Button
-                          className={cx("success")}
-                          color="success"
-                          onClick={() => handleClickOpenUpdate(item._id)}
-                          disabled={!(roles.includes("EDIT") || roles.includes("ADMIN"))}
-                        >
-                          <FaPencil />
-                        </Button>
-
-                        <Button
-                          className={cx("error")}
-                          color="error"
-                          onClick={() => handleClickOpen(item._id)}
-                          disabled={!(roles.includes("DELETE") || (roles.includes("ADMIN") && item.product_quantity === 0))}
-                        >
-                          <MdOutlineBlock />
-                        </Button>
+                        {(roles.includes("EDIT") ||
+                          roles.includes("ADMIN")) && (
+                          <Button
+                            className={cx("success")}
+                            color="success"
+                            onClick={() => handleClickOpenUpdate(item._id)}
+                          >
+                            <FaPencil />
+                          </Button>
+                        )}
+                        {(roles.includes("DELETE") ||
+                          roles.includes("ADMIN")) &&
+                          (item.product_quantity === 0 ? (
+                            <Button
+                              className={cx("error")}
+                              color="error"
+                              onClick={() => handleClickOpen(item._id)}
+                            >
+                              <MdOutlineBlock />
+                            </Button>
+                          ) : (
+                            <div>
+                              <Button className={cx("error")} disabled>
+                                <MdOutlineBlock />
+                              </Button>
+                            </div>
+                          ))}
                       </div>
                     </td>
                   </tr>
@@ -523,14 +554,14 @@ const ListProduct = ({ apis, fetchProducts }) => {
           </div>
         )}
         <div className={cx("page")}>
-          <Pagination count={totalPages} page={currentPage} onChange={(event, value) => setCurrentPage(value)} />
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(event, value) => setCurrentPage(value)}
+          />
         </div>
-        {roles.includes("ADMIN") ? (
+        {roles.includes("ADMIN") && (
           <Button variant="contained" color="primary" onClick={exportToExcel}>
-            Export to Excel
-          </Button>
-        ) : (
-          <Button variant="contained" color="primary" disabled>
             Export to Excel
           </Button>
         )}
@@ -538,7 +569,9 @@ const ListProduct = ({ apis, fetchProducts }) => {
       <Dialog open={openDelete} onClose={() => handleClose(false)}>
         <DialogTitle>Xác nhận xóa</DialogTitle>
         <DialogContent>
-          <DialogContentText>Bạn có chắc chắn muốn xóa mục này không?</DialogContentText>
+          <DialogContentText>
+            Bạn có chắc chắn muốn xóa mục này không?
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleClose(false)} color="primary">
@@ -593,8 +626,19 @@ const ListProduct = ({ apis, fetchProducts }) => {
             helperText={errorMessages.quantity}
             inputRef={quantityInputRef}
           />
-          <TextField margin="dense" id="image" label="Hình ảnh" type="text" fullWidth disabled hidden value={uploadedImage || ""} />
-          <div style={{ display: "flex", height: "80px", alignItems: "center" }}>
+          <TextField
+            margin="dense"
+            id="image"
+            label="Hình ảnh"
+            type="text"
+            fullWidth
+            disabled
+            hidden
+            value={uploadedImage || ""}
+          />
+          <div
+            style={{ display: "flex", height: "80px", alignItems: "center" }}
+          >
             <Button
               component="label"
               role={undefined}
@@ -605,10 +649,18 @@ const ListProduct = ({ apis, fetchProducts }) => {
             >
               Upload file
             </Button>
-            <VisuallyHiddenInput id="fileInput" type="file" onChange={handleFileChange} />
+            <VisuallyHiddenInput
+              id="fileInput"
+              type="file"
+              onChange={handleFileChange}
+            />
             {uploadedImage && (
               <img
-                src={uploadedImage instanceof File ? URL.createObjectURL(uploadedImage) : uploadedImage}
+                src={
+                  uploadedImage instanceof File
+                    ? URL.createObjectURL(uploadedImage)
+                    : uploadedImage
+                }
                 alt="Uploaded"
                 style={{
                   width: 80,

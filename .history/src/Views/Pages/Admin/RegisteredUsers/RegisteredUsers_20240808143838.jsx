@@ -10,8 +10,14 @@ import Select from "@mui/material/Select";
 import styles from "./RegisteredUsers.module.scss";
 import classNames from "classnames/bind";
 import Cookies from "js-cookie";
-import { Input, Modal, Select as AntSelect, message } from "antd";
-import { Call_Post_Api } from "../../../../Components/CallApi/CallApis";
+import {
+  Input,
+  Modal,
+  Select as AntSelect,
+  Collapse,
+  DatePicker,
+  message,
+} from "antd";
 
 const cx = classNames.bind(styles);
 
@@ -91,9 +97,8 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [email, setEmail] = useState("");
   const [roles, setRoles] = useState([]);
-  const [role, setRole] = useState([]);
   const [status, setStatus] = useState("");
-  const [selectShow, setSelectShow] = useState(10);
+  const [selectShow, setSelectShow] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
   const [textRadom, setTextRadom] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -415,16 +420,42 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
   const handelRamdom = () => {
     getRandomString(6);
   };
-  useEffect(() => {
-    const token = Cookies.get("accessToken")?.replace(/"/g, "");
-    const id = Cookies.get("id")?.replace(/"/g, "");
+  const handleBlockUser = (userId) => {
+    const token = Cookies.get("accessToken");
+    const id = Cookies.get("id");
+    const cleanedJwtString = token?.replace(/^"|"$/g, "");
+    const cleanId = id?.replace(/^"|"$/g, "");
 
-    Call_Post_Api(null, token, id, `/shop/get_roles/${id}`, "GET")
-      .then((data) => {
-        setRole(data.metadata);
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+        authorization: cleanedJwtString,
+        "x-client-id": cleanId,
+      },
+      body: JSON.stringify({
+        userId,
+      }),
+    };
+
+    fetch(URL + "/users/block", requestOptions)
+      .then((res) => res.json())
+      .then((res) => {
+        messageApi.open({
+          type: "success",
+          content: "Người dùng đã bị khóa thành công!",
+        });
+        getApi();
       })
-      .catch((err) => console.log({ err }));
-  }, []);
+      .catch((error) => {
+        console.error("Error:", error);
+        messageApi.open({
+          type: "error",
+          content: "Khóa người dùng thất bại, vui lòng thử lại!",
+        });
+      });
+  };
   const filteredUsers = api.filter((user) =>
     selectCategory ? user.roles.includes(selectCategory) : true
   );
@@ -433,7 +464,6 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
     (currentPage - 1) * selectShow,
     currentPage * selectShow
   );
-
   return (
     <div className={cx("container")}>
       {contextHolder}
@@ -583,7 +613,7 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
                 <MenuItem value={20}>20 hàng</MenuItem>
                 <MenuItem value={30}>30 hàng</MenuItem>
                 <MenuItem value={api.length}>Tất cả</MenuItem>
-              </Select>
+              </Select> 
             </FormControl>
           </div>
           <div className="col-md-3 " style={{ marginLeft: "10px" }}>
@@ -664,14 +694,19 @@ const RegisteredUsers = ({ apis, fetchUsers }) => {
                   <td>{new Date(api.updatedAt).toLocaleDateString()}</td>
                   <td>
                     <div className={cx("actions")}>
-                      <Button
-                        className={cx("success")}
-                        color="success"
-                        onClick={() => role.includes("ADMIN") && showModal(api)}
-                        disabled={!role.includes("ADMIN")}
-                      >
-                        <FaPencil />
+                      {/* <Button className={cx("secondary")} color="secondary">
+                        <FaEye />
+                      </Button> */}
+                      <Button className={cx("success")} color="success">
+                        <FaPencil onClick={() => showModal(api)} />
                       </Button>
+                      {/* <Button
+                        className={cx("error")}
+                        color="error"
+                        onClick={() => handleBlockUser(api._id)}
+                      >
+                        <MdOutlineBlock />
+                      </Button> */}
                     </div>
                   </td>
                 </tr>
