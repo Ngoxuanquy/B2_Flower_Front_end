@@ -26,11 +26,26 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const cx = classNames.bind(styles);
-
-export const checkValidation = (apiProducts, name, price, quantity) => {
+export const checkValidation = (apiProducts, name, price, quantity, size) => {
   const isDuplicateName = apiProducts.some((product) => product.product_name.toLowerCase() === name.toLowerCase());
   if (isDuplicateName) {
     return "*Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác!";
+  }
+
+  if (!name.trim()) {
+    return "*Vui lòng nhập tên sản phẩm";
+  }
+
+  if (!price) {
+    return "*Vui lòng nhập giá sản phẩm";
+  }
+
+  if (!quantity) {
+    return "*Vui lòng nhập số lượng sản phẩm";
+  }
+
+  if (!size.trim()) {
+    return "*Vui lòng nhập kích thước sản phẩm";
   }
 
   if (Number(price) < 0) {
@@ -40,8 +55,6 @@ export const checkValidation = (apiProducts, name, price, quantity) => {
   if (Number(quantity) < 0) {
     return "*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!";
   }
-
-  return ""; // Return empty string if no validation errors
 };
 
 const ProductUpload = () => {
@@ -126,9 +139,7 @@ const ProductUpload = () => {
   const checkValidation = () => {
     let valid = true;
 
-    const isDuplicateName = apiProducts.some(
-      (product) => product.product_name.toLowerCase() === name.toLowerCase()
-    );
+    const isDuplicateName = apiProducts.some((product) => product.product_name.toLowerCase() === name.toLowerCase());
     if (isDuplicateName) {
       setNameError("*Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác!");
       valid = false;
@@ -138,9 +149,7 @@ const ProductUpload = () => {
     }
 
     if (Number(price) < 0) {
-      setPriceError(
-        "*Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
-      );
+      setPriceError("*Giá sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
       priceInputRef.current.focus();
       valid = false;
     } else {
@@ -148,9 +157,7 @@ const ProductUpload = () => {
     }
 
     if (Number(quantity) < 0) {
-      setQuantityError(
-        "*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!"
-      );
+      setQuantityError("*Số lượng sản phẩm không thể nhỏ hơn 0. Vui lòng kiểm tra lại!");
       quantityInputRef.current.focus();
       valid = false;
     } else {
@@ -274,34 +281,20 @@ const ProductUpload = () => {
                     />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 0 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 0 }}>
                         N
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 1 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 1 }}>
                         a
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 2 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 2 }}>
                         m
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 3 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 3 }}>
                         e
                       </span>
                     </label>
-                    {nameError && (
-                      <div className={cx("error")}>{nameError}</div>
-                    )}
+                    {nameError && <div className={cx("error")}>{nameError}</div>}
                   </div>
                 </div>
                 <div>
@@ -317,40 +310,23 @@ const ProductUpload = () => {
                     />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 0 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 0 }}>
                         P
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 1 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 1 }}>
                         r
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 2 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 2 }}>
                         i
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 3 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 3 }}>
                         c
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 4 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 4 }}>
                         e
                       </span>
                     </label>
-                    {priceError && (
-                      <div className={cx("error")}>{priceError}</div>
-                    )}
+                    {priceError && <div className={cx("error")}>{priceError}</div>}
                   </div>
                 </div>
               </Col>
@@ -367,70 +343,37 @@ const ProductUpload = () => {
                     />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 0 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 0 }}>
                         D
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 1 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 1 }}>
                         e
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 2 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 2 }}>
                         s
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 3 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 3 }}>
                         c
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 4 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 4 }}>
                         r
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 5 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 5 }}>
                         i
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 6 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 6 }}>
                         p
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 7 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 7 }}>
                         t
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 8 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 8 }}>
                         i
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 9 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 9 }}>
                         o
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 10 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 10 }}>
                         n
                       </span>
                     </label>
@@ -439,37 +382,19 @@ const ProductUpload = () => {
                 <div>
                   <span>Loại:</span>
                   <div className={cx("wave-group")}>
-                    <input
-                      value={type}
-                      required
-                      type="text"
-                      className={cx("input")}
-                      onChange={(e) => setType(e.target.value)}
-                    />
+                    <input value={type} required type="text" className={cx("input")} onChange={(e) => setType(e.target.value)} />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 0 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 0 }}>
                         T
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 1 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 1 }}>
                         y
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 2 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 2 }}>
                         p
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 3 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 3 }}>
                         e
                       </span>
                     </label>
@@ -490,100 +415,53 @@ const ProductUpload = () => {
                     />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 0 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 0 }}>
                         Q
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 1 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 1 }}>
                         u
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 2 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 2 }}>
                         a
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 3 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 3 }}>
                         n
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 4 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 4 }}>
                         t
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 5 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 5 }}>
                         i
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 6 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 6 }}>
                         t
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 7 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 7 }}>
                         y
                       </span>
                     </label>
-                    {quantityError && (
-                      <div className={cx("error")}>{quantityError}</div>
-                    )}
+                    {quantityError && <div className={cx("error")}>{quantityError}</div>}
                   </div>
                 </div>
                 <div>
                   <span>Màu:</span>
                   <div className={cx("wave-group")}>
-                    <input
-                      value={color}
-                      required
-                      type="text"
-                      className={cx("input")}
-                      onChange={(e) => setColor(e.target.value)}
-                    />
+                    <input value={color} required type="text" className={cx("input")} onChange={(e) => setColor(e.target.value)} />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 0 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 0 }}>
                         C
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 1 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 1 }}>
                         o
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 2 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 2 }}>
                         l
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 3 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 3 }}>
                         o
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 4 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 4 }}>
                         r
                       </span>
                     </label>
@@ -594,37 +472,19 @@ const ProductUpload = () => {
                 <div>
                   <span>Kích thước:</span>
                   <div className={cx("wave-group")}>
-                    <input
-                      value={size}
-                      required
-                      type="text"
-                      className={cx("input")}
-                      onChange={(e) => setSize(e.target.value)}
-                    />
+                    <input value={size} required type="text" className={cx("input")} onChange={(e) => setSize(e.target.value)} />
                     <span className={cx("bar")}></span>
                     <label className={cx("label")}>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 0 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 0 }}>
                         S
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 1 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 1 }}>
                         i
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 2 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 2 }}>
                         z
                       </span>
-                      <span
-                        className={cx("label-char")}
-                        style={{ "--index": 3 }}
-                      >
+                      <span className={cx("label-char")} style={{ "--index": 3 }}>
                         e
                       </span>
                     </label>
@@ -650,11 +510,7 @@ const ProductUpload = () => {
                     >
                       Upload file
                     </Button>
-                    <VisuallyHiddenInput
-                      id="fileInput"
-                      type="file"
-                      onChange={handleFileChange}
-                    />
+                    <VisuallyHiddenInput id="fileInput" type="file" onChange={handleFileChange} />
                     {uploadedImage && (
                       <img
                         src={URL.createObjectURL(uploadedImage)}
@@ -675,12 +531,7 @@ const ProductUpload = () => {
               <Button onClick={resetForm} variant="contained" color="secondary">
                 Reset
               </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{ marginLeft: 10 }}
-              >
+              <Button type="submit" variant="contained" color="primary" style={{ marginLeft: 10 }}>
                 Upload
               </Button>
             </div>

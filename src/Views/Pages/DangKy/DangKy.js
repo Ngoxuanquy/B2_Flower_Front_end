@@ -18,6 +18,22 @@ export const IsValidVietnamPhoneNumber = (phoneNumber) => {
   return vietnamPhoneRegex.test(phoneNumber);
 };
 
+export function checkValiDangKy(email, pass, re_Pass, number, messageApi) {
+  if (!email || !pass || !re_Pass || !number) {
+    return "Vui lòng không để trống các trường!!!";
+  }
+
+  if (pass !== re_Pass) {
+    return "Mật khẩu không khớp!!!";
+  }
+
+  if (pass.length <= 6) {
+    return "Mật khẩu phải dài hơn 6 kí tự";
+  }
+
+  return true;
+}
+
 function DangKy() {
   const URL = process.env.REACT_APP_URL;
   const [email, setEmail] = useState("");
@@ -97,10 +113,7 @@ function DangKy() {
         console.log(data);
         setIsLoad(false);
 
-        if (
-          data.metadata.msg === "Email đã được đăng ký!!" ||
-          data.metadata.msg === "Email không tồn tại!!"
-        ) {
+        if (data.metadata.msg === "Email đã được đăng ký!!" || data.metadata.msg === "Email không tồn tại!!") {
           messageApi.open({
             type: "warning",
             content: data.metadata.msg,
@@ -233,10 +246,7 @@ function DangKy() {
           <div className={cx("all")}>
             <div className={cx("left")}>
               <div className={cx("login")}>Đăng Ký</div>
-              <div className={cx("titer")}>
-                By logging in you agree to the ridiculously long terms that you
-                didn't bother to read
-              </div>
+              <div className={cx("titer")}>By logging in you agree to the ridiculously long terms that you didn't bother to read</div>
               <div className={cx("taikhoan")}>
                 Bạn Chưa Có Tài Khoản?
                 <Link to={"/login"}>
@@ -248,42 +258,28 @@ function DangKy() {
               <div>
                 <div className={cx("email")}>Email</div>
                 <div>
-                  <input
-                    className={cx("input")}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+                  <input className={cx("input")} onChange={(e) => setEmail(e.target.value)} />
                 </div>
               </div>
 
               <div>
                 <div className={cx("matkhau")}>Mật Khẩu</div>
                 <div>
-                  <input
-                    type="password"
-                    className={cx("input")}
-                    onChange={(e) => setPass(e.target.value)}
-                  />
+                  <input type="password" className={cx("input")} onChange={(e) => setPass(e.target.value)} />
                 </div>
               </div>
 
               <div>
                 <div className={cx("matkhau")}>Nhập Lại Mật Khẩu</div>
                 <div>
-                  <input
-                    type="password"
-                    className={cx("input")}
-                    onChange={(e) => setRe_Passs(e.target.value)}
-                  />
+                  <input type="password" className={cx("input")} onChange={(e) => setRe_Passs(e.target.value)} />
                 </div>
               </div>
 
               <div>
                 <div className={cx("matkhau")}>Số Điện Thoại</div>
                 <div>
-                  <input
-                    className={cx("input")}
-                    onChange={(e) => setNumber(e.target.value)}
-                  />
+                  <input className={cx("input")} onChange={(e) => setNumber(e.target.value)} />
                 </div>
               </div>
 

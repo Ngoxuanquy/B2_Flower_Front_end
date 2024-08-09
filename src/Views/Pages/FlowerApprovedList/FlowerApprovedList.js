@@ -16,13 +16,7 @@ const FlowerApprovedList = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(
-      { status: "Đã duyệt", status2: "Không duyệt" },
-      cleanedJwtString,
-      cleanId,
-      "/brokenFlowers/getBrokenFlowers",
-      "Post"
-    )
+    Call_Post_Api({ status: "Đã duyệt", status2: "Không duyệt" }, cleanedJwtString, cleanId, "/brokenFlowers/getBrokenFlowers", "Post")
       .then((data) => {
         setApi(data.metadata.reverse() || []); // Ensure you set an empty array if metadata is undefined
       })
@@ -74,9 +68,7 @@ const FlowerApprovedList = () => {
                 <td>
                   <Image src={flower.img} />
                 </td>
-                <td className={cx("status", getStatusClass(flower.status))}>
-                  {flower.status}
-                </td>
+                <td className={cx("status", getStatusClass(flower.status))}>{flower.status}</td>
                 <td>{new Date(flower.date).toLocaleDateString()}</td>
               </tr>
             ))}
