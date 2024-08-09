@@ -139,7 +139,7 @@ const Sidebar = () => {
           primary="Yêu cầu hủy sản phẩm"
           subItems={
             roles.includes("ADMIN")
-              ? ["Tạo báo cáo", "Danh sách hủy hoa", "Danh sách đã duyệt"]
+              ? ["Danh sách hủy hoa", "Danh sách đã duyệt"]
               : null
           }
           onItemClick={() => handleItemClick("Yêu cầu hủy sản phẩm")}
