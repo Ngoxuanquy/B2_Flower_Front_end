@@ -33,7 +33,8 @@ const Information = () => {
   const [activeTab, setActiveTab] = useState("0"); // State to track the active tab
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [amount, setAmount] = useState("");
-  const [isModalOpenUpdateAddress, setIsModalOpenUpdateAddress] = useState(false);
+  const [isModalOpenUpdateAddress, setIsModalOpenUpdateAddress] =
+    useState(false);
 
   const [isModalOpenEditOrder, setIsModalOpenEditOrder] = useState(false);
   const showModalEditOrder = () => {
@@ -87,9 +88,17 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api({ userId: cleanId }, cleanedJwtString, cleanId, "/cart/getlistCart")
+    Call_Post_Api(
+      { userId: cleanId },
+      cleanedJwtString,
+      cleanId,
+      "/cart/getlistCart"
+    )
       .then((data) => {
-        EventRegister.emit("chaneLength", data.metadata?.cart_products?.length ?? 0);
+        EventRegister.emit(
+          "chaneLength",
+          data.metadata?.cart_products?.length ?? 0
+        );
       })
       .catch((err) => {
         console.log({ err });
@@ -151,7 +160,13 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/users/getAddressUser/${cleanId}`, "GET")
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/users/getAddressUser/${cleanId}`,
+      "GET"
+    )
       .then((data) => {
         console.log(data);
         setAddress(data.metadata.address);
@@ -172,7 +187,13 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullUseId/${cleanId}`, "Get")
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/transaction/getFullUseId/${cleanId}`,
+      "Get"
+    )
       .then((data) => {
         setOrder(data.metadata.reverse());
         setIsLoad(false);
@@ -187,7 +208,13 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrder_doneUseId/${cleanId}`, "Get")
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/transaction/getFullOrder_doneUseId/${cleanId}`,
+      "Get"
+    )
       .then((data) => {
         const orders = data.metadata.reverse();
         setOrderSend(orders);
@@ -219,7 +246,13 @@ const Information = () => {
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
 
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/getFullOrder_receivedUseId/${cleanId}`, "Get")
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/transaction/getFullOrder_receivedUseId/${cleanId}`,
+      "Get"
+    )
       .then((data) => {
         setOrderReceived(data.metadata.reverse());
         setIsLoad(false);
@@ -251,7 +284,12 @@ const Information = () => {
       quantity: product.quantity,
     }));
 
-    Call_Post_Api(convertedProducts, cleanedJwtString, cleanId, "/product/updateQuantity").then((data) => {
+    Call_Post_Api(
+      convertedProducts,
+      cleanedJwtString,
+      cleanId,
+      "/product/updateQuantity"
+    ).then((data) => {
       console.log(data);
     });
   };
@@ -263,7 +301,12 @@ const Information = () => {
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
-    Call_Post_Api(null, cleanedJwtString, cleanId, `/transaction/deleteTransaction/${transactionId}`)
+    Call_Post_Api(
+      null,
+      cleanedJwtString,
+      cleanId,
+      `/transaction/deleteTransaction/${transactionId}`
+    )
       .then((data) => {
         setIsLoad(false);
         messageApi.open({
@@ -273,7 +316,10 @@ const Information = () => {
         getApiTransactionOrder();
         updateQuantity(product);
 
-        if (status === "Đã thanh toán" || status === "Thanh toán qua Ví 2Be Flower") {
+        if (
+          status === "Đã thanh toán" ||
+          status === "Thanh toán qua Ví 2Be Flower"
+        ) {
           const token = Cookies.get("accessToken");
           const id = Cookies.get("id");
           const cleanedJwtString = token?.replace(/"/g, "");
@@ -338,7 +384,6 @@ const Information = () => {
   const handelUpdateAdrees = (item) => {
     setIsModalOpenUpdateAddress(true);
 
-    console.log(item);
     setUpdateAddress(item?.id);
     setAddresUpdate(item);
   };
@@ -361,11 +406,31 @@ const Information = () => {
   };
 
   const handleUpdateAddressOk = () => {
-    setIsModalOpenUpdateAddress(false);
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
     const cleanId = id?.replace(/"/g, "");
+
+    // Check for required fields in addresUpdate
+    const { phuongXa, quanHuyen, tinhThanh, diaChiCuThe, number, name } =
+      addresUpdate;
+    if (
+      !idUpdateAddress ||
+      !phuongXa ||
+      !quanHuyen ||
+      !tinhThanh ||
+      !diaChiCuThe ||
+      !number ||
+      !name
+    ) {
+      messageApi.open({
+        type: "warning",
+        content: "Vui lòng nhập đầy đủ thông tin địa chỉ",
+      });
+      return;
+    }
+
+    // Proceed with the API call
     Call_Post_Api(
       {
         userId: cleanId,
@@ -378,10 +443,11 @@ const Information = () => {
     )
       .then((data) => {
         getApiAdrressUser();
-        return;
+        setIsModalOpenUpdateAddress(false);
       })
       .catch((err) => console.log({ err }));
   };
+
   const handleUpdateAddressCancel = () => {
     setIsModalOpenUpdateAddress(false);
   };
@@ -516,7 +582,12 @@ const Information = () => {
                   }}
                 >
                   {/* Content for Tab 1 */}
-                  <Modal title="Nạp tiền vào ví 2Be flower" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                  <Modal
+                    title="Nạp tiền vào ví 2Be flower"
+                    visible={isModalVisible}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                  >
                     <div>
                       <div>Số tiền cần Nạp</div>
                       <Input value={amount} onChange={handleChange} />
@@ -549,19 +620,44 @@ const Information = () => {
                     >
                       <Form layout="vertical">
                         <Form.Item label="Tên">
-                          <Input placeholder="Tên" name="name" value={addresUpdate.name} onChange={handleInputChange} />
+                          <Input
+                            placeholder="Tên"
+                            name="name"
+                            value={addresUpdate.name}
+                            onChange={handleInputChange}
+                          />
                         </Form.Item>
                         <Form.Item label="Số điện thoại">
-                          <Input placeholder="Số điện thoại" name="number" value={addresUpdate.number} onChange={handleInputChange} />
+                          <Input
+                            placeholder="Số điện thoại"
+                            name="number"
+                            value={addresUpdate.number}
+                            onChange={handleInputChange}
+                          />
                         </Form.Item>
                         <Form.Item label="Phường/Xã">
-                          <Input placeholder="Phường/Xã" name="phuongXa" value={addresUpdate.phuongXa} onChange={handleInputChange} />
+                          <Input
+                            placeholder="Phường/Xã"
+                            name="phuongXa"
+                            value={addresUpdate.phuongXa}
+                            onChange={handleInputChange}
+                          />
                         </Form.Item>
                         <Form.Item label="Quận/Huyện">
-                          <Input placeholder="Quận/Huyện" name="quanHuyen" value={addresUpdate.quanHuyen} onChange={handleInputChange} />
+                          <Input
+                            placeholder="Quận/Huyện"
+                            name="quanHuyen"
+                            value={addresUpdate.quanHuyen}
+                            onChange={handleInputChange}
+                          />
                         </Form.Item>
                         <Form.Item label="Tỉnh/Thành">
-                          <Input placeholder="Tỉnh/Thành" name="tinhThanh" value={addresUpdate.tinhThanh} onChange={handleInputChange} />
+                          <Input
+                            placeholder="Tỉnh/Thành"
+                            name="tinhThanh"
+                            value={addresUpdate.tinhThanh}
+                            onChange={handleInputChange}
+                          />
                         </Form.Item>
                         <Form.Item label="Địa chỉ cụ thể">
                           <Input
@@ -635,7 +731,8 @@ const Information = () => {
                               </div>
                             </div>
                             <div>
-                              {item.diaChiCuThe}, {item.phuongXa}, {item.quanHuyen}, {item.tinhThanh}
+                              {item.diaChiCuThe}, {item.phuongXa},{" "}
+                              {item.quanHuyen}, {item.tinhThanh}
                             </div>
                           </div>
                         </div>
@@ -665,7 +762,10 @@ const Information = () => {
                       lineHeight: "50px",
                     }}
                   >
-                    <ModalMap props={"Thêm"} onClickHandler={handleEventFromChild} />
+                    <ModalMap
+                      props={"Thêm"}
+                      onClickHandler={handleEventFromChild}
+                    />
                   </div>
                 </div>
               ) : (
@@ -692,36 +792,48 @@ const Information = () => {
                           </div>
 
                           <div>
-                            <strong>Transaction ID:</strong> {orderEdit.transactionId}
+                            <strong>Transaction ID:</strong>{" "}
+                            {orderEdit.transactionId}
                           </div>
 
                           <div>
                             <strong>Products:</strong>
                             <ul>
-                              {orderEdit.transaction_products?.map((product) => (
-                                <li key={product._id}>
-                                  <img src={product.product_thumb} alt={product.product_name} />
-                                  <div>
-                                    <strong>Name:</strong> {product.product_name}
-                                  </div>
-                                  <div>
-                                    <strong>Description:</strong> {product.product_description}
-                                  </div>
-                                  <div>
-                                    <strong>Price:</strong> {product.product_price}
-                                  </div>
-                                  <div>
-                                    <strong>Quantity:</strong> {product.quantity}
-                                  </div>
-                                  <div>
-                                    <strong>Discount:</strong> {product.product_discount}
-                                  </div>
-                                  <div>
-                                    <strong>Attributes:</strong> Color: {product.product_attributes.color}, Size:{" "}
-                                    {product.product_attributes.size}
-                                  </div>
-                                </li>
-                              ))}
+                              {orderEdit.transaction_products?.map(
+                                (product) => (
+                                  <li key={product._id}>
+                                    <img
+                                      src={product.product_thumb}
+                                      alt={product.product_name}
+                                    />
+                                    <div>
+                                      <strong>Name:</strong>{" "}
+                                      {product.product_name}
+                                    </div>
+                                    <div>
+                                      <strong>Description:</strong>{" "}
+                                      {product.product_description}
+                                    </div>
+                                    <div>
+                                      <strong>Price:</strong>{" "}
+                                      {product.product_price}
+                                    </div>
+                                    <div>
+                                      <strong>Quantity:</strong>{" "}
+                                      {product.quantity}
+                                    </div>
+                                    <div>
+                                      <strong>Discount:</strong>{" "}
+                                      {product.product_discount}
+                                    </div>
+                                    <div>
+                                      <strong>Attributes:</strong> Color:{" "}
+                                      {product.product_attributes.color}, Size:{" "}
+                                      {product.product_attributes.size}
+                                    </div>
+                                  </li>
+                                )
+                              )}
                             </ul>
                           </div>
 
@@ -749,23 +861,29 @@ const Information = () => {
                                     <strong>Phone:</strong> {user.number}
                                   </div>
                                   <div>
-                                    <strong>Address Details:</strong> {user.phuongXa}, {user.quanHuyen}, {user.tinhThanh}
+                                    <strong>Address Details:</strong>{" "}
+                                    {user.phuongXa}, {user.quanHuyen},{" "}
+                                    {user.tinhThanh}
                                   </div>
                                 </div>
                               ))}
                             </div>
                           </div>
                           <div>
-                            <strong>Payment Expression:</strong> {orderEdit.payment_expression}
+                            <strong>Payment Expression:</strong>{" "}
+                            {orderEdit.payment_expression}
                           </div>
                           <div>
-                            <strong>Total Amount:</strong> {orderEdit.total_amounts?.toLocaleString()} đ
+                            <strong>Total Amount:</strong>{" "}
+                            {orderEdit.total_amounts?.toLocaleString()} đ
                           </div>
                           <div>
-                            <strong>Discount:</strong> {orderEdit.discount ? orderEdit.discount : 0}
+                            <strong>Discount:</strong>{" "}
+                            {orderEdit.discount ? orderEdit.discount : 0}
                           </div>
                           <div>
-                            <strong>Shipping Fee:</strong> {orderEdit.phiShip ? orderEdit.phiShip : 0}
+                            <strong>Shipping Fee:</strong>{" "}
+                            {orderEdit.phiShip ? orderEdit.phiShip : 0}
                           </div>
                         </div>
                       ) : (
@@ -809,9 +927,13 @@ const Information = () => {
                                 }}
                               >
                                 <span>
-                                  <EditOutlined onClick={() => handelEditOrder(order)} />
+                                  <EditOutlined
+                                    onClick={() => handelEditOrder(order)}
+                                  />
                                 </span>
-                                <h2 style={{ fontSize: "1.5rem", margin: "0" }}>Đơn hàng {order.transactionId}</h2>
+                                <h2 style={{ fontSize: "1.5rem", margin: "0" }}>
+                                  Đơn hàng {order.transactionId}
+                                </h2>
                                 <h6
                                   style={{
                                     fontWeight: "bold",
@@ -819,7 +941,9 @@ const Information = () => {
                                 >
                                   {order.total_amounts?.toLocaleString()} đ
                                 </h6>
-                                {order.notifications === "Đã thanh toán" || order.notifications === "Thanh toán qua Ví 2Be Flower" ? (
+                                {order.notifications === "Đã thanh toán" ||
+                                order.notifications ===
+                                  "Thanh toán qua Ví 2Be Flower" ? (
                                   <span
                                     style={{
                                       color: "green",
@@ -846,7 +970,10 @@ const Information = () => {
                                     color: theme.color,
                                   }}
                                 >
-                                  Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
+                                  Ngày đặt:{" "}
+                                  {new Date(order.createdOn).toLocaleDateString(
+                                    "vi-VN"
+                                  )}
                                 </p>
                                 <p
                                   style={{
@@ -858,7 +985,12 @@ const Information = () => {
                                   {order.status === "Đang nhận đơn" ? (
                                     <Button
                                       onClick={() =>
-                                        handelHuyDon(order._id, order.notifications, order.total_amounts, order.transaction_products)
+                                        handelHuyDon(
+                                          order._id,
+                                          order.notifications,
+                                          order.total_amounts,
+                                          order.transaction_products
+                                        )
                                       }
                                     >
                                       Hủy đơn
@@ -880,73 +1012,114 @@ const Information = () => {
                                     fontWeight: "bold",
                                   }}
                                 >
-                                  <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                  <div
+                                    className={cx("order-cell")}
+                                    style={{ flex: "1", padding: "10px" }}
+                                  >
                                     STT
                                   </div>
-                                  <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                  <div
+                                    className={cx("order-cell")}
+                                    style={{ flex: "2", padding: "10px" }}
+                                  >
                                     Sản phẩm
                                   </div>
-                                  <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
+                                  <div
+                                    className={cx("order-cell")}
+                                    style={{ flex: "3", padding: "10px" }}
+                                  >
                                     Hình ảnh
                                   </div>
-                                  <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                  <div
+                                    className={cx("order-cell")}
+                                    style={{ flex: "1", padding: "10px" }}
+                                  >
                                     Số lượng
                                   </div>
-                                  <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                  <div
+                                    className={cx("order-cell")}
+                                    style={{ flex: "1", padding: "10px" }}
+                                  >
                                     Giá
                                   </div>
                                 </div>
-                                {order.transaction_products.map((product, prodIndex) => (
-                                  <div
-                                    key={prodIndex}
-                                    className={cx("order-row")}
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      borderBottom: "1px solid #eee",
-                                      padding: "10px 0",
-                                    }}
-                                  >
-                                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
-                                      {prodIndex + 1}
-                                    </div>
-                                    <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
-                                      {product.product_name}
-                                    </div>
-                                    <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
-                                      <Image
-                                        src={product.product_thumb}
-                                        style={{
-                                          width: "80px",
-                                          height: "80px",
-                                        }}
-                                      />
-                                    </div>
-                                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
-                                      {product.quantity}
-                                    </div>
-                                    <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
-                                      <div>
-                                        {product?.product_discount ? (
-                                          <>
-                                            <span
-                                              style={{
-                                                textDecoration: "line-through",
-                                                marginRight: "8px",
-                                                fontSize: "12px",
-                                              }}
-                                            >
-                                              {product.product_price}
+                                {order.transaction_products.map(
+                                  (product, prodIndex) => (
+                                    <div
+                                      key={prodIndex}
+                                      className={cx("order-row")}
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        borderBottom: "1px solid #eee",
+                                        padding: "10px 0",
+                                      }}
+                                    >
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
+                                        {prodIndex + 1}
+                                      </div>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "2", padding: "10px" }}
+                                      >
+                                        {product.product_name}
+                                      </div>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "3", padding: "10px" }}
+                                      >
+                                        <Image
+                                          src={product.product_thumb}
+                                          style={{
+                                            width: "80px",
+                                            height: "80px",
+                                          }}
+                                        />
+                                      </div>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
+                                        {product.quantity}
+                                      </div>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
+                                        <div>
+                                          {product?.product_discount ? (
+                                            <>
+                                              <span
+                                                style={{
+                                                  textDecoration:
+                                                    "line-through",
+                                                  marginRight: "8px",
+                                                  fontSize: "12px",
+                                                }}
+                                              >
+                                                {product.product_price}
+                                              </span>
+                                              <span>
+                                                {product.product_price *
+                                                  (1 -
+                                                    product.product_discount /
+                                                      100)}{" "}
+                                                đ
+                                              </span>
+                                            </>
+                                          ) : (
+                                            <span>
+                                              {product.product_price} đ
                                             </span>
-                                            <span>{product.product_price * (1 - product.product_discount / 100)} đ</span>
-                                          </>
-                                        ) : (
-                                          <span>{product.product_price} đ</span>
-                                        )}
+                                          )}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                ))}
+                                  )
+                                )}
                               </div>
                             </div>
                           ))
@@ -1011,7 +1184,9 @@ const Information = () => {
                                     }}
                                   >
                                     <span>
-                                      <EditOutlined onClick={() => handelEditOrder(order)} />
+                                      <EditOutlined
+                                        onClick={() => handelEditOrder(order)}
+                                      />
                                     </span>
                                     <h2
                                       style={{
@@ -1028,7 +1203,9 @@ const Information = () => {
                                     >
                                       {order.total_amounts?.toLocaleString()} đ
                                     </h6>
-                                    {order.notifications === "Đã thanh toán" || order.notifications === "Thanh toán qua Ví 2Be Flower" ? (
+                                    {order.notifications === "Đã thanh toán" ||
+                                    order.notifications ===
+                                      "Thanh toán qua Ví 2Be Flower" ? (
                                       <span
                                         style={{
                                           color: "green",
@@ -1055,7 +1232,10 @@ const Information = () => {
                                         color: theme.color,
                                       }}
                                     >
-                                      Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
+                                      Ngày đặt:{" "}
+                                      {new Date(
+                                        order.createdOn
+                                      ).toLocaleDateString("vi-VN")}
                                     </p>
                                     <p
                                       style={{
@@ -1064,7 +1244,11 @@ const Information = () => {
                                         color: theme.color,
                                       }}
                                     >
-                                      <Button onClick={() => handelNhanDon(order._id)}>Đã nhận đơn</Button>
+                                      <Button
+                                        onClick={() => handelNhanDon(order._id)}
+                                      >
+                                        Đã nhận đơn
+                                      </Button>
                                     </p>
                                   </div>
                                   <div
@@ -1075,109 +1259,138 @@ const Information = () => {
                                     }}
                                   >
                                     <div
-                                      className={cx("order-row", "order-header")}
+                                      className={cx(
+                                        "order-row",
+                                        "order-header"
+                                      )}
                                       style={{
                                         backgroundColor: "#f0f0f0",
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
                                         STT
                                       </div>
-                                      <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "2", padding: "10px" }}
+                                      >
                                         Sản phẩm
                                       </div>
-                                      <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "3", padding: "10px" }}
+                                      >
                                         Hình ảnh
                                       </div>
-                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
                                         Số lượng
                                       </div>
-                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
                                         Giá
                                       </div>
                                     </div>
-                                    {order.transaction_products.map((product, prodIndex) => (
-                                      <div
-                                        key={prodIndex}
-                                        className={cx("order-row")}
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          borderBottom: "1px solid #eee",
-                                          padding: "10px 0",
-                                        }}
-                                      >
+                                    {order.transaction_products.map(
+                                      (product, prodIndex) => (
                                         <div
-                                          className={cx("order-cell")}
+                                          key={prodIndex}
+                                          className={cx("order-row")}
                                           style={{
-                                            flex: "1",
-                                            padding: "10px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            borderBottom: "1px solid #eee",
+                                            padding: "10px 0",
                                           }}
                                         >
-                                          {prodIndex + 1}
-                                        </div>
-                                        <div
-                                          className={cx("order-cell")}
-                                          style={{
-                                            flex: "2",
-                                            padding: "10px",
-                                          }}
-                                        >
-                                          {product.product_name}
-                                        </div>
-                                        <div
-                                          className={cx("order-cell")}
-                                          style={{
-                                            flex: "3",
-                                            padding: "10px",
-                                          }}
-                                        >
-                                          <Image
-                                            src={product.product_thumb}
+                                          <div
+                                            className={cx("order-cell")}
                                             style={{
-                                              width: "80px",
-                                              height: "80px",
+                                              flex: "1",
+                                              padding: "10px",
                                             }}
-                                          />
-                                        </div>
-                                        <div
-                                          className={cx("order-cell")}
-                                          style={{
-                                            flex: "1",
-                                            padding: "10px",
-                                          }}
-                                        >
-                                          {product.quantity}
-                                        </div>
-                                        <div
-                                          className={cx("order-cell")}
-                                          style={{
-                                            flex: "1",
-                                            padding: "10px",
-                                          }}
-                                        >
-                                          <div>
-                                            {product?.product_discount ? (
-                                              <>
-                                                <span
-                                                  style={{
-                                                    textDecoration: "line-through",
-                                                    marginRight: "8px",
-                                                    fontSize: "12px",
-                                                  }}
-                                                >
-                                                  {product.product_price}
+                                          >
+                                            {prodIndex + 1}
+                                          </div>
+                                          <div
+                                            className={cx("order-cell")}
+                                            style={{
+                                              flex: "2",
+                                              padding: "10px",
+                                            }}
+                                          >
+                                            {product.product_name}
+                                          </div>
+                                          <div
+                                            className={cx("order-cell")}
+                                            style={{
+                                              flex: "3",
+                                              padding: "10px",
+                                            }}
+                                          >
+                                            <Image
+                                              src={product.product_thumb}
+                                              style={{
+                                                width: "80px",
+                                                height: "80px",
+                                              }}
+                                            />
+                                          </div>
+                                          <div
+                                            className={cx("order-cell")}
+                                            style={{
+                                              flex: "1",
+                                              padding: "10px",
+                                            }}
+                                          >
+                                            {product.quantity}
+                                          </div>
+                                          <div
+                                            className={cx("order-cell")}
+                                            style={{
+                                              flex: "1",
+                                              padding: "10px",
+                                            }}
+                                          >
+                                            <div>
+                                              {product?.product_discount ? (
+                                                <>
+                                                  <span
+                                                    style={{
+                                                      textDecoration:
+                                                        "line-through",
+                                                      marginRight: "8px",
+                                                      fontSize: "12px",
+                                                    }}
+                                                  >
+                                                    {product.product_price}
+                                                  </span>
+                                                  <span>
+                                                    {product.product_price *
+                                                      (1 -
+                                                        product.product_discount /
+                                                          100)}{" "}
+                                                    đ
+                                                  </span>
+                                                </>
+                                              ) : (
+                                                <span>
+                                                  {product.product_price} đ
                                                 </span>
-                                                <span>{product.product_price * (1 - product.product_discount / 100)} đ</span>
-                                              </>
-                                            ) : (
-                                              <span>{product.product_price} đ</span>
-                                            )}
+                                              )}
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    ))}
+                                      )
+                                    )}
                                   </div>
                                 </div>
                               ))
@@ -1215,7 +1428,8 @@ const Information = () => {
                                 fontWeight: 400,
                               }}
                             >
-                              Đơn đã nhận (Nếu không xác nhận thì sau 5 ngày đơn sẽ tự động xác nhận)
+                              Đơn đã nhận (Nếu không xác nhận thì sau 5 ngày đơn
+                              sẽ tự động xác nhận)
                             </i>
                           </div>
                           <div className={cx("orders-container")}>
@@ -1243,7 +1457,9 @@ const Information = () => {
                                     }}
                                   >
                                     <span>
-                                      <EditOutlined onClick={() => handelEditOrder(order)} />
+                                      <EditOutlined
+                                        onClick={() => handelEditOrder(order)}
+                                      />
                                     </span>
                                     <h2
                                       style={{
@@ -1260,7 +1476,9 @@ const Information = () => {
                                     >
                                       {order.total_amounts?.toLocaleString()} đ
                                     </h6>
-                                    {order.notifications === "Đã thanh toán" || order.notifications === "Thanh toán qua Ví 2Be Flower" ? (
+                                    {order.notifications === "Đã thanh toán" ||
+                                    order.notifications ===
+                                      "Thanh toán qua Ví 2Be Flower" ? (
                                       <span
                                         style={{
                                           color: "green",
@@ -1287,7 +1505,10 @@ const Information = () => {
                                         color: theme.color,
                                       }}
                                     >
-                                      Ngày đặt: {new Date(order.createdOn).toLocaleDateString("vi-VN")}
+                                      Ngày đặt:{" "}
+                                      {new Date(
+                                        order.createdOn
+                                      ).toLocaleDateString("vi-VN")}
                                     </p>
                                     <p
                                       style={{
@@ -1297,7 +1518,13 @@ const Information = () => {
                                       }}
                                     >
                                       {order.status === "Đang nhận đơn" ? (
-                                        <Button onClick={() => handelHuyDon(order._id)}>Hủy đơn</Button>
+                                        <Button
+                                          onClick={() =>
+                                            handelHuyDon(order._id)
+                                          }
+                                        >
+                                          Hủy đơn
+                                        </Button>
                                       ) : null}
                                     </p>
                                   </div>
@@ -1309,109 +1536,138 @@ const Information = () => {
                                     }}
                                   >
                                     <div
-                                      className={cx("order-row", "order-header")}
+                                      className={cx(
+                                        "order-row",
+                                        "order-header"
+                                      )}
                                       style={{
                                         backgroundColor: "#f0f0f0",
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
                                         STT
                                       </div>
-                                      <div className={cx("order-cell")} style={{ flex: "2", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "2", padding: "10px" }}
+                                      >
                                         Sản phẩm
                                       </div>
-                                      <div className={cx("order-cell")} style={{ flex: "3", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "3", padding: "10px" }}
+                                      >
                                         Hình ảnh
                                       </div>
-                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
                                         Số lượng
                                       </div>
-                                      <div className={cx("order-cell")} style={{ flex: "1", padding: "10px" }}>
+                                      <div
+                                        className={cx("order-cell")}
+                                        style={{ flex: "1", padding: "10px" }}
+                                      >
                                         Giá
                                       </div>
                                     </div>
-                                    {order.transaction_products.map((product, prodIndex) => (
-                                      <div
-                                        key={prodIndex}
-                                        className={cx("order-row")}
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          borderBottom: "1px solid #eee",
-                                          padding: "10px 0",
-                                        }}
-                                      >
+                                    {order.transaction_products.map(
+                                      (product, prodIndex) => (
                                         <div
-                                          className={cx("order-cell")}
+                                          key={prodIndex}
+                                          className={cx("order-row")}
                                           style={{
-                                            flex: "1",
-                                            padding: "10px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            borderBottom: "1px solid #eee",
+                                            padding: "10px 0",
                                           }}
                                         >
-                                          {prodIndex + 1}
-                                        </div>
-                                        <div
-                                          className={cx("order-cell")}
-                                          style={{
-                                            flex: "2",
-                                            padding: "10px",
-                                          }}
-                                        >
-                                          {product.product_name}
-                                        </div>
-                                        <div
-                                          className={cx("order-cell")}
-                                          style={{
-                                            flex: "3",
-                                            padding: "10px",
-                                          }}
-                                        >
-                                          <Image
-                                            src={product.product_thumb}
+                                          <div
+                                            className={cx("order-cell")}
                                             style={{
-                                              width: "80px",
-                                              height: "80px",
+                                              flex: "1",
+                                              padding: "10px",
                                             }}
-                                          />
-                                        </div>
-                                        <div
-                                          className={cx("order-cell")}
-                                          style={{
-                                            flex: "1",
-                                            padding: "10px",
-                                          }}
-                                        >
-                                          {product.quantity}
-                                        </div>
-                                        <div
-                                          className={cx("order-cell")}
-                                          style={{
-                                            flex: "1",
-                                            padding: "10px",
-                                          }}
-                                        >
-                                          <div>
-                                            {product?.product_discount ? (
-                                              <>
-                                                <span
-                                                  style={{
-                                                    textDecoration: "line-through",
-                                                    marginRight: "8px",
-                                                    fontSize: "12px",
-                                                  }}
-                                                >
-                                                  {product.product_price}
+                                          >
+                                            {prodIndex + 1}
+                                          </div>
+                                          <div
+                                            className={cx("order-cell")}
+                                            style={{
+                                              flex: "2",
+                                              padding: "10px",
+                                            }}
+                                          >
+                                            {product.product_name}
+                                          </div>
+                                          <div
+                                            className={cx("order-cell")}
+                                            style={{
+                                              flex: "3",
+                                              padding: "10px",
+                                            }}
+                                          >
+                                            <Image
+                                              src={product.product_thumb}
+                                              style={{
+                                                width: "80px",
+                                                height: "80px",
+                                              }}
+                                            />
+                                          </div>
+                                          <div
+                                            className={cx("order-cell")}
+                                            style={{
+                                              flex: "1",
+                                              padding: "10px",
+                                            }}
+                                          >
+                                            {product.quantity}
+                                          </div>
+                                          <div
+                                            className={cx("order-cell")}
+                                            style={{
+                                              flex: "1",
+                                              padding: "10px",
+                                            }}
+                                          >
+                                            <div>
+                                              {product?.product_discount ? (
+                                                <>
+                                                  <span
+                                                    style={{
+                                                      textDecoration:
+                                                        "line-through",
+                                                      marginRight: "8px",
+                                                      fontSize: "12px",
+                                                    }}
+                                                  >
+                                                    {product.product_price}
+                                                  </span>
+                                                  <span>
+                                                    {product.product_price *
+                                                      (1 -
+                                                        product.product_discount /
+                                                          100)}{" "}
+                                                    đ
+                                                  </span>
+                                                </>
+                                              ) : (
+                                                <span>
+                                                  {product.product_price} đ
                                                 </span>
-                                                <span>{product.product_price * (1 - product.product_discount / 100)} đ</span>
-                                              </>
-                                            ) : (
-                                              <span>{product.product_price} đ</span>
-                                            )}
+                                              )}
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    ))}
+                                      )
+                                    )}
                                   </div>
                                 </div>
                               ))
