@@ -221,17 +221,29 @@ const Information = () => {
         setIsLoad(false);
 
         // Get today's date
+        // Assuming today is defined as the current date and time
         const today = new Date();
 
-        // Check each order's createdOn date
         orders.forEach((order) => {
-          const createdOn = new Date(order.createdOn); // Ensure createdOn is in Date format
-          const diffTime = Math.abs(today - createdOn);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          // Ensure createdOn is in Date format
+          const createdOn = new Date(order.createdOn);
 
-          // If the order is older than 5 days, call handelNhanDon
-          if (diffDays > 5) {
-            handelNhanDon(order.transactionId); // Ensure transactionId is available in the order object
+          // Calculate the difference in time
+          const diffTime = Math.abs(today - createdOn);
+
+          // Convert time difference to minutes
+          const diffMinutes = Math.ceil(diffTime / (1000 * 60));
+
+          // If the order is older than 1 minute, call handelNhanDon
+          if (diffMinutes > 1) {
+            if (order._id) {
+              // Check if transactionId is available
+              handelNhanDon(order._id, order.notifications);
+            } else {
+              console.error(
+                `Order with createdOn ${order.createdOn} does not have a transactionId.`
+              );
+            }
           }
         });
 
@@ -473,7 +485,7 @@ const Information = () => {
       .catch((err) => console.log({ err }));
   };
 
-  const handelNhanDon = (transactionId) => {
+  const handelNhanDon = (transactionId, notifications) => {
     const token = Cookies.get("accessToken");
     const id = Cookies.get("id");
     const cleanedJwtString = token?.replace(/"/g, "");
@@ -483,7 +495,8 @@ const Information = () => {
       {
         transactionId,
         status: "Đã nhận hàng",
-        notifications: "Đã thanh toán",
+        notifications:
+          notifications == "null" ? "Đã thanh toán" : notifications,
       },
       cleanedJwtString,
       cleanId,
@@ -816,7 +829,28 @@ const Information = () => {
                                     </div>
                                     <div>
                                       <strong>Price:</strong>{" "}
-                                      {product.product_price}
+                                      {product?.product_discount ? (
+                                        <>
+                                          <span
+                                            style={{
+                                              textDecoration: "line-through",
+                                              marginRight: "8px",
+                                              fontSize: "12px",
+                                            }}
+                                          >
+                                            {product.product_price}
+                                          </span>
+                                          <span>
+                                            {product.product_price *
+                                              (1 -
+                                                product.product_discount /
+                                                  100)}{" "}
+                                            đ
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <span>{product.product_price} đ</span>
+                                      )}
                                     </div>
                                     <div>
                                       <strong>Quantity:</strong>{" "}
@@ -1245,7 +1279,12 @@ const Information = () => {
                                       }}
                                     >
                                       <Button
-                                        onClick={() => handelNhanDon(order._id)}
+                                        onClick={() =>
+                                          handelNhanDon(
+                                            order._id,
+                                            order.notifications
+                                          )
+                                        }
                                       >
                                         Đã nhận đơn
                                       </Button>
@@ -1467,7 +1506,7 @@ const Information = () => {
                                         margin: "0",
                                       }}
                                     >
-                                      Đơn hàng {index + 1}
+                                      Đơn hàng {order.transactionId}
                                     </h2>
                                     <h6
                                       style={{
